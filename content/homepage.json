@@ -1,0 +1,905 @@
+{
+ "version": 1,
+ "site": {
+  "name": "ailearning",
+  "base": "/ailearning/",
+  "promise": [
+   "How machines learn, drawn as machines you can tune.",
+   "From one neuron to transformers. Turn the dials.",
+   "Modern AI, one working drawing at a time."
+  ],
+  "subline": "Neuron → learning → transformers → graph networks → the frontier.",
+  "cta": {
+   "new": "Begin: Plate I",
+   "returning": "Continue: Plate {plate}, {beat}",
+   "phone": "Send to my desktop"
+  },
+  "trust": "Free · no account · open source",
+  "sound": "Sound on: every plate is narrated.",
+  "strip": [
+   {
+    "beat": "watch",
+    "label": "Watch",
+    "line": "A narrated plate explains one idea, start to finish."
+   },
+   {
+    "beat": "drive",
+    "label": "Drive",
+    "line": "You turn the dials while the plate guides your hand."
+   },
+   {
+    "beat": "play",
+    "label": "Play",
+    "line": "Games on the same machine, at your own pace."
+   }
+  ],
+  "credits": {
+   "drawn": "Claude",
+   "colophon": "Drawn, written and narrated by Claude."
+  },
+  "licence": {
+   "code": "MIT",
+   "plates": "CC BY-NC 4.0",
+   "narration": "CC BY-NC 4.0",
+   "fonts": "OFL",
+   "voice": "Kokoro, Apache-2.0"
+  }
+ },
+ "rings": [
+  {
+   "n": 1,
+   "name": "The machine"
+  },
+  {
+   "n": 2,
+   "name": "How it learns"
+  },
+  {
+   "n": 3,
+   "name": "Language as numbers"
+  },
+  {
+   "n": 4,
+   "name": "The transformer"
+  },
+  {
+   "n": 5,
+   "name": "Graphs"
+  },
+  {
+   "n": 6,
+   "name": "Beyond attention"
+  },
+  {
+   "n": 7,
+   "name": "Generation"
+  },
+  {
+   "n": 8,
+   "name": "Learning from reward"
+  },
+  {
+   "n": 9,
+   "name": "Frontier"
+  }
+ ],
+ "silhouettes": {
+  "gauge": {
+   "name": "Gauge",
+   "draws": "A round dial face with a needle and a graduated arc."
+  },
+  "sheet": {
+   "name": "Sheet",
+   "draws": "A flat sheet with two dash-dot crease lines crossing it."
+  },
+  "contour": {
+   "name": "Contour",
+   "draws": "Three nested contour rings with one arrow across them."
+  },
+  "gears": {
+   "name": "Gear train",
+   "draws": "Two meshed gears of different sizes on one baseline."
+  },
+  "arrows": {
+   "name": "Arrows",
+   "draws": "Two arrows from one origin on a pair of axes."
+  },
+  "type": {
+   "name": "Type slugs",
+   "draws": "A row of four metal type slugs of different widths."
+  },
+  "tower": {
+   "name": "Tower",
+   "draws": "An elevation of a storeyed tower with one vertical duct."
+  },
+  "grid": {
+   "name": "Grid",
+   "draws": "A ruled square table with its upper triangle covered."
+  },
+  "graph": {
+   "name": "Graph",
+   "draws": "Five nodes joined by edges, one node drawn heavier."
+  },
+  "drum": {
+   "name": "Drum",
+   "draws": "A register drum with a strip of tape running through it."
+  },
+  "course": {
+   "name": "Course",
+   "draws": "A plan-view course line with one buoy and a curved trail."
+  },
+  "frame": {
+   "name": "Frame",
+   "draws": "A ruled picture frame holding one rising curve."
+  }
+ },
+ "units": [
+  {
+   "id": "U01",
+   "n": 1,
+   "plate": "I",
+   "slug": "01-neuron",
+   "ring": 1,
+   "kind": "full",
+   "title": "The neuron",
+   "line": "A neuron adds its inputs, each turned by a dial, and passes one number on.",
+   "minutes": 25,
+   "requires": [],
+   "game": "Race the tuner",
+   "silhouette": "gauge",
+   "status": "drawn"
+  },
+  {
+   "id": "U02",
+   "n": 2,
+   "plate": "II",
+   "slug": "02-layers",
+   "ring": 1,
+   "kind": "full",
+   "title": "Layers and creases",
+   "line": "Each neuron adds one crease; without the valve, any stack is one straight line.",
+   "minutes": 25,
+   "requires": [
+    "U01"
+   ],
+   "game": "Crease budget",
+   "silhouette": "sheet",
+   "status": "in-preparation"
+  },
+  {
+   "id": "U03",
+   "n": 3,
+   "plate": "III",
+   "slug": "03-loss",
+   "ring": 2,
+   "kind": "full",
+   "title": "Loss",
+   "line": "One number for how wrong the machine is: the mean of the squared misses.",
+   "minutes": 25,
+   "requires": [
+    "U01"
+   ],
+   "game": "Outlier tug",
+   "silhouette": "gauge",
+   "status": "in-preparation"
+  },
+  {
+   "id": "U04",
+   "n": 4,
+   "plate": "IV",
+   "slug": "04-gradient",
+   "ring": 2,
+   "kind": "full",
+   "title": "The gradient",
+   "line": "Nudge each dial, read its slope, and the slopes combine into one arrow pointing uphill.",
+   "minutes": 25,
+   "requires": [
+    "U03"
+   ],
+   "game": "Survey by nudges",
+   "silhouette": "contour",
+   "status": "in-preparation"
+  },
+  {
+   "id": "U05",
+   "n": 5,
+   "plate": "V",
+   "slug": "05-gradient-descent",
+   "ring": 2,
+   "kind": "full",
+   "title": "Gradient descent",
+   "line": "Step against the arrow, again and again. The tuner from Plate I was doing this.",
+   "minutes": 25,
+   "requires": [
+    "U04"
+   ],
+   "game": "Survey golf",
+   "silhouette": "contour",
+   "status": "in-preparation"
+  },
+  {
+   "id": "U06",
+   "n": 6,
+   "plate": "VI",
+   "slug": "06-chain-rule",
+   "ring": 2,
+   "kind": "full",
+   "title": "The chain rule",
+   "line": "Linked stages multiply: turn the first gear and the last turns by the product.",
+   "minutes": 20,
+   "requires": [
+    "U04",
+    "U02"
+   ],
+   "game": null,
+   "silhouette": "gears",
+   "status": "in-preparation"
+  },
+  {
+   "id": "U07",
+   "n": 7,
+   "plate": "VII",
+   "slug": "07-backpropagation",
+   "ring": 2,
+   "kind": "full",
+   "title": "Backpropagation",
+   "line": "One backward sweep hands every dial its slope, from the loss to the first layer.",
+   "minutes": 20,
+   "requires": [
+    "U06",
+    "U05"
+   ],
+   "game": null,
+   "silhouette": "graph",
+   "status": "in-preparation"
+  },
+  {
+   "id": "U08",
+   "n": 8,
+   "plate": "VIII",
+   "slug": "08-generalisation",
+   "ring": 2,
+   "kind": "full",
+   "title": "Generalisation",
+   "line": "A curve through every training point can still miss every point it never saw.",
+   "minutes": 20,
+   "requires": [
+    "U03",
+    "U05",
+    "U02"
+   ],
+   "game": null,
+   "silhouette": "sheet",
+   "status": "in-preparation"
+  },
+  {
+   "id": "U09",
+   "n": 9,
+   "plate": "IX",
+   "slug": "09-vectors",
+   "ring": 3,
+   "kind": "lens",
+   "title": "Vectors",
+   "line": "A list of numbers is one arrow, and the neuron's inputs were one all along.",
+   "minutes": 10,
+   "requires": [
+    "U01"
+   ],
+   "game": null,
+   "silhouette": "arrows",
+   "status": "in-preparation"
+  },
+  {
+   "id": "U10",
+   "n": 10,
+   "plate": "X",
+   "slug": "10-dot-product",
+   "ring": 3,
+   "kind": "lens",
+   "title": "Dot product",
+   "line": "One arrow's shadow on another gives the same number the neuron's needle read.",
+   "minutes": 10,
+   "requires": [
+    "U09"
+   ],
+   "game": null,
+   "silhouette": "arrows",
+   "status": "in-preparation"
+  },
+  {
+   "id": "U11",
+   "n": 11,
+   "plate": "XI",
+   "slug": "11-tokens",
+   "ring": 3,
+   "kind": "full",
+   "title": "Tokens",
+   "line": "Text is cut into pieces, and each piece is stamped with a number.",
+   "minutes": 20,
+   "requires": [
+    "U01"
+   ],
+   "game": null,
+   "silhouette": "type",
+   "status": "in-preparation"
+  },
+  {
+   "id": "U12",
+   "n": 12,
+   "plate": "XII",
+   "slug": "12-embeddings",
+   "ring": 3,
+   "kind": "full",
+   "title": "Embeddings",
+   "line": "Each token number opens a vector, and directions in that space carry meaning.",
+   "minutes": 20,
+   "requires": [
+    "U11",
+    "U10",
+    "U05"
+   ],
+   "game": null,
+   "silhouette": "arrows",
+   "status": "in-preparation"
+  },
+  {
+   "id": "U13",
+   "n": 13,
+   "plate": "XIII",
+   "slug": "13-softmax",
+   "ring": 3,
+   "kind": "lens",
+   "title": "Softmax",
+   "line": "Any row of scores becomes shares that are positive and add up to one.",
+   "minutes": 10,
+   "requires": [
+    "U09"
+   ],
+   "game": null,
+   "silhouette": "gauge",
+   "status": "in-preparation"
+  },
+  {
+   "id": "U14",
+   "n": 14,
+   "plate": "XIV",
+   "slug": "14-next-token",
+   "ring": 3,
+   "kind": "full",
+   "title": "Next-token prediction",
+   "line": "A language model scores every possible next piece, picks one, and repeats.",
+   "minutes": 20,
+   "requires": [
+    "U12",
+    "U13",
+    "U03"
+   ],
+   "game": null,
+   "silhouette": "type",
+   "status": "in-preparation"
+  },
+  {
+   "id": "U15",
+   "n": 15,
+   "plate": "XV",
+   "slug": "15-transformer-map",
+   "ring": 4,
+   "kind": "full",
+   "title": "The transformer map",
+   "line": "One duct per token; every floor reads from it and writes back into it.",
+   "minutes": 20,
+   "requires": [
+    "U14",
+    "U02"
+   ],
+   "game": null,
+   "silhouette": "tower",
+   "status": "in-preparation"
+  },
+  {
+   "id": "U16",
+   "n": 16,
+   "plate": "XVI",
+   "slug": "16-attention",
+   "ring": 4,
+   "kind": "full",
+   "title": "Attention, the idea",
+   "line": "The same word moves to a different place depending on the words around it.",
+   "minutes": 20,
+   "requires": [
+    "U15",
+    "U13",
+    "U12"
+   ],
+   "game": null,
+   "silhouette": "arrows",
+   "status": "in-preparation"
+  },
+  {
+   "id": "U17",
+   "n": 17,
+   "plate": "XVII",
+   "slug": "17-query-key-value",
+   "ring": 4,
+   "kind": "full",
+   "title": "Query, key and value",
+   "line": "Each word asks with a query, answers with a key and hands over a value.",
+   "minutes": 20,
+   "requires": [
+    "U16",
+    "U10"
+   ],
+   "game": null,
+   "silhouette": "arrows",
+   "status": "in-preparation"
+  },
+  {
+   "id": "U18",
+   "n": 18,
+   "plate": "XVIII",
+   "slug": "18-attention-mask",
+   "ring": 4,
+   "kind": "full",
+   "title": "The attention pattern and the mask",
+   "line": "The future is covered; double the context and the table grows fourfold.",
+   "minutes": 20,
+   "requires": [
+    "U17",
+    "U14"
+   ],
+   "game": null,
+   "silhouette": "grid",
+   "status": "in-preparation"
+  },
+  {
+   "id": "U19",
+   "n": 19,
+   "plate": "XIX",
+   "slug": "19-multi-head",
+   "ring": 4,
+   "kind": "full",
+   "title": "Multi-head attention",
+   "line": "Twelve heads read the same text, each for its own kind of pattern.",
+   "minutes": 20,
+   "requires": [
+    "U18"
+   ],
+   "game": null,
+   "silhouette": "grid",
+   "status": "in-preparation"
+  },
+  {
+   "id": "U20",
+   "n": 20,
+   "plate": "XX",
+   "slug": "20-mlp",
+   "ring": 4,
+   "kind": "full",
+   "title": "The MLP block",
+   "line": "Each token passes a wide bank of valves that writes facts back into its duct.",
+   "minutes": 20,
+   "requires": [
+    "U15",
+    "U02"
+   ],
+   "game": null,
+   "silhouette": "tower",
+   "status": "in-preparation"
+  },
+  {
+   "id": "U21",
+   "n": 21,
+   "plate": "XXI",
+   "slug": "21-position",
+   "ring": 4,
+   "kind": "full",
+   "title": "Position",
+   "line": "Without position, 'dog bites man' and 'man bites dog' look the same to attention.",
+   "minutes": 20,
+   "requires": [
+    "U17"
+   ],
+   "game": null,
+   "silhouette": "arrows",
+   "status": "in-preparation"
+  },
+  {
+   "id": "U22",
+   "n": 22,
+   "plate": "XXII",
+   "slug": "22-residuals",
+   "ring": 4,
+   "kind": "full",
+   "title": "Residuals and normalisation",
+   "line": "A bypass duct lets the learning signal cross dozens of layers without fading.",
+   "minutes": 20,
+   "requires": [
+    "U15",
+    "U07"
+   ],
+   "game": null,
+   "silhouette": "tower",
+   "status": "in-preparation"
+  },
+  {
+   "id": "U23",
+   "n": 23,
+   "plate": "XXIII",
+   "slug": "23-whole-machine",
+   "ring": 4,
+   "kind": "full",
+   "title": "The whole machine and pretraining",
+   "line": "One token followed through every floor, from text in to the next word out.",
+   "minutes": 20,
+   "requires": [
+    "U19",
+    "U20",
+    "U21",
+    "U22"
+   ],
+   "game": null,
+   "silhouette": "tower",
+   "status": "in-preparation"
+  },
+  {
+   "id": "U24",
+   "n": 24,
+   "plate": "XXIV",
+   "slug": "24-graphs",
+   "ring": 5,
+   "kind": "full",
+   "title": "Graphs as data",
+   "line": "Atoms and bonds, or words in a line: both are nodes joined by edges.",
+   "minutes": 20,
+   "requires": [
+    "U06",
+    "U09"
+   ],
+   "game": null,
+   "silhouette": "graph",
+   "status": "in-preparation"
+  },
+  {
+   "id": "U25",
+   "n": 25,
+   "plate": "XXV",
+   "slug": "25-message-passing",
+   "ring": 5,
+   "kind": "full",
+   "title": "Message passing",
+   "line": "Each round, every node gathers from its neighbours, and news spreads one edge further.",
+   "minutes": 20,
+   "requires": [
+    "U24",
+    "U02"
+   ],
+   "game": null,
+   "silhouette": "graph",
+   "status": "in-preparation"
+  },
+  {
+   "id": "U26",
+   "n": 26,
+   "plate": "XXVI",
+   "slug": "26-gnn-limits",
+   "ring": 5,
+   "kind": "full",
+   "title": "What a GNN cannot tell apart",
+   "line": "Some different graphs look identical to a message-passing network, round after round.",
+   "minutes": 20,
+   "requires": [
+    "U25"
+   ],
+   "game": null,
+   "silhouette": "graph",
+   "status": "in-preparation"
+  },
+  {
+   "id": "U27",
+   "n": 27,
+   "plate": "XXVII",
+   "slug": "27-over-squashing",
+   "ring": 5,
+   "kind": "full",
+   "title": "Over-squashing",
+   "line": "Too many messages forced through one narrow bridge arrive as a faint trace.",
+   "minutes": 20,
+   "requires": [
+    "U25"
+   ],
+   "game": null,
+   "silhouette": "graph",
+   "status": "in-preparation"
+  },
+  {
+   "id": "U28",
+   "n": 28,
+   "plate": "XXVIII",
+   "slug": "28-transformer-gnn",
+   "ring": 5,
+   "kind": "full",
+   "title": "The transformer is a GNN",
+   "line": "An attention table is a graph with an edge between every pair of words.",
+   "minutes": 20,
+   "requires": [
+    "U27",
+    "U18"
+   ],
+   "game": null,
+   "silhouette": "graph",
+   "status": "in-preparation"
+  },
+  {
+   "id": "U29",
+   "n": 29,
+   "plate": "XXIX",
+   "slug": "29-equivariance",
+   "ring": 5,
+   "kind": "full",
+   "title": "Symmetry and equivariance",
+   "line": "Rotate the molecule and the predicted forces turn with it, by construction.",
+   "minutes": 20,
+   "requires": [
+    "U25",
+    "U09"
+   ],
+   "game": null,
+   "silhouette": "graph",
+   "status": "in-preparation"
+  },
+  {
+   "id": "U30",
+   "n": 30,
+   "plate": "XXX",
+   "slug": "30-mixture-of-experts",
+   "ring": 6,
+   "kind": "full",
+   "title": "Mixture of experts",
+   "line": "A router sends each token to two of many experts, so most of the machine rests.",
+   "minutes": 20,
+   "requires": [
+    "U20",
+    "U13"
+   ],
+   "game": null,
+   "silhouette": "graph",
+   "status": "in-preparation"
+  },
+  {
+   "id": "U31",
+   "n": 31,
+   "plate": "XXXI",
+   "slug": "31-recurrence",
+   "ring": 6,
+   "kind": "full",
+   "title": "Recurrence and state",
+   "line": "A fixed-size memory updated once per token, however long the text runs.",
+   "minutes": 20,
+   "requires": [
+    "U18",
+    "U09"
+   ],
+   "game": null,
+   "silhouette": "drum",
+   "status": "in-preparation"
+  },
+  {
+   "id": "U32",
+   "n": 32,
+   "plate": "XXXII",
+   "slug": "32-selectivity",
+   "ring": 6,
+   "kind": "full",
+   "title": "Selectivity (Mamba)",
+   "line": "Each token sets how much to write into the memory and how much to keep.",
+   "minutes": 20,
+   "requires": [
+    "U31"
+   ],
+   "game": null,
+   "silhouette": "drum",
+   "status": "in-preparation"
+  },
+  {
+   "id": "U33",
+   "n": 33,
+   "plate": "XXXIII",
+   "slug": "33-linear-attention",
+   "ring": 6,
+   "kind": "full",
+   "title": "Linear attention and the delta rule",
+   "line": "The table folds into one square memory, and the delta rule erases before it writes.",
+   "minutes": 20,
+   "requires": [
+    "U32",
+    "U17"
+   ],
+   "game": null,
+   "silhouette": "grid",
+   "status": "in-preparation"
+  },
+  {
+   "id": "U34",
+   "n": 34,
+   "plate": "XXXIV",
+   "slug": "34-diffusion",
+   "ring": 7,
+   "kind": "full",
+   "title": "Diffusion",
+   "line": "Learn to remove noise, then start from pure noise and remove it step by step.",
+   "minutes": 20,
+   "requires": [
+    "U05",
+    "U02",
+    "U09"
+   ],
+   "game": null,
+   "silhouette": "frame",
+   "status": "in-preparation"
+  },
+  {
+   "id": "U35",
+   "n": 35,
+   "plate": "XXXV",
+   "slug": "35-flow-matching",
+   "ring": 7,
+   "kind": "full",
+   "title": "Flow matching",
+   "line": "A field of arrows carries every point of plain noise straight to the data.",
+   "minutes": 20,
+   "requires": [
+    "U34"
+   ],
+   "game": null,
+   "silhouette": "contour",
+   "status": "in-preparation"
+  },
+  {
+   "id": "U36",
+   "n": 36,
+   "plate": "XXXVI",
+   "slug": "36-text-diffusion",
+   "ring": 7,
+   "kind": "full",
+   "title": "Diffusion for text",
+   "line": "Every word starts blank, and the surest ones are set first, anywhere in the line.",
+   "minutes": 20,
+   "requires": [
+    "U34",
+    "U23"
+   ],
+   "game": null,
+   "silhouette": "type",
+   "status": "in-preparation"
+  },
+  {
+   "id": "U37",
+   "n": 37,
+   "plate": "XXXVII",
+   "slug": "37-reinforcement-learning",
+   "ring": 8,
+   "kind": "full",
+   "title": "Reinforcement learning",
+   "line": "Actions that earned more reward become more likely, loopholes included.",
+   "minutes": 20,
+   "requires": [
+    "U13",
+    "U05"
+   ],
+   "game": null,
+   "silhouette": "course",
+   "status": "in-preparation"
+  },
+  {
+   "id": "U38",
+   "n": 38,
+   "plate": "XXXVIII",
+   "slug": "38-human-preference",
+   "ring": 8,
+   "kind": "full",
+   "title": "Learning from human preference",
+   "line": "Many ticks between two answers become a reward model, with a tether to the start.",
+   "minutes": 20,
+   "requires": [
+    "U37",
+    "U23",
+    "U14"
+   ],
+   "game": null,
+   "silhouette": "gauge",
+   "status": "in-preparation"
+  },
+  {
+   "id": "U39",
+   "n": 39,
+   "plate": "XXXIX",
+   "slug": "39-checkable-rewards",
+   "ring": 8,
+   "kind": "full",
+   "title": "Rewards you can check",
+   "line": "Many answers to one problem, each checked, pulled toward the ones that passed.",
+   "minutes": 20,
+   "requires": [
+    "U37",
+    "U14"
+   ],
+   "game": null,
+   "silhouette": "gauge",
+   "status": "in-preparation"
+  },
+  {
+   "id": "U40",
+   "n": 40,
+   "plate": "XL",
+   "slug": "40-test-time-compute",
+   "ring": 9,
+   "kind": "full",
+   "title": "Test-time compute",
+   "line": "A small model that thinks longer can beat a large one that answers at once.",
+   "minutes": 20,
+   "requires": [
+    "U39"
+   ],
+   "game": null,
+   "silhouette": "frame",
+   "status": "in-preparation"
+  },
+  {
+   "id": "U41",
+   "n": 41,
+   "plate": "XLI",
+   "slug": "41-latent-reasoning",
+   "ring": 9,
+   "kind": "full",
+   "title": "Recursive latent reasoning",
+   "line": "One small machine, run in a loop, refines its own answer pass after pass.",
+   "minutes": 20,
+   "requires": [
+    "U40",
+    "U22",
+    "U31"
+   ],
+   "game": null,
+   "silhouette": "grid",
+   "status": "in-preparation"
+  },
+  {
+   "id": "U42",
+   "n": 42,
+   "plate": "XLII",
+   "slug": "42-world-models",
+   "ring": 9,
+   "kind": "full",
+   "title": "World models",
+   "line": "The agent plans on its own drawn copy of the world, then runs the plan for real.",
+   "minutes": 20,
+   "requires": [
+    "U37",
+    "U34",
+    "U12"
+   ],
+   "game": null,
+   "silhouette": "course",
+   "status": "in-preparation"
+  },
+  {
+   "id": "U43",
+   "n": 43,
+   "plate": "XLIII",
+   "slug": "43-superposition",
+   "ring": 9,
+   "kind": "full",
+   "title": "Superposition and sparse features",
+   "line": "A layer stores more features than it has dimensions, and they can be pulled apart.",
+   "minutes": 20,
+   "requires": [
+    "U20",
+    "U10",
+    "U12"
+   ],
+   "game": null,
+   "silhouette": "arrows",
+   "status": "in-preparation"
+  }
+ ]
+}

@@ -1,0 +1,84 @@
+{
+ "$schema": "https://json-schema.org/draft/2020-12/schema",
+ "$id": "homepage.schema.json",
+ "title": "ailearning homepage content",
+ "type": "object",
+ "additionalProperties": false,
+ "required": ["version", "site", "rings", "silhouettes", "units"],
+ "$defs": {
+  "text": {"type": "string", "minLength": 1, "maxLength": 120},
+  "unitId": {"type": "string", "pattern": "^U[0-9]{2}$"}
+ },
+ "properties": {
+  "version": {"const": 1},
+  "site": {
+   "type": "object",
+   "additionalProperties": false,
+   "required": ["name", "base", "promise", "subline", "cta", "trust", "sound", "strip", "credits", "licence"],
+   "properties": {
+    "name": {"const": "ailearning"},
+    "base": {"const": "/ailearning/"},
+    "promise": {"type": "array", "minItems": 2, "maxItems": 3, "items": {"$ref": "#/$defs/text"}},
+    "subline": {"$ref": "#/$defs/text"},
+    "cta": {
+     "type": "object", "additionalProperties": false, "required": ["new", "returning", "phone"],
+     "properties": {"new": {"$ref": "#/$defs/text"}, "returning": {"type": "string", "pattern": "\\{plate\\}.*\\{beat\\}"}, "phone": {"$ref": "#/$defs/text"}}
+    },
+    "trust": {"$ref": "#/$defs/text"},
+    "sound": {"$ref": "#/$defs/text"},
+    "strip": {
+     "type": "array", "minItems": 3, "maxItems": 3,
+     "items": {
+      "type": "object", "additionalProperties": false, "required": ["beat", "label", "line"],
+      "properties": {"beat": {"enum": ["watch", "drive", "play"]}, "label": {"$ref": "#/$defs/text"}, "line": {"$ref": "#/$defs/text"}}
+     }
+    },
+    "credits": {
+     "type": "object", "additionalProperties": false, "required": ["drawn", "colophon"],
+     "properties": {"drawn": {"const": "Claude"}, "colophon": {"$ref": "#/$defs/text"}}
+    },
+    "licence": {
+     "type": "object", "additionalProperties": false, "required": ["code", "plates", "narration", "fonts", "voice"],
+     "properties": {"code": {"const": "MIT"}, "plates": {"$ref": "#/$defs/text"}, "narration": {"$ref": "#/$defs/text"}, "fonts": {"$ref": "#/$defs/text"}, "voice": {"$ref": "#/$defs/text"}}
+    }
+   }
+  },
+  "rings": {
+   "type": "array", "minItems": 1,
+   "items": {
+    "type": "object", "additionalProperties": false, "required": ["n", "name"],
+    "properties": {"n": {"type": "integer", "minimum": 1}, "name": {"$ref": "#/$defs/text"}}
+   }
+  },
+  "silhouettes": {
+   "type": "object", "minProperties": 1, "maxProperties": 12,
+   "propertyNames": {"pattern": "^[a-z][a-z-]*$"},
+   "additionalProperties": {
+    "type": "object", "additionalProperties": false, "required": ["name", "draws"],
+    "properties": {"name": {"$ref": "#/$defs/text"}, "draws": {"$ref": "#/$defs/text"}}
+   }
+  },
+  "units": {
+   "type": "array", "minItems": 43, "maxItems": 43,
+   "items": {
+    "type": "object", "additionalProperties": false,
+    "required": ["id", "n", "plate", "slug", "ring", "kind", "title", "line", "minutes", "requires", "game", "silhouette", "status"],
+    "properties": {
+     "id": {"$ref": "#/$defs/unitId"},
+     "n": {"type": "integer", "minimum": 1},
+     "plate": {"type": "string", "pattern": "^[IVXL]+$"},
+     "slug": {"type": "string", "pattern": "^[0-9]{2}-[a-z0-9-]+$"},
+     "ring": {"type": "integer", "minimum": 1},
+     "kind": {"enum": ["full", "lens"]},
+     "title": {"type": "string", "minLength": 1, "maxLength": 48},
+     "line": {"$ref": "#/$defs/text"},
+     "minutes": {"type": "integer", "minimum": 5, "maximum": 40},
+     "requires": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/unitId"}},
+     "game": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/text"}]},
+     "silhouette": {"type": "string"},
+     "status": {"enum": ["drawn", "in-preparation"]}
+    }
+   }
+  }
+ }
+}

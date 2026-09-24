@@ -1,0 +1,87 @@
+@font-face{font-family:"Plex Cond";font-weight:400;font-display:swap;src:url(/fonts/ibm-plex-sans-condensed-latin-400-normal.woff2) format("woff2")}
+@font-face{font-family:"Plex Cond";font-weight:600;font-display:swap;src:url(/fonts/ibm-plex-sans-condensed-latin-600-normal.woff2) format("woff2")}
+@font-face{font-family:"Plex Mono";font-weight:500;font-display:swap;src:url(/fonts/ibm-plex-mono-latin-500-normal.woff2) format("woff2")}
+@font-face{font-family:"Caslon";font-weight:400;font-display:swap;src:url(/fonts/libre-caslon-text-latin-400-normal.woff2) format("woff2")}
+@font-face{font-family:"Caslon";font-weight:400;font-style:italic;font-display:swap;src:url(/fonts/libre-caslon-text-latin-400-italic.woff2) format("woff2")}
+:root{--paper:#f2ecdf;--shade:#e7dfcc;--glass:#f8f4ea;--ink:#1c2230;--dim:#6b6a66;--hatch:#8f887a;--blue:#1d5fb0;--red:#cc3a2b;--yellow:#e9ae2c;--yink:#a8740c;
+  --rule:rgba(28,34,48,.3);--gut:clamp(8px,1.6vw,28px);--pad:clamp(14px,2.6vw,52px);--zone:18px;--w:-1;--lv:.346;--o:227deg;color-scheme:light}
+*{box-sizing:border-box}
+html{background:var(--paper);-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--paper);color:var(--ink);font:400 16px/1.45 "Plex Cond",system-ui,sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{color:inherit}
+.vh{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
+
+.sheet{position:relative;margin:var(--gut);padding:calc(var(--zone) + var(--pad) * .6) calc(var(--zone) + var(--pad)) calc(var(--zone) + var(--pad) * .5);
+  border:3px solid var(--ink);outline:1px solid var(--ink);outline-offset:clamp(3px,.5vw,6px);min-width:0}
+.zones{position:absolute;display:flex;justify-content:space-around;font:500 10px/1 "Plex Mono",monospace;color:var(--dim);pointer-events:none}
+.zt,.zb{left:var(--zone);right:var(--zone);height:var(--zone);align-items:center}
+.zt{top:0;border-bottom:1px solid var(--rule)}.zb{bottom:0;border-top:1px solid var(--rule)}
+.zl,.zr{top:var(--zone);bottom:var(--zone);width:var(--zone);flex-direction:column;align-items:center}
+.zl{left:0;border-right:1px solid var(--rule)}.zr{right:0;border-left:1px solid var(--rule)}
+
+.top{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 22px;padding-bottom:12px;border-bottom:1px solid var(--rule);
+  font:500 12px/1.3 "Plex Mono",monospace;letter-spacing:.12em;text-transform:uppercase;color:var(--dim)}
+.mark{font:600 17px/1 "Plex Cond",sans-serif;letter-spacing:.2em;color:var(--ink);text-decoration:none}
+.nav{display:flex;gap:18px;margin-left:auto}.nav a{text-decoration:none}.nav a:hover{color:var(--ink)}
+@media (max-width:639px){:root{--zone:0px;--pad:14px}.zones{display:none}
+  .top{gap:8px 14px}.nav{margin-left:0}
+  .sh0{display:none}.top{flex-wrap:nowrap;justify-content:space-between}.nav{gap:14px}}
+
+/* a unit sheet: the frame fills the viewport and the plate fills the field under the header rail; phones keep the bare plate */
+.sheet.app{position:fixed;inset:var(--gut);margin:0;padding:var(--zone);display:flex;flex-direction:column}
+.app .top{flex:none;margin:calc(var(--pad) * .6) var(--pad) 0}
+.sn{margin-left:auto}.sn .of{color:var(--ink)}
+.back{display:inline-flex;align-items:center;gap:10px;min-height:44px;padding:0 18px 0 14px;border:1.5px solid var(--ink);border-radius:3px;align-self:center;
+  font:600 14px/1 "Plex Cond",sans-serif;letter-spacing:.14em;text-transform:uppercase;text-decoration:none;color:var(--ink);background:var(--paper);
+  box-shadow:0 0 0 3px var(--paper),0 0 0 4px var(--ink);transition:background .15s,color .15s}
+.back svg{width:22px;height:12px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;transition:transform .15s}
+.back:hover{color:var(--paper);background:var(--ink)}.back:hover svg{transform:translateX(-3px)}
+.back:focus-visible{outline:2px solid var(--blue);outline-offset:7px}
+.app .top{align-items:center}
+.field{position:relative;flex:1;min-height:0}
+@media (max-width:639px){.sheet.app{inset:0;border:0;outline:0;padding:0}.app .top{display:none}}
+@media (min-width:2200px){.sheet.app{inset:calc(var(--gut) * 1.32);padding:calc(var(--zone) * 1.32);border-width:4px}.app .top,.app .zones{zoom:1.32}}
+
+/* sheet change (opted in by the sheet plugin): the earlier sheet is a book page hinged on its left edge. Forward it turns away right to left,
+   folding over from the lower right corner and showing its paper back, to reveal the next sheet; back it turns over again, left to right.
+   The fold line leans 8° and moves with P, its x at mid height. Only transforms move, so the compositor runs the turn: each image-pair is a
+   window cut along the fold (the page left of it, the leaf right of it) and its image turns the other way to stay put; the leaf group
+   reflects about the fold. Every transform is linear in P, so two keyframes are exact. */
+.leaf{position:fixed;left:0;top:0;width:100vw;height:100vh;pointer-events:none;view-transition-name:leaf;background:#f0eadd}
+.leaf::before,.leaf::after{content:"";position:absolute;inset:var(--gut);border:3px solid rgba(28,34,48,.07)}
+.leaf::after{inset:calc(var(--gut) + var(--zone) + 3px);border-width:1px}
+:root.turning{view-transition-name:front}
+@media (prefers-reduced-motion:no-preference){
+  ::view-transition-group(front),::view-transition-image-pair(front),::view-transition-old(front),::view-transition-new(front),
+  ::view-transition-group(leaf),::view-transition-image-pair(leaf),::view-transition-old(leaf),::view-transition-new(leaf){animation-duration:1s;
+    animation-timing-function:cubic-bezier(.6,.04,.26,1);animation-fill-mode:both}
+  ::view-transition-old(root),::view-transition-new(root){animation-name:none}
+  ::view-transition-group(front){z-index:1;animation-name:none}
+  ::view-transition-group(leaf){z-index:2;transform-origin:0 0;filter:drop-shadow(-10px 4px 16px rgba(28,34,48,.4))}
+  ::view-transition-image-pair(front),::view-transition-image-pair(leaf){inset:auto;top:-100vh;width:300vw;height:300vh;overflow:hidden}
+  ::view-transition-image-pair(front){left:-300vw;transform-origin:300vw 150vh}
+  ::view-transition-image-pair(leaf){left:0;transform-origin:0 150vh}
+  ::view-transition-old(front),::view-transition-new(front),::view-transition-old(leaf),::view-transition-new(leaf){inset:auto;top:100vh;
+    width:100vw;height:100vh;transform-origin:0 50vh;mix-blend-mode:normal}
+  ::view-transition-old(front),::view-transition-new(front){left:300vw}
+  ::view-transition-old(leaf),::view-transition-new(leaf){left:0}
+  html:active-view-transition-type(forward)::view-transition-image-pair(front),html:active-view-transition-type(forward)::view-transition-image-pair(leaf){animation-name:cut-away}
+  html:active-view-transition-type(forward)::view-transition-old(front){animation-name:hold-away}
+  html:active-view-transition-type(forward)::view-transition-old(leaf){animation-name:hold-away,leaf-shade}
+  html:active-view-transition-type(forward)::view-transition-group(leaf){animation-name:fold-away}
+  html:active-view-transition-type(back)::view-transition-image-pair(front),html:active-view-transition-type(back)::view-transition-image-pair(leaf){animation-name:cut-back}
+  html:active-view-transition-type(back)::view-transition-new(front){animation-name:hold-back}
+  html:active-view-transition-type(back)::view-transition-new(leaf){animation-name:hold-back,leaf-shade}
+  html:active-view-transition-type(back)::view-transition-group(leaf){animation-name:fold-back}}
+@media (prefers-reduced-motion:reduce){.back,.back svg{transition:none}::view-transition-group(root),::view-transition-old(root),::view-transition-new(root){animation-duration:.15s}}
+@keyframes cut-away{from{transform:translateX(calc(100vw + 7.03vh)) rotate(8deg)}to{transform:translateX(-7.03vh) rotate(8deg)}}
+@keyframes cut-back{from{transform:translateX(-7.03vh) rotate(8deg)}to{transform:translateX(calc(100vw + 7.03vh)) rotate(8deg)}}
+@keyframes hold-away{from{transform:rotate(-8deg) translateX(calc(-100vw - 7.03vh))}to{transform:rotate(-8deg) translateX(7.03vh)}}
+@keyframes hold-back{from{transform:rotate(-8deg) translateX(7.03vh)}to{transform:rotate(-8deg) translateX(calc(-100vw - 7.03vh))}}
+@keyframes fold-away{
+  from{transform:translate(calc(100vw + 7.03vh),50vh) rotate(98deg) scaleY(-1) rotate(-98deg) translate(calc(-100vw - 7.03vh),-50vh)}
+  to{transform:translate(-7.03vh,50vh) rotate(98deg) scaleY(-1) rotate(-98deg) translate(7.03vh,-50vh)}}
+@keyframes fold-back{
+  from{transform:translate(-7.03vh,50vh) rotate(98deg) scaleY(-1) rotate(-98deg) translate(7.03vh,-50vh)}
+  to{transform:translate(calc(100vw + 7.03vh),50vh) rotate(98deg) scaleY(-1) rotate(-98deg) translate(calc(-100vw - 7.03vh),-50vh)}}
+@keyframes leaf-shade{from,to{filter:brightness(1)}50%{filter:brightness(.92)}}

@@ -1,0 +1,23 @@
+ailearning plates and narration
+Copyright (c) 2026 Oscar Nadjar.
+Attribution: "Oscar Nadjar, drawn with Claude".
+
+Which licence covers what
+- Code (everything not listed below): MIT, see LICENSE. This includes the
+  source code that draws the plates (units/*/plate/ and every .ts file).
+- Plates and narration: Creative Commons Attribution-NonCommercial 4.0
+  International (CC BY-NC 4.0). This covers the images the plates render,
+  the unit scripts (units/*/unit.json) and the narration audio and cue sheets
+  (public/bundles/**).
+- Bundled libraries: three.js (MIT) and GSAP (GSAP Standard "no charge"
+  licence); see public/THIRD-PARTY-NOTICES.txt.
+- Fonts (public/fonts/*.woff2): SIL Open Font License 1.1; the licence texts
+  sit next to the fonts (public/fonts/OFL-*.txt).
+- Narration voice: rendered offline with the Kokoro TTS model (Apache-2.0).
+
+CC BY-NC 4.0 summary (the legal code governs)
+You may share and adapt the plates and narration for non-commercial purposes,
+provided you give appropriate credit, link to the licence and indicate if
+changes were made.
+
+Full legal code: https://creativecommons.org/licenses/by-nc/4.0/legalcode

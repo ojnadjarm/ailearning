@@ -1,0 +1,19 @@
+node_modules/
+dist/
+.vite/
+out/
+*.log
+# raw narration renders and local-only files
+*.wav
+*.raw/
+.render/
+.env*
+.local/
+*.flac
+*.aiff
+*.mp3
+.claude/
+CLAUDE.local.md
+.DS_Store
+test-results/
+playwright-report/

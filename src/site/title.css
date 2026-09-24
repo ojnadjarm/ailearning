@@ -1,0 +1,75 @@
+@font-face { font-family: "Caslon"; font-weight: 400; font-style: normal; font-display: swap; src: url(/fonts/libre-caslon-text-latin-400-normal.woff2) format("woff2"); }
+@font-face { font-family: "Caslon"; font-weight: 400; font-style: italic; font-display: swap; src: url(/fonts/libre-caslon-text-latin-400-italic.woff2) format("woff2"); }
+@font-face { font-family: "Plex Cond"; font-weight: 500; font-style: normal; font-display: swap; src: url(/fonts/ibm-plex-sans-condensed-latin-500-normal.woff2) format("woff2"); }
+@font-face { font-family: "Plex Mono"; font-weight: 500; font-style: normal; font-display: swap; src: url(/fonts/ibm-plex-mono-latin-500-normal.woff2) format("woff2"); }
+
+:root {
+  --paper: #f2ecdf; --paper-shade: #e7dfcc; --ink: #1c2230; --dim: #6b6a66; --hatch: #8f887a; --blue: #1d5fb0;
+  --m: clamp(16px, 2.6vw, 56px);
+  --pad: clamp(16px, 2.4vw, 52px);
+  --mono: 500 clamp(11px, 0.72vw, 15px)/1.3 "Plex Mono", ui-monospace, monospace;
+  color-scheme: light;
+}
+* { box-sizing: border-box; }
+html { background: var(--paper); }
+body { margin: 0; color: var(--ink); background: var(--paper); font: 400 16px/1.45 "Caslon", Georgia, serif; -webkit-font-smoothing: antialiased; }
+
+.sheet {
+  display: flex; flex-direction: column; gap: var(--pad);
+  min-height: calc(100svh - 2 * var(--m)); margin: var(--m); padding: var(--pad);
+  border: 2px solid var(--ink); box-shadow: inset 0 0 0 5px var(--paper), inset 0 0 0 6px var(--ink);
+}
+
+.rail { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; font: var(--mono);
+  letter-spacing: 0.16em; text-transform: uppercase; color: var(--dim); }
+.zones { display: flex; gap: clamp(18px, 5vw, 120px); }
+.zones i { font-style: normal; }
+
+.field { flex: 1; display: grid; align-items: center; justify-items: center; gap: var(--pad); }
+@media (min-width: 900px) { .field:not(.solo) { grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); } }
+
+.fig { margin: 0; width: min(100%, calc((100svh - 360px) * 1.48)); min-width: min(100%, 300px); }
+.fig svg { display: block; width: 100%; height: auto; overflow: visible; }
+.fig figcaption { margin-top: 10px; text-align: center; font: var(--mono); letter-spacing: 0.14em; text-transform: uppercase; color: var(--dim); }
+
+.fig line, .fig circle, .fig path { fill: none; stroke: var(--ink); stroke-linecap: round; }
+.fig .hair { stroke: var(--hatch); stroke-width: 1; }
+.fig .thin { stroke-width: 1.4; }
+.fig .med { stroke-width: 2.2; }
+.fig .bold { stroke-width: 3.4; }
+.fig .centre line { stroke: var(--dim); stroke-width: 1; stroke-dasharray: 22 5 3 5; }
+.fig .cut { fill: url(#hatch); stroke: none; }
+.fig .ticks { stroke-width: 9; stroke: var(--ink); stroke-dasharray: 1.4 11; stroke-linecap: butt; }
+.fig .knob { fill: var(--paper-shade); stroke-width: 2.2; }
+.fig .needle { stroke: var(--blue); stroke-width: 5; }
+.fig .leader { stroke-width: 1.2; }
+.fig .balloon { fill: var(--paper); }
+.fig .fill-ink { fill: var(--ink); stroke: none; }
+.fig text { fill: var(--ink); font: 500 17px "Plex Cond", system-ui, sans-serif; letter-spacing: 0.12em; }
+.fig .num { font: 500 18px "Plex Mono", ui-monospace, monospace; letter-spacing: 0; }
+.fig .dim { font: 500 15px "Plex Mono", ui-monospace, monospace; letter-spacing: 0.06em; }
+.fig .blue { fill: var(--blue); }
+
+.name { width: 100%; container-type: inline-size; text-align: left; }
+.eyebrow { margin: 0 0 0.6em; font: italic 400 clamp(17px, 1.3vw, 30px)/1.3 "Caslon", Georgia, serif; color: var(--dim); }
+h1 { margin: 0; font: 400 min(21cqi, 12vw + 40px, 176px)/0.95 "Caslon", Georgia, serif; letter-spacing: -0.01em; }
+.line { max-width: 20em; margin: 0.7em 0 0; font: italic 400 clamp(20px, 1.9vw, 44px)/1.3 "Caslon", Georgia, serif; text-wrap: balance; }
+.status { display: inline-block; margin: 1.6em 0 0; padding: 0.45em 0.9em; border: 1.5px solid var(--ink); font: var(--mono);
+  letter-spacing: 0.18em; text-transform: uppercase; transform: rotate(-2deg); }
+a.status { color: inherit; text-decoration: none; }
+a.status:hover, a.status:focus-visible { background: var(--ink); color: var(--paper); outline: none; }
+.solo .name { max-width: 60rem; }
+.solo h1 { font-size: min(11cqi, 8vw + 32px, 128px); }
+
+.block { align-self: stretch; }
+.block dl { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); margin: 0; border: 2px solid var(--ink); }
+.block div { padding: 8px 12px 10px; border: 0.5px solid var(--ink); min-width: 0; }
+.block .wide { grid-column: 1 / -1; }
+.block dt { font: var(--mono); letter-spacing: 0.16em; text-transform: uppercase; color: var(--dim); }
+.block dd { margin: 4px 0 0; font: 400 clamp(16px, 1.1vw, 24px)/1.35 "Caslon", Georgia, serif; overflow-wrap: anywhere; }
+.block dd a { color: inherit; text-decoration-thickness: 1px; text-underline-offset: 0.2em; }
+.block dd a:hover, .block dd a:focus-visible { background: var(--ink); color: var(--paper); outline: none; text-decoration: none; }
+@media (min-width: 900px) {
+  .block dl { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1.2fr) minmax(0, 0.5fr) minmax(0, 3fr); }
+  .block .wide { grid-column: auto; }
+}

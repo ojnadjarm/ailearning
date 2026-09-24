@@ -1,0 +1,24 @@
+/** explainer-kit: the narrated-explanation → guided-play → exercise engine, style-agnostic (a style plugs in as a View). */
+export { AudioClock, ManualClock, PerfClock, type Clock } from './core/clock';
+export { clamp, lerp, smooth, damp, rng } from './core/math';
+export { Events, type Progress } from './core/events';
+export type { Word, Clip, CueSheet, Term, UnitSpec, UnitBundle } from './content/types';
+export { loadBundle } from './content/load';
+export { CueBinder, layoutClips } from './motion/cues';
+export { Timeline } from './motion/timeline';
+export { VoicePlayer, NullVoice, type Voice, type Earcon } from './audio/voice';
+export { Captions } from './captions';
+export { OnDemand, stateKey } from './loop';
+export { Spring } from './play/spring';
+export { DetentHand, type DialGeom } from './play/hand';
+export { PointerRouter, type Projector, type Grabbable } from './play/pointer';
+export { bindKeys, type KeyTarget } from './play/keys';
+export type { View, ShellPort, UnitDef, Control } from './unit/ports';
+export { Director, type DirectorParts, type Easing } from './unit/director';
+export { BeatMachine, type Beat } from './unit/beats';
+export { WatchBeat, type WatchOptions } from './unit/watch';
+export { GuidedPlay, all, settled, handAt, type Spec, type GuidedStep, type GuidedOptions } from './unit/guided';
+export { Exercise, type Round, type ExerciseOptions } from './unit/exercise';
+export { EndBeat } from './unit/end';
+export { Shell, type ShellText } from './shell/shell';
+export { boot, probe, type BootOptions, type Probe } from './boot';
