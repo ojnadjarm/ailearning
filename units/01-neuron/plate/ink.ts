@@ -3,11 +3,10 @@ import { LineSegments2 } from 'three/addons/lines/LineSegments2.js';
 import { LineSegmentsGeometry } from 'three/addons/lines/LineSegmentsGeometry.js';
 import { LineMaterial } from 'three/addons/lines/LineMaterial.js';
 import type { Theme, ColorRole } from './theme';
-import type { Segs } from './geom';
+import type { Segs } from '../../../src/kit/cutaway/geom';
 
-export type Weight = 'hair' | 'thin' | 'med' | 'bold' | number;
-/** Draw layers (z): later layers cover earlier ones. */
-export const Z = { back: 0, shade: 0.5, fill: 1, hatch: 1.5, part: 2, live: 3, line: 4, top: 5, focus: 6, callout: 8, text: 9, veil: 20 };
+type Weight = 'hair' | 'thin' | 'med' | 'bold' | number;
+export { Z } from './z';
 export const FONT = { label: '"Plex Cond"', mono: '"Plex Mono"', serif: '"Caslon"' };
 
 interface LineEntry { mat: LineMaterial; role: ColorRole; w: Weight }
@@ -85,6 +84,8 @@ export class Ink {
     const p = new Float32Array((s.length / 2) * 3);
     for (let i = 0, j = 0; i < s.length; i += 2, j += 3) { p[j] = s[i]; p[j + 1] = s[i + 1]; }
     l.geometry.setPositions(p);
+    /** three caches the instance count at the first draw; a line that later grows would be cut to that length. */
+    delete (l.geometry as { _maxInstanceCount?: number })._maxInstanceCount;
     l.visible = s.length >= 4;
     if ((l.material as LineMaterial).dashed) l.computeLineDistances();
   }

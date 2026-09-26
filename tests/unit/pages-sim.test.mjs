@@ -25,6 +25,9 @@ test('pages-sim behaves like GitHub Pages under the base', async () => {
     assert.equal(await miss.text(), 'sheet not found');
     assert.equal((await get('/other/')).status, 404);
     assert.equal((await get('/ailearning/../secret')).status, 404);
+    const home = await get('/ailearning/');
+    assert.equal(home.headers.get('content-encoding'), 'gzip');
+    assert.equal(await home.text(), 'home');
   } finally {
     await sim.close();
     rmSync(dir, { recursive: true, force: true });

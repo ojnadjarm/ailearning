@@ -145,7 +145,7 @@
    "line": "A neuron adds its inputs, each turned by a dial, and passes one number on.",
    "minutes": 25,
    "requires": [],
-   "game": "Race the tuner",
+   "game": "Tuning",
    "silhouette": "gauge",
    "status": "drawn"
   },

@@ -1,31 +1,7 @@
 import * as THREE from 'three';
 import { Ink, Z, FONT } from '../ink';
-import { circle, hatchPolys, polyline, rect, roundRectPts } from '../geom';
-import type { Part } from './part';
-
-/** Push each point of a closed outline inward by a smooth irregular amount: a freehand break line. */
-function breakLine(pts: number[], depth: number): number[] {
-  const n = pts.length / 2, out: number[] = [];
-  let s = 0;
-  for (let i = 0; i < n; i++) {
-    const p = (i - 1 + n) % n, q = (i + 1) % n;
-    const tx = pts[2 * q] - pts[2 * p], ty = pts[2 * q + 1] - pts[2 * p + 1], l = Math.hypot(tx, ty) || 1;
-    if (i > 0) s += Math.hypot(pts[2 * i] - pts[2 * i - 2], pts[2 * i + 1] - pts[2 * i - 1]);
-    const w = depth + 7 * Math.sin(s * 0.021) + 4.5 * Math.sin(s * 0.057 + 1.3) + 2.2 * Math.sin(s * 0.19 + 0.4);
-    out.push(pts[2 * i] - (ty / l) * w, pts[2 * i + 1] + (tx / l) * w);
-  }
-  return out;
-}
-/** Resample a closed outline to points about `step` apart (so the break line can wobble along straight edges). */
-function resample(pts: number[], step: number): number[] {
-  const out: number[] = [], n = pts.length / 2;
-  for (let i = 0; i < n; i++) {
-    const x0 = pts[2 * i], y0 = pts[2 * i + 1], x1 = pts[(2 * i + 2) % pts.length], y1 = pts[(2 * i + 3) % pts.length];
-    const k = Math.max(1, Math.round(Math.hypot(x1 - x0, y1 - y0) / step));
-    for (let j = 0; j < k; j++) out.push(x0 + ((x1 - x0) * j) / k, y0 + ((y1 - y0) * j) / k);
-  }
-  return out;
-}
+import { breakLine, circle, hatchPolys, polyline, resample, rect, roundRectPts } from '../../../../src/kit/cutaway/geom';
+import type { Part } from '../../../../src/kit/cutaway/parts/part';
 
 /** The instrument casing with its front cover cut away along a break line; the cut shell is hatched and riveted. */
 export class Casing implements Part {
@@ -54,12 +30,12 @@ export class Casing implements Part {
 }
 
 /** Names in the title block's signature strip. */
-export interface Signed { drawn: string; approved: string }
+interface Signed { drawn: string; approved: string }
 
-/** The drawing sheet: double border, zone marks, title block with its DRAWN / APPROVED strip, and figure captions. */
+/** The drawing sheet: double border, zone marks, title block with its general notes and DRAWN / APPROVED strip. */
 export class Sheet implements Part {
   readonly root = new THREE.Group();
-  constructor(ink: Ink, box: [number, number, number, number], legend: string[], signed: Signed) {
+  constructor(ink: Ink, box: [number, number, number, number], notes: string[], signed: Signed) {
     const g = this.root, [x0, y0, x1, y1] = box, m = 16;
     g.add(ink.segs(rect(x0, y0, x1, y1), ink.line('ink', 'med'), Z.line));
     g.add(ink.segs(rect(x0 + m, y0 + m, x1 - m, y1 - m), ink.line('ink', 'hair'), Z.line));
@@ -86,7 +62,7 @@ export class Sheet implements Part {
       c.textAlign = 'left'; c.fillText('SCALE 1 : 1', 396, 68); c.fillText('SHEET 1 OF 4', 396, 92);
       c.fillStyle = th.ink; c.font = `600 36px ${FONT.label}`; c.letterSpacing = '4px'; c.fillText('THE NEURON', 16, 92);
       c.letterSpacing = '0px'; c.font = `400 15px ${FONT.label}`;
-      legend.forEach((s, i) => c.fillText(`${i + 1}  ${s}`, 16 + (i % 3) * 184, 138 + Math.floor(i / 3) * 24));
+      notes.forEach((s, i) => c.fillText(`${i + 1}.  ${s}`, 16, 138 + i * 24));
       ([['DRAWN', signed.drawn], ['APPROVED', signed.approved]] as const).forEach(([k, v], i) => {
         const x = 16 + (i * bw) / 2;
         c.fillStyle = th.inkSoft; c.font = `500 11px ${FONT.mono}`; c.letterSpacing = '1.5px'; c.fillText(k, x, sy + 25);

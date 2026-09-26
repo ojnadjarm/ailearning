@@ -2,14 +2,10 @@
 // ≤ 700 / 450 kB, no audio or three.js before a click, 0 frames drawn in 3 s after the strip settles.
 // Usage: node tests/e2e/home-perf.mjs [url] (default: dist under pages-sim). Byte budgets are counted gzip, as Pages serves them.
 import { gzipSync } from 'node:zlib';
-import { startPagesSim } from '../lib/pages-sim.mjs';
-import { launch } from '../lib/browser.mjs';
+import { harness, settled } from '../lib/harness.mjs';
 
 const BUDGET = { lcp: 1000, cls: 0, htmlCss: 40 * 1024, js: 30 * 1024, visit: { desktop: 700 * 1024, phone: 450 * 1024 }, idleFrames: 0 };
-const sim = process.argv[2] ? null : await startPagesSim();
-const url = process.argv[2] ?? sim.url;
-const browser = await launch();
-const faults = [];
+const { url, browser, faults, end } = await harness('home-perf', { path: '' });
 const kb = (n) => +(n / 1024).toFixed(1);
 
 for (const [view, width, height] of [['desktop', 1920, 1080], ['phone', 400, 860]]) {
@@ -23,10 +19,10 @@ for (const [view, width, height] of [['desktop', 1920, 1080], ['phone', 400, 860
     new PerformanceObserver((l) => { for (const e of l.getEntries()) if (!e.hadRecentInput) window.__cls += e.value; }).observe({ type: 'layout-shift', buffered: true });
   });
   await page.goto(url, { waitUntil: 'networkidle' });
-  await page.waitForTimeout(1200);
+  await settled(page);
   const { lcp, cls } = await page.evaluate(() => ({ lcp: window.__lcp, cls: window.__cls }));
   await page.evaluate(() => document.querySelector('.how').scrollIntoView({ block: 'center' }));
-  await page.waitForTimeout(2500);
+  await settled(page);
   const framesIn = async (ms, act = async () => {}) => {
     await browser.startTracing(page, { categories: ['disabled-by-default-devtools.timeline.frame', 'devtools.timeline'] });
     await act();
@@ -56,7 +52,4 @@ for (const [view, width, height] of [['desktop', 1920, 1080], ['phone', 400, 860
   await ctx.close();
 }
 
-await browser.close();
-await sim?.close();
-faults.forEach((f) => console.error(`home-perf: ${f}`));
-process.exit(faults.length ? 1 : 0);
+await end();

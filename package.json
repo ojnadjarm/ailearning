@@ -15,10 +15,12 @@
     "hygiene": "node tools/hygiene.mjs",
     "kit:verify": "node tools/kit-verify.mjs",
     "kit:sync": "tools/sync-kit.sh",
-    "test": "node --test tests/unit/*.test.mjs",
-    "e2e": "node tests/e2e/site.mjs && node tests/e2e/home.mjs && node tests/e2e/home-perf.mjs && node tests/e2e/sheet-change.mjs && node tests/e2e/sheet-cold.mjs && node tests/e2e/unit.mjs",
+    "test": "node --import ./tests/lib/register.mjs --test tests/unit/*.test.mjs",
+    "e2e": "node tests/run-e2e.mjs",
+    "test:changed": "node tools/test-changed.mjs",
     "ci": "npm run typecheck && npm run kit:verify && npm test && npm run build && npm run e2e",
-    "check-links": "tools/check-links.sh"
+    "check-links": "tools/check-links.sh",
+    "cue-check": "node --import ./tests/lib/register.mjs tools/cue-check.mjs"
   },
   "devDependencies": {
     "@types/three": "^0.186.0",

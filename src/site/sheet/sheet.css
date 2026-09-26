@@ -1,3 +1,4 @@
+@import '../../kit/cutaway/buttons.css';
 @font-face{font-family:"Plex Cond";font-weight:400;font-display:swap;src:url(/fonts/ibm-plex-sans-condensed-latin-400-normal.woff2) format("woff2")}
 @font-face{font-family:"Plex Cond";font-weight:600;font-display:swap;src:url(/fonts/ibm-plex-sans-condensed-latin-600-normal.woff2) format("woff2")}
 @font-face{font-family:"Plex Mono";font-weight:500;font-display:swap;src:url(/fonts/ibm-plex-mono-latin-500-normal.woff2) format("woff2")}
@@ -31,15 +32,28 @@ a{color:inherit}
 .sheet.app{position:fixed;inset:var(--gut);margin:0;padding:var(--zone);display:flex;flex-direction:column}
 .app .top{flex:none;margin:calc(var(--pad) * .6) var(--pad) 0}
 .sn{margin-left:auto}.sn .of{color:var(--ink)}
-.back{display:inline-flex;align-items:center;gap:10px;min-height:44px;padding:0 18px 0 14px;border:1.5px solid var(--ink);border-radius:3px;align-self:center;
-  font:600 14px/1 "Plex Cond",sans-serif;letter-spacing:.14em;text-transform:uppercase;text-decoration:none;color:var(--ink);background:var(--paper);
-  box-shadow:0 0 0 3px var(--paper),0 0 0 4px var(--ink);transition:background .15s,color .15s}
-.back svg{width:22px;height:12px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;transition:transform .15s}
-.back:hover{color:var(--paper);background:var(--ink)}.back:hover svg{transform:translateX(-3px)}
-.back:focus-visible{outline:2px solid var(--blue);outline-offset:7px}
+.top .back{align-self:center}
 .app .top{align-items:center}
 .field{position:relative;flex:1;min-height:0}
 @media (max-width:639px){.sheet.app{inset:0;border:0;outline:0;padding:0}.app .top{display:none}}
+/* the narrow sheet of a unit page (html.is-narrow, set by the page entry below 1024 px): the frame stays on phones, the plate is not drawn */
+.narrow{display:none}
+html.is-narrow #stage,html.is-narrow #shell{display:none}
+html.is-narrow .narrow{display:block;position:absolute;inset:0;overflow:auto;padding:clamp(20px,5vw,48px) var(--pad) clamp(24px,5vw,56px)}
+.narrow>*{width:min(100%,38rem);margin-inline:auto}
+.narrow .ne{margin-block:0 10px;font:italic 400 clamp(15px,3.6vw,17px)/1.3 "Caslon",Georgia,serif;color:var(--dim)}
+.narrow h1{margin-block:0 14px;font:600 clamp(24px,6.4vw,38px)/1.08 "Plex Cond",sans-serif;letter-spacing:.06em;text-transform:uppercase;text-wrap:balance}
+.narrow .nl{margin-block:0 clamp(22px,5vw,36px);font:400 clamp(16px,3.9vw,18px)/1.5 "Caslon",Georgia,serif;color:#3b3f48;text-wrap:pretty}
+.nc{padding:0;list-style:none;border-top:2px solid var(--ink);border-bottom:2px solid var(--ink)}
+.nc li{display:grid;grid-template-columns:3.4em 1fr auto;align-items:baseline;gap:12px;padding:11px 2px}
+.nc li+li{border-top:1px solid var(--rule)}
+.nc .nm{font:500 13px/1 "Plex Mono",monospace;letter-spacing:.08em;color:var(--dim)}
+.nc .nt{font:600 clamp(14px,3.6vw,16px)/1.3 "Plex Cond",sans-serif;letter-spacing:.08em;text-transform:uppercase}
+.nc .nd{font:500 13px/1 "Plex Mono",monospace;color:var(--dim)}
+.narrow .nf{margin-block:12px 0;font:400 15px/1.4 "Caslon",Georgia,serif;color:var(--dim)}
+@media (max-width:639px){html.is-narrow .sheet.app{inset:var(--gut);border:3px solid var(--ink);outline:1px solid var(--ink);outline-offset:3px}
+  html.is-narrow .app .top{display:flex;margin:12px 12px 0}html.is-narrow .back{white-space:nowrap}}
+@media (max-width:479px){html.is-narrow .sn{display:none}}
 @media (min-width:2200px){.sheet.app{inset:calc(var(--gut) * 1.32);padding:calc(var(--zone) * 1.32);border-width:4px}.app .top,.app .zones{zoom:1.32}}
 
 /* sheet change (opted in by the sheet plugin): the earlier sheet is a book page hinged on its left edge. Forward it turns away right to left,
@@ -47,7 +61,14 @@ a{color:inherit}
    The fold line leans 8° and moves with P, its x at mid height. Only transforms move, so the compositor runs the turn: each image-pair is a
    window cut along the fold (the page left of it, the leaf right of it) and its image turns the other way to stay put; the leaf group
    reflects about the fold. Every transform is linear in P, so two keyframes are exact. */
-.leaf{position:fixed;left:0;top:0;width:100vw;height:100vh;pointer-events:none;view-transition-name:leaf;background:#f0eadd}
+/* The leaf is added by the new page and exists only while the change runs, so no frame of either page shows it. */
+.leaf{display:none;position:fixed;left:0;top:0;width:100vw;height:100vh;pointer-events:none;view-transition-name:leaf;background:#f0eadd}
+:root:active-view-transition .leaf{display:block}
+/* hold: the old sheet stays whole until the new one is drawn (turn.js removes the class) */
+:root.hold::view-transition-group(*),:root.hold::view-transition-image-pair(*),:root.hold::view-transition-old(*),:root.hold::view-transition-new(*){animation-play-state:paused}
+/* a press on a link to another sheet stays sunk until the page turns (press.js) */
+.btn.pressed:is(.primary,.secondary,.back){translate:4px 4px}
+.btn.pressed:is(.primary,.secondary,.back)::before{inset:1px -2px -2px 1px}
 .leaf::before,.leaf::after{content:"";position:absolute;inset:var(--gut);border:3px solid rgba(28,34,48,.07)}
 .leaf::after{inset:calc(var(--gut) + var(--zone) + 3px);border-width:1px}
 :root.turning{view-transition-name:front}
@@ -67,7 +88,7 @@ a{color:inherit}
   ::view-transition-old(leaf),::view-transition-new(leaf){left:0}
   html:active-view-transition-type(forward)::view-transition-image-pair(front),html:active-view-transition-type(forward)::view-transition-image-pair(leaf){animation-name:cut-away}
   html:active-view-transition-type(forward)::view-transition-old(front){animation-name:hold-away}
-  html:active-view-transition-type(forward)::view-transition-old(leaf){animation-name:hold-away,leaf-shade}
+  html:active-view-transition-type(forward)::view-transition-new(leaf){animation-name:hold-away,leaf-shade}
   html:active-view-transition-type(forward)::view-transition-group(leaf){animation-name:fold-away}
   html:active-view-transition-type(back)::view-transition-image-pair(front),html:active-view-transition-type(back)::view-transition-image-pair(leaf){animation-name:cut-back}
   html:active-view-transition-type(back)::view-transition-new(front){animation-name:hold-back}

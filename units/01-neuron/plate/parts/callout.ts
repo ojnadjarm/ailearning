@@ -1,11 +1,9 @@
 import * as THREE from 'three';
 import type { LineSegments2 } from 'three/addons/lines/LineSegments2.js';
 import { Ink, Z, FONT, type TextPlate } from '../ink';
-import { circle, partial, polyline } from '../geom';
+import { circle, partial, polyline } from '../../../../src/kit/cutaway/geom';
 import type { ColorRole } from '../theme';
-import type { Part } from './part';
-
-const clamp01 = (x: number): number => Math.min(1, Math.max(0, x));
+import { clamp01, type Part } from '../../../../src/kit/cutaway/parts/part';
 
 /** Typed label: draws the first n characters of `text` (n follows the draw-on progress). */
 function typed(ink: Ink, text: string, size: number, role: ColorRole, ax: number, font = FONT.label, weight = 600): { plate: TextPlate; show: (f: number) => void } {
@@ -54,21 +52,23 @@ export class Callout implements Part {
   }
 }
 
-/** Numbered balloon (patent style) on a short leader. */
+/** Numbered balloon (patent style) on a short leader that ends on its part with a dot. */
 export class Balloon implements Part {
   readonly root = new THREE.Group();
   private leg: LineSegments2;
+  private dot: THREE.Mesh;
   private head = new THREE.Group();
   private last = -1;
   constructor(private ink: Ink, private pts: number[], n: number, private r = 15) {
     const [x, y] = pts.slice(-2);
     this.leg = ink.segs([], ink.line('ink', 'hair'), Z.callout);
+    this.dot = ink.disc(pts[0], pts[1], 3.6, ink.fill('ink'), Z.callout + 0.1, 20);
     this.head.position.set(x, y, 0);
     this.head.add(ink.disc(0, 0, r, ink.fill('paper'), Z.callout + 0.1, 40), ink.segs(circle(0, 0, r, 48), ink.line('ink', 'thin'), Z.callout + 0.2));
     const t = ink.text(2 * r, 2 * r, (c, th) => { c.fillStyle = th.ink; c.font = `500 17px ${FONT.serif}`; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText(String(n), r, r + 1); }, 0.5, 0.5);
     t.mesh.position.z = Z.text;
     this.head.add(t.mesh);
-    this.root.add(this.leg, this.head);
+    this.root.add(this.leg, this.dot, this.head);
     this.set(0);
   }
   set(p: number): void {
@@ -77,9 +77,22 @@ export class Balloon implements Part {
     this.root.visible = p > 0.001;
     const lead = this.pts.slice(0, -2).concat(this.shorten());
     this.ink.setSegs(this.leg, polyline(partial(lead, clamp01(p / 0.6))));
+    this.dot.scale.setScalar(Math.max(0.001, clamp01(p * 6)));
     const s = clamp01((p - 0.5) / 0.35);
     this.head.scale.setScalar(Math.max(0.001, s < 1 ? s * (1.15 - 0.15 * s) : 1));
   }
+  /** Redraw from a new leader and centre (the layout of a new pose). */
+  move(pts: number[]): void {
+    if (pts.every((v, i) => v === this.pts[i])) return;
+    this.pts = pts;
+    this.dot.position.set(pts[0], pts[1], this.dot.position.z);
+    this.head.position.set(pts[pts.length - 2], pts[pts.length - 1], 0);
+    const p = this.last;
+    this.last = -1;
+    this.set(p);
+  }
+  /** The badge centre while it is drawn (a tap target), else null. */
+  at(): [number, number] | null { return this.last > 0.5 ? [this.pts[this.pts.length - 2], this.pts[this.pts.length - 1]] : null; }
   private shorten(): number[] {
     const n = this.pts.length, x = this.pts[n - 2], y = this.pts[n - 1], px = this.pts[n - 4], py = this.pts[n - 3], l = Math.hypot(x - px, y - py) || 1;
     return [x - ((x - px) / l) * this.r, y - ((y - py) / l) * this.r];
@@ -127,7 +140,10 @@ export class DetailLink implements Part {
   private tags: THREE.Group[] = [];
   private ringPts: number[];
   private last = -1;
-  constructor(private ink: Ink, cx: number, cy: number, r: number, private legPts: number[], letter = 'A') {
+  private sign = new THREE.Group();
+  /** `sign`: an arrow on the leg pointing the way it goes, and a line of text under it that says where. */
+  constructor(private ink: Ink, cx: number, cy: number, r: number, private legPts: number[], letter = 'A',
+    sign?: { arrow: [number, number]; note: { at: [number, number]; text: string } }) {
     this.ringPts = [];
     for (let i = 0; i <= 96; i++) { const a = Math.PI * 1.25 - (i / 96) * Math.PI * 2; this.ringPts.push(cx + Math.cos(a) * r, cy + Math.sin(a) * r); }
     this.ring = ink.segs([], ink.line('ink', 'thin', { dash: [18, 5] }), Z.callout);
@@ -141,6 +157,14 @@ export class DetailLink implements Part {
       t.mesh.position.z = Z.text; g.add(t.mesh);
       this.tags.push(g); this.root.add(g);
     }
+    if (sign) {
+      const [ax, ay] = sign.arrow, t = sign.note.text;
+      this.sign.add(ink.segs([ax + 14, ay + 9, ax, ay, ax, ay, ax + 14, ay - 9], ink.line('ink', 'thin'), Z.callout));
+      const label = ink.text(260, 28, (c, th) => { c.fillStyle = th.inkSoft; c.font = `600 16px ${FONT.label}`; c.letterSpacing = '1.4px'; c.textAlign = 'left'; c.textBaseline = 'middle'; c.fillText(t, 0, 14); }, 0, 0.5);
+      label.mesh.position.set(sign.note.at[0], sign.note.at[1], Z.text);
+      this.sign.add(label.mesh);
+      this.root.add(this.sign);
+    }
     this.set(0);
   }
   set(p: number): void {
@@ -151,5 +175,6 @@ export class DetailLink implements Part {
     this.ink.setSegs(this.leg, polyline(partial(this.legPts, clamp01((p - 0.4) / 0.45))));
     this.tags[0].scale.setScalar(Math.max(0.001, clamp01(p * 5)));
     this.tags[1].scale.setScalar(Math.max(0.001, clamp01((p - 0.8) * 5)));
+    this.sign.visible = p > 0.85;
   }
 }

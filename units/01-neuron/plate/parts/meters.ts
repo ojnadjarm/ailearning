@@ -2,18 +2,14 @@ import * as THREE from 'three';
 import type { LineMaterial } from 'three/addons/lines/LineMaterial.js';
 import type { LineSegments2 } from 'three/addons/lines/LineSegments2.js';
 import { Ink, Z, FONT } from '../ink';
-import { arcPts, circle, hatch, polyline } from '../geom';
-import { inRing, dir, type Part } from './part';
+import { arcPts, circle, hatch, polyline } from '../../../../src/kit/cutaway/geom';
+import { inRing, dir, centreMark, type Part } from '../../../../src/kit/cutaway/parts/part';
+import { dialAngle } from '../../unit/layout';
 
-export const DIAL_MIN = -3, DIAL_MAX = 3, DIAL_STEP = 0.5, DIAL_SWEEP = (135 * Math.PI) / 180;
-export const valueToAngle = (v: number): number => (-v / DIAL_MAX) * DIAL_SWEEP;
+const DIAL_MIN = -3, DIAL_MAX = 3, DIAL_STEP = 0.5, DIAL_SWEEP = (135 * Math.PI) / 180;
+export const valueToAngle = dialAngle;
 export const angleToValue = (a: number): number => (-a / DIAL_SWEEP) * DIAL_MAX;
 const signed = (v: number): string => (v > 0 ? `+${v}` : v < 0 ? `−${-v}` : '0');
-
-/** Drafting centre mark: four short strokes outside a circle. */
-function centreMark(cx: number, cy: number, r0: number, r1: number): number[] {
-  return [cx - r1, cy, cx - r0, cy, cx + r0, cy, cx + r1, cy, cx, cy - r1, cx, cy - r0, cx, cy + r0, cx, cy + r1];
-}
 
 /** Sectioned housing: paper disc, hatched bezel ring, two outlines. */
 function housing(ink: Ink, g: THREE.Group, cx: number, cy: number, r0: number, r1: number): void {
@@ -94,29 +90,33 @@ export class Valve implements Part {
 
 const SWEEP = (120 * Math.PI) / 180;
 
-/** Round needle gauge 0–max: blue needle and arc are the output, the yellow chevron is the target. */
+/** Round needle gauge 0–max: blue needle and arc are the output, the yellow chevron is the target; a grey ghost needle and a hatched cover cap are optional. */
 export class Gauge implements Part {
   readonly root = new THREE.Group();
+  /** Lowest value the needle can show: 0, or RULES.gauge.stub when a build can send a sum past the valve. */
+  low = 0;
   private needle = new THREE.Group();
+  private ghostNeedle = new THREE.Group();
+  private cap = new THREE.Group();
   private mark = new THREE.Group();
   private chev = new THREE.Group();
   private arc: LineSegments2;
   private glow: THREE.MeshBasicMaterial;
   private glowMesh: THREE.Mesh;
   private last = NaN;
-  constructor(private ink: Ink, readonly cx: number, readonly cy: number, readonly r: number, readonly max = 5) {
-    const g = this.root;
+  constructor(private ink: Ink, readonly cx: number, readonly cy: number, readonly r: number, readonly max = 5, small = false) {
+    const g = this.root, [nr, fs, t0, t1] = small ? [r - 29, 13, r - 19, r - 14] : [r - 44, 17, r - 26, r - 18];
     housing(ink, g, cx, cy, r, r + 12);
     const tk: number[] = [], mj: number[] = [];
     for (let i = 0; i <= max * 5; i++) {
       const [dx, dy] = dir(this.angleOf(i / 5)), major = i % 5 === 0;
-      (major ? mj : tk).push(cx + dx * (major ? r - 26 : r - 18), cy + dy * (major ? r - 26 : r - 18), cx + dx * (r - 8), cy + dy * (r - 8));
+      (major ? mj : tk).push(cx + dx * (major ? t0 : t1), cy + dy * (major ? t0 : t1), cx + dx * (r - 8), cy + dy * (r - 8));
     }
     g.add(ink.segs(tk, ink.line('ink', 'hair'), Z.line), ink.segs(mj, ink.line('ink', 'thin'), Z.line));
     g.add(ink.segs(polyline(arcPts(cx, cy, r - 8, Math.PI / 2 - SWEEP, Math.PI / 2 + SWEEP, 96)), ink.line('ink', 'hair'), Z.line));
     const t = ink.text(2 * r, 2 * r, (c, th) => {
-      c.fillStyle = th.ink; c.font = `500 17px ${FONT.mono}`; c.textAlign = 'center'; c.textBaseline = 'middle';
-      for (let v = 0; v <= max; v++) { const [dx, dy] = dir(this.angleOf(v)); c.fillText(String(v), r + dx * (r - 44), r - dy * (r - 44)); }
+      c.fillStyle = th.ink; c.font = `500 ${fs}px ${FONT.mono}`; c.textAlign = 'center'; c.textBaseline = 'middle';
+      for (let v = 0; v <= max; v++) { const [dx, dy] = dir(this.angleOf(v)); c.fillText(String(v), r + dx * nr, r - dy * nr); }
     }, 0.5, 0.5);
     t.mesh.position.set(cx, cy, Z.text);
     g.add(t.mesh);
@@ -136,10 +136,24 @@ export class Gauge implements Part {
     const n = this.needle;
     n.position.set(cx, cy, 0);
     n.add(ink.shape([-6, -16, 6, -16, 1.6, r - 12, -1.6, r - 12], ink.fill('signal'), Z.top));
-    n.add(ink.disc(0, 0, 11, ink.fill('ink'), Z.top + 0.1, 40), ink.disc(0, 0, 3.5, ink.fill('paper'), Z.top + 0.2, 20));
+    n.add(ink.disc(0, 0, small ? 7 : 11, ink.fill('ink'), Z.top + 0.1, 40), ink.disc(0, 0, small ? 2.5 : 3.5, ink.fill('paper'), Z.top + 0.2, 20));
     g.add(n, ink.segs(centreMark(cx, cy, r + 16, r + 30), ink.line('inkSoft', 'hair'), Z.line));
+    const gh = this.ghostNeedle;
+    gh.position.set(cx, cy, 0);
+    gh.add(ink.shape([-3.5, -10, 3.5, -10, 1, r - 16, -1, r - 16], ink.fill('inkSoft'), Z.top - 0.2));
+    gh.visible = false;
+    const c = this.cap, cr = r * 0.45;
+    c.add(ink.disc(cx, cy, cr, ink.fill('paper'), Z.text + 0.5, 64), ink.segs(hatch(inRing(cx, cy, 0, cr), [cx - cr, cy - cr, cx + cr, cy + cr], 4), ink.line('hatch', 'hair'), Z.text + 0.6));
+    c.add(ink.segs(circle(cx, cy, cr, 64), ink.line('ink', 'thin'), Z.text + 0.7));
+    c.visible = false;
+    g.add(gh, c);
   }
-  angleOf(v: number): number { return SWEEP - (THREE.MathUtils.clamp(v, 0, this.max) / this.max) * 2 * SWEEP; }
+  angleOf(v: number): number { return SWEEP - (THREE.MathUtils.clamp(v, this.low, this.max) / this.max) * 2 * SWEEP; }
+  /** A second, grey needle (the tuner's reading), or none. */
+  ghost(v: number | null): void { this.ghostNeedle.visible = v !== null; if (v !== null) this.ghostNeedle.rotation.z = this.angleOf(v); }
+  /** Covered: needle and arc hidden under a hatched cap, the scale still readable. */
+  cover(on: boolean): void { this.cap.visible = on; this.needle.visible = !on; this.arc.visible = !on && this.lastArc; }
+  private lastArc = false;
   set(v: number): void {
     this.needle.rotation.z = this.angleOf(v);
     const q = Math.round(v * 200) / 200;
@@ -147,6 +161,8 @@ export class Gauge implements Part {
       this.last = q;
       const a0 = Math.PI / 2 + this.angleOf(0), a1 = Math.PI / 2 + this.angleOf(v);
       this.ink.setSegs(this.arc, Math.abs(a1 - a0) < 1e-3 ? [] : polyline(arcPts(this.cx, this.cy, this.r - 4, a0, a1, 64)));
+      this.lastArc = this.arc.visible;
+      if (this.cap.visible) this.arc.visible = false;
     }
   }
   setTarget(v: number, show: number, glow: number): void {

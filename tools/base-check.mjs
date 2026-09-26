@@ -15,6 +15,8 @@ const SOURCE_RULES = {
   ],
 };
 const DIST_JS = /["'`]\/?(bundles|fonts|assets)\//;
+/** Vite's dependency map for a lazy chunk lists base-relative files its preload helper prefixes with the base; it is not a page URL. */
+const VITE_DEPS = /^const __vite__mapDeps=.*$/m;
 
 const faults = [];
 const sources = ['index.html', '404.html', ...walk('u'), ...walk('units'), ...walk('src')].filter((f) => existsSync(f));
@@ -26,7 +28,7 @@ for (const f of walk('dist')) {
   const text = extname(f) === '.html' || extname(f) === '.css' || extname(f) === '.js' ? readFileSync(f, 'utf8') : '';
   if (extname(f) === '.html') for (const [, u] of text.matchAll(/(?:href|src)="([^"]*)"/g)) if (!OK_URL(u)) faults.push(`${f}: ${u} is outside ${BASE}`);
   if (extname(f) === '.css') for (const [, u] of text.matchAll(/url\(\s*['"]?([^'")]*)/g)) if (!OK_URL(u)) faults.push(`${f}: url(${u}) is outside ${BASE}`);
-  if (extname(f) === '.js') { const m = text.match(DIST_JS); if (m) faults.push(`${f}: page-relative asset string ${m[0]}`); }
+  if (extname(f) === '.js') { const m = text.replace(VITE_DEPS, '').match(DIST_JS); if (m) faults.push(`${f}: page-relative asset string ${m[0]}`); }
 }
 faults.forEach((m) => console.error(`base-check: ${m}`));
 console.log(`base-check: ${sources.length} sources + dist under ${BASE}, ${faults.length} faults`);

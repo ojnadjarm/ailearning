@@ -1,14 +1,10 @@
 // The first sheet change on a cold cache over a slow link (fresh context, 150 ms latency, 1.6 Mbit/s): Begin on Sheet 0 must turn onto a drawn
 // Sheet I. Fails if the turn is skipped, if any frame after the turn ends lacks the plate or the Begin card, or if the card takes over 7 s from
 // the click. Usage: node tests/e2e/sheet-cold.mjs [site url]   (default: dist/ under pages-sim)
-import { startPagesSim } from '../lib/pages-sim.mjs';
-import { launch } from '../lib/browser.mjs';
+import { harness, frames } from '../lib/harness.mjs';
 
 const BUDGET_MS = 7000;
-const sim = process.argv[2] ? null : await startPagesSim();
-const url = process.argv[2] ?? sim.url;
-const browser = await launch();
-const faults = [];
+const { url, browser, faults, end } = await harness('sheet-cold', { path: '' });
 
 /** On Sheet I: every frame from the reveal to 1 s after the turn, is the plate drawn and the Begin card up. */
 const watch = () => addEventListener('pagereveal', (e) => {
@@ -35,7 +31,8 @@ for (const [width, height] of [[1366, 768], [1920, 1080]]) {
   await cdp.send('Network.emulateNetworkConditions', { offline: false, latency: 150, downloadThroughput: 1.6e6 / 8, uploadThroughput: 750e3 / 8 });
   await page.addInitScript(watch);
   await page.goto(url, { waitUntil: 'load' });
-  await page.waitForTimeout(500);
+  await page.evaluate(() => document.fonts.ready);
+  await frames(page);
   const click = Date.now();
   await page.locator('.primary:visible').first().click({ noWaitAfter: true });
   await page.waitForURL(/\/u\/01-neuron\//, { timeout: 20000 });
@@ -52,8 +49,4 @@ for (const [width, height] of [[1366, 768], [1920, 1080]]) {
   await ctx.close();
 }
 
-await browser.close();
-await sim?.close();
-faults.forEach((f) => console.error(`sheet-cold: ${f}`));
-console.log(`sheet-cold: ${faults.length} faults`);
-process.exit(faults.length ? 1 : 0);
+await end(`sheet-cold: ${faults.length} faults`);

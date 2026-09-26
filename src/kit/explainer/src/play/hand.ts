@@ -7,13 +7,31 @@ const K_DRAG = 1300, D_DRAG = 90, K_REST = 600, D_REST = 26;
 /** A dial as the hand sees it: where it is, its detent scale, and the style's value ↔ angle mapping. */
 export interface DialGeom { cx: number; cy: number; r: number; min: number; max: number; step: number; angle(v: number): number; value(a: number): number }
 
+/** Anything the learner moves by pointer or keys (Strategy): a dial, a pencil on a scale, a part carried to a seat, a locked input. */
+export interface Hand extends Grabbable {
+  grabbed: boolean;
+  /** Called when the value lands on a new step (a detent, a snap, a seat). */
+  onDetent: (value: number) => void;
+  /** Keyboard path: n steps up (positive) or down. */
+  turn(n: number): void;
+  /** Nearest allowed value to `v`. */
+  snap(v: number): number;
+  /** The value the hand is on now. */
+  value(): number;
+  settled(): boolean;
+  /** Put the hand on `v` at once (a new case, a restored step); not a learner move. */
+  place(v: number): void;
+  /** Advance one frame; returns the value to draw (it may ease between steps). */
+  update(dt: number): number;
+}
+
 /** Turns a dial by dragging around its centre (or by keys); it settles into detents through a spring. */
-export class DetentHand implements Grabbable {
+export class DetentHand implements Hand {
   enabled = false;
   grabbed = false;
   readonly spring: Spring;
   onDetent: (value: number) => void = () => undefined;
-  private target = 0; private last: [number, number] = [0, 0]; private centre: [number, number] = [0, 0]; private detent = 0;
+  private target = 0; private goal: number | null = null; private last: [number, number] = [0, 0]; private centre: [number, number] = [0, 0]; private detent = 0;
   private lo: number; private hi: number;
   readonly g: DialGeom; private proj: Projector;
 
@@ -23,22 +41,25 @@ export class DetentHand implements Grabbable {
     this.spring = new Spring(-limit, limit);
   }
   hits(wx: number, wy: number): boolean { return Math.hypot(wx - this.g.cx, wy - this.g.cy) <= this.g.r; }
-  down(px: number, py: number): void { this.grabbed = true; this.target = this.spring.a; this.last = [px, py]; this.centre = this.proj.toScreen(this.g.cx, this.g.cy); }
+  down(px: number, py: number): void { this.grabbed = true; this.goal = null; this.target = this.spring.a; this.last = [px, py]; this.centre = this.proj.toScreen(this.g.cx, this.g.cy); }
   move(px: number, py: number): void {
     const rx = this.last[0] - this.centre[0], ry = -(this.last[1] - this.centre[1]);
     const dx = px - this.last[0], dy = -(py - this.last[1]);
     this.target = clamp(this.target + (rx * dy - ry * dx) / Math.max(rx * rx + ry * ry, 24 * 24), this.lo, this.hi);
     this.last = [px, py];
   }
-  up(): void { this.grabbed = false; this.target = this.g.angle(this.value()); }
-  /** Keyboard path: n detents up (positive) or down. */
-  turn(n: number): void { this.target = this.g.angle(clamp(this.value() + n * this.g.step, this.g.min, this.g.max)); }
+  up(): void { this.grabbed = false; this.goal = null; this.target = this.g.angle(this.value()); }
+  /** Keyboard path: n detents up (positive) or down, from the detent the last press aimed at (presses faster than the spring add up). */
+  turn(n: number): void {
+    this.goal = clamp((this.goal ?? this.value()) + n * this.g.step, this.g.min, this.g.max);
+    this.target = this.g.angle(this.goal);
+  }
   /** Nearest detent to `v`. */
   snap(v: number): number { return clamp(this.g.min + Math.round((v - this.g.min) / this.g.step) * this.g.step, this.g.min, this.g.max); }
   /** Detent value nearest to where the knob physically is. */
   value(): number { return this.snap(this.g.value(this.spring.a)); }
   settled(): boolean { return !this.grabbed && Math.abs(this.spring.v) < 0.05 && Math.abs(this.spring.a - this.g.angle(this.value())) < 0.02; }
-  place(v: number): void { this.spring.set(this.g.angle(v)); this.target = this.spring.a; this.detent = v; }
+  place(v: number): void { this.spring.set(this.g.angle(v)); this.target = this.spring.a; this.goal = null; this.detent = v; }
   /** Step the spring; returns the continuous value for drawing (the knob moves smoothly between detents). */
   update(dt: number): number {
     if (this.grabbed) {

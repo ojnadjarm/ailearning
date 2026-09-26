@@ -1,56 +1,4438 @@
 {
-  "id": "01-neuron",
-  "title": "What a neural network is",
-  "voice": { "engine": "kokoro-82M-fp32", "voice": "af_heart", "speed": 0.92 },
-  "introduces": [
-    { "id": "input", "word": "input", "gloss": "a number that goes into the machine", "namedCue": "input" },
-    { "id": "weight", "word": "weight", "gloss": "the setting of a dial: how much its input counts", "namedCue": "weight" },
-    { "id": "output", "word": "output", "gloss": "the number that comes out", "namedCue": "output" },
-    { "id": "target", "word": "target", "gloss": "the output we want for these inputs", "namedCue": "target" },
-    { "id": "neuron", "word": "neuron", "gloss": "inputs, weights, a sum, a valve, an output", "namedCue": "neuron" },
-    { "id": "network", "word": "neural network", "gloss": "many neurons wired together", "namedCue": "network" }
+ "id": "01-neuron",
+ "title": "The neuron",
+ "voice": {
+  "engine": "kokoro-82M-fp32",
+  "voice": "af_heart",
+  "speed": 0.92
+ },
+ "introduces": [
+  {
+   "id": "neuron",
+   "word": "neuron",
+   "gloss": "a machine that turns numbers into one number",
+   "namedCue": "c1a.neuron",
+   "part": "neuron"
+  },
+  {
+   "id": "input",
+   "word": "input",
+   "gloss": "a number given to the neuron",
+   "namedCue": "c1a.input",
+   "part": "tube1"
+  },
+  {
+   "id": "weight",
+   "word": "weight",
+   "gloss": "the setting of a dial: how much its input counts",
+   "namedCue": "c2a.weight",
+   "part": "dial1"
+  },
+  {
+   "id": "product",
+   "word": "product",
+   "gloss": "an input times its weight",
+   "namedCue": "c2a.product",
+   "part": "win1"
+  },
+  {
+   "id": "sum",
+   "word": "sum",
+   "gloss": "all the products added together",
+   "namedCue": "c3a.sum",
+   "part": "chamber"
+  },
+  {
+   "id": "valve",
+   "word": "valve",
+   "gloss": "passes a sum above zero, stops a sum below zero",
+   "namedCue": "c4a.valve",
+   "part": "valve"
+  },
+  {
+   "id": "output",
+   "word": "output",
+   "gloss": "the number that comes out, after the valve",
+   "namedCue": "c4a.output",
+   "part": "gauge"
+  },
+  {
+   "id": "target",
+   "word": "target",
+   "gloss": "the output we want for these inputs",
+   "namedCue": "c5a.target",
+   "part": "mark"
+  },
+  {
+   "id": "miss",
+   "word": "miss",
+   "gloss": "the target minus the output, with its sign",
+   "namedCue": "c5a.miss",
+   "part": "miss"
+  },
+  {
+   "id": "tuning",
+   "word": "tuning",
+   "gloss": "changing weights to bring the output to the target",
+   "namedCue": "c6a.tuning",
+   "part": "dial1"
+  },
+  {
+   "id": "click",
+   "word": "click",
+   "gloss": "one turn of a knob to the next mark of its scale",
+   "namedCue": "c7a.click",
+   "part": "detent"
+  },
+  {
+   "id": "example",
+   "word": "example",
+   "gloss": "a set of inputs together with its target",
+   "namedCue": "c8a.example",
+   "part": "bracket"
+  },
+  {
+   "id": "tuner",
+   "word": "tuner",
+   "gloss": "a procedure that turns every dial a little each step",
+   "namedCue": "c9a.tuner",
+   "part": "tuner"
+  },
+  {
+   "id": "learning",
+   "word": "learning",
+   "gloss": "a tuner tuning the weights from many examples",
+   "namedCue": "c10a.learning",
+   "part": "tuner"
+  },
+  {
+   "id": "network",
+   "word": "neural network",
+   "gloss": "many neurons wired, outputs into inputs",
+   "namedCue": "c10a.network",
+   "part": "fig2"
+  }
+ ],
+ "chapters": [
+  {
+   "id": "c1",
+   "numeral": "I",
+   "title": "The neuron and its inputs",
+   "clips": [
+    "c1a",
+    "c1b"
+   ]
+  },
+  {
+   "id": "c2",
+   "numeral": "II",
+   "title": "One dial: weight and product",
+   "clips": [
+    "c2a",
+    "c2b"
+   ]
+  },
+  {
+   "id": "c3",
+   "numeral": "III",
+   "title": "Two dials, and the sum",
+   "clips": [
+    "c3a",
+    "c3b"
+   ]
+  },
+  {
+   "id": "c4",
+   "numeral": "IV",
+   "title": "The valve, and the output",
+   "clips": [
+    "c4a",
+    "c4b"
+   ]
+  },
+  {
+   "id": "c5",
+   "numeral": "V",
+   "title": "Target and miss",
+   "clips": [
+    "c5a",
+    "c5b"
+   ]
+  },
+  {
+   "id": "c6",
+   "numeral": "VI",
+   "title": "Tuning: only the dials turn",
+   "clips": [
+    "c6a"
+   ]
+  },
+  {
+   "id": "c7",
+   "numeral": "VII",
+   "title": "Tuning by hand, click by click",
+   "clips": [
+    "c7a",
+    "c7b"
+   ]
+  },
+  {
+   "id": "c8",
+   "numeral": "VIII",
+   "title": "Many examples, one setting",
+   "clips": [
+    "c8a",
+    "c8b"
+   ]
+  },
+  {
+   "id": "c9",
+   "numeral": "IX",
+   "title": "The tuner",
+   "clips": [
+    "c9a",
+    "c9b"
+   ]
+  },
+  {
+   "id": "c10",
+   "numeral": "X",
+   "title": "Learning, and the network",
+   "clips": [
+    "c10a"
+   ]
+  },
+  {
+   "id": "turn",
+   "numeral": "XI",
+   "title": "Your turn",
+   "beat": "drive"
+  },
+  {
+   "id": "bench",
+   "numeral": "XII",
+   "title": "Workbench",
+   "beat": "bench"
+  },
+  {
+   "id": "race",
+   "numeral": "XIII",
+   "title": "Tuning",
+   "beat": "race"
+  },
+  {
+   "id": "close",
+   "numeral": "XIV",
+   "title": "What one neuron can't do",
+   "beat": "click",
+   "clips": [
+    "payoff",
+    "close"
+   ]
+  }
+ ],
+ "parts": [
+  {
+   "id": "tube1",
+   "name": "Tube 1",
+   "term": "input",
+   "n": 1,
+   "callout": "x1"
+  },
+  {
+   "id": "tube2",
+   "name": "Tube 2",
+   "term": "input",
+   "n": 2,
+   "callout": "x2"
+  },
+  {
+   "id": "dial1",
+   "name": "Dial 1",
+   "term": "weight",
+   "n": 3,
+   "callout": "w1"
+  },
+  {
+   "id": "dial2",
+   "name": "Dial 2",
+   "term": "weight",
+   "n": 4,
+   "callout": "w2"
+  },
+  {
+   "id": "win1",
+   "name": "Product window 1",
+   "term": "product",
+   "n": 5,
+   "callout": "p1"
+  },
+  {
+   "id": "note",
+   "name": "Note",
+   "term": "product",
+   "n": 6,
+   "callout": "note"
+  },
+  {
+   "id": "win2",
+   "name": "Product window 2",
+   "term": "product",
+   "n": 7,
+   "callout": "p2"
+  },
+  {
+   "id": "chamber",
+   "name": "Chamber",
+   "term": "sum",
+   "n": 8,
+   "callout": "sum"
+  },
+  {
+   "id": "valve",
+   "name": "Valve",
+   "term": "valve",
+   "n": 9,
+   "callout": "valve"
+  },
+  {
+   "id": "gauge",
+   "name": "Gauge",
+   "term": "output",
+   "n": 10,
+   "callout": "out"
+  },
+  {
+   "id": "graph",
+   "name": "Valve graph",
+   "term": "valve",
+   "n": 11,
+   "callout": "graph"
+  },
+  {
+   "id": "mark",
+   "name": "Brass mark",
+   "term": "target",
+   "n": 12,
+   "callout": "t"
+  },
+  {
+   "id": "miss",
+   "name": "Miss arc",
+   "term": "miss",
+   "n": 13,
+   "callout": "miss"
+  },
+  {
+   "id": "lock",
+   "name": "Lock pins",
+   "term": "tuning",
+   "n": 14,
+   "callout": "lock"
+  },
+  {
+   "id": "detent",
+   "name": "Click ring",
+   "term": "click",
+   "n": 15,
+   "callout": "click"
+  },
+  {
+   "id": "bracket",
+   "name": "Example bracket",
+   "term": "example",
+   "n": 16
+  },
+  {
+   "id": "fig3",
+   "name": "Small gauges",
+   "term": "example",
+   "n": 17,
+   "callout": "fig3"
+  },
+  {
+   "id": "tally",
+   "name": "Total-miss tally",
+   "term": "example",
+   "n": 18,
+   "callout": "total"
+  },
+  {
+   "id": "tuner",
+   "name": "Tuner block",
+   "term": "tuner",
+   "n": 19,
+   "callout": "tstep"
+  },
+  {
+   "id": "neuron",
+   "name": "Dimension line",
+   "term": "neuron"
+  },
+  {
+   "id": "fig2",
+   "name": "Network drawing",
+   "term": "network"
+  },
+  {
+   "id": "goal",
+   "name": "Ringed goal",
+   "term": "target",
+   "callout": "goal"
+  },
+  {
+   "id": "pencil",
+   "name": "Pencils",
+   "term": "output",
+   "callout": "pen"
+  },
+  {
+   "id": "arrow",
+   "name": "Arc arrow",
+   "term": "click",
+   "callout": "arrow"
+  },
+  {
+   "id": "plaque",
+   "name": "Plaque",
+   "term": "neuron",
+   "callout": "plaque"
+  },
+  {
+   "id": "tray",
+   "name": "Parts tray",
+   "term": "neuron",
+   "callout": "tray"
+  },
+  {
+   "id": "fig6",
+   "name": "Side gauges",
+   "term": "example",
+   "callout": "fig6"
+  },
+  {
+   "id": "race",
+   "name": "Tally block",
+   "term": "tuner",
+   "callout": "race"
+  },
+  {
+   "id": "fig5",
+   "name": "Output line",
+   "term": "neuron",
+   "callout": "fig5"
+  }
+ ],
+ "callouts": [
+  {
+   "id": "x1",
+   "term": "input",
+   "title": "Input 1",
+   "what": "the first number given to the neuron"
+  },
+  {
+   "id": "x2",
+   "term": "input",
+   "title": "Input 2",
+   "what": "the second number given to the neuron"
+  },
+  {
+   "id": "w1",
+   "term": "weight",
+   "title": "Weight 1",
+   "what": "how much input 1 counts"
+  },
+  {
+   "id": "w2",
+   "term": "weight",
+   "title": "Weight 2",
+   "what": "how much input 2 counts",
+   "cue": "c3a.dial2"
+  },
+  {
+   "id": "p1",
+   "term": "product",
+   "title": "Product 1",
+   "what": "input 1 times weight 1"
+  },
+  {
+   "id": "p2",
+   "term": "product",
+   "title": "Product 2",
+   "what": "input 2 times weight 2",
+   "cue": "c3a.p2"
+  },
+  {
+   "id": "note",
+   "term": "product",
+   "title": "Note",
+   "what": "the working, one line per step",
+   "cue": "c2a.note"
+  },
+  {
+   "id": "sum",
+   "term": "sum",
+   "title": "Sum",
+   "what": "the products added together"
+  },
+  {
+   "id": "valve",
+   "term": "valve",
+   "title": "Valve",
+   "what": "passes a sum above zero, stops one below"
+  },
+  {
+   "id": "out",
+   "term": "output",
+   "title": "Output",
+   "what": "the sum after the valve"
+  },
+  {
+   "id": "graph",
+   "term": "valve",
+   "title": "Valve graph",
+   "what": "output against sum",
+   "cue": "c4b.graph"
+  },
+  {
+   "id": "t",
+   "term": "target",
+   "title": "Target",
+   "what": "the output we want for these inputs"
+  },
+  {
+   "id": "miss",
+   "term": "miss",
+   "title": "Miss",
+   "what": "target minus output, with its sign"
+  },
+  {
+   "id": "click",
+   "term": "click",
+   "title": "Click",
+   "what": "one turn of a knob to the next mark"
+  },
+  {
+   "id": "lock",
+   "term": "tuning",
+   "title": "Locked input",
+   "what": "inputs are given; only the dials turn",
+   "cue": "c6a.locked"
+  },
+  {
+   "id": "total",
+   "term": "example",
+   "title": "Total miss",
+   "what": "the sizes of the four misses added up",
+   "cue": "c9a.total"
+  },
+  {
+   "id": "tstep",
+   "term": "tuner",
+   "title": "Tuner step",
+   "what": "one small turn of every dial"
+  },
+  {
+   "id": "e1",
+   "term": "example",
+   "title": "Example 1",
+   "what": "inputs with their own target",
+   "cue": "c8a.four"
+  },
+  {
+   "id": "e2",
+   "term": "example",
+   "title": "Example 2",
+   "what": "inputs with their own target",
+   "cue": "c8a.four"
+  },
+  {
+   "id": "e3",
+   "term": "example",
+   "title": "Example 3",
+   "what": "inputs with their own target",
+   "cue": "c8a.four"
+  },
+  {
+   "id": "e4",
+   "term": "example",
+   "title": "Example 4",
+   "what": "inputs with their own target",
+   "cue": "c8a.four"
+  },
+  {
+   "id": "fig3",
+   "term": "example",
+   "title": "Four examples",
+   "what": "four examples, one setting for all",
+   "cue": "c8a.four"
+  },
+  {
+   "id": "goal",
+   "term": "target",
+   "title": "Goal",
+   "what": "the value to reach, written in ringed ink",
+   "said": false
+  },
+  {
+   "id": "pen",
+   "term": "output",
+   "title": "Your pencil",
+   "what": "your guess, before the cover lifts or the dial turns",
+   "said": false
+  },
+  {
+   "id": "arrow",
+   "term": "click",
+   "title": "Arc arrow",
+   "what": "the dial that will turn, and how many clicks",
+   "said": false
+  },
+  {
+   "id": "plaque",
+   "term": "neuron",
+   "title": "Plaque",
+   "what": "press it, or Enter, to lock in your answer",
+   "said": false
+  },
+  {
+   "id": "tray",
+   "term": "neuron",
+   "title": "Parts tray",
+   "what": "each part and the seat it sits in",
+   "said": false
+  },
+  {
+   "id": "fig6",
+   "term": "example",
+   "title": "Side gauges",
+   "what": "more examples, or a second plate, on the same dials",
+   "said": false
+  },
+  {
+   "id": "race",
+   "term": "tuner",
+   "title": "Tally block",
+   "what": "your total miss, step by step, against the goal",
+   "said": false
+  },
+  {
+   "id": "fig5",
+   "term": "neuron",
+   "title": "Output line",
+   "what": "one neuron's output against input 1: one bend",
+   "said": false
+  }
+ ],
+ "fig3": [
+  {
+   "x": [
+    2,
+    1
+   ],
+   "t": 2.5
+  },
+  {
+   "x": [
+    1,
+    2
+   ],
+   "t": 2.0
+  },
+  {
+   "x": [
+    3,
+    1
+   ],
+   "t": 3.5
+  },
+  {
+   "x": [
+    1,
+    1
+   ],
+   "t": 1.5
+  }
+ ],
+ "tuner": {
+  "lr": 0.1,
+  "goal": 0.05,
+  "steps": 37,
+  "end": [
+   1.0106,
+   0.4829
   ],
-  "clips": [
-    { "id": "w1", "beat": "watch", "focus": "tubes", "sentences": [
-      "{machine}This is a machine that turns numbers into a number.",
-      "{tubes}Two numbers go in on the left, held as light in these glass tubes.",
-      "{input}Each one is called an input.|",
-      "{x1}This one holds two. {x2}This one holds one."
-    ]},
-    { "id": "w2", "beat": "watch", "focus": "dials", "sentences": [
-      "{dials}Each input flows through a dial.",
-      "{w1up}Turn a dial up, and its input counts for more.",
-      "{w2down}Turn it below zero, and its input pulls the total down.",
-      "{weight}The setting of a dial is called a weight.|"
-    ]},
-    { "id": "w3", "beat": "watch", "focus": "gauge", "sentences": [
-      "{chamber}In this chamber, everything that flows in is added up.",
-      "{valve}Then a one way valve. Below zero, nothing passes.",
-      "{gauge}What comes out, on this gauge, {output}is the output.|",
-      "{target}The brass mark is the output we want. The target.|"
-    ]},
-    { "id": "w4", "beat": "watch", "focus": "neuron", "sentences": [
-      "{recap}Inputs, weights, a sum, a valve, an output.",
-      "{neuron}This whole instrument is one neuron.|",
-      "{pull}Wire many neurons together, so the outputs of some become the inputs of others, {network}and you have a neural network.|",
-      "{billions}Large networks have billions of dials.",
-      "{tuned}Nobody sets them by hand. They are tuned, until the outputs meet their targets."
-    ]},
-    { "id": "d1", "beat": "drive", "sentences": ["Your turn. Take the first dial, and turn it two clicks to the right."] },
-    { "id": "d1ok", "beat": "drive", "sentences": ["The needle rose. The first input now counts."] },
-    { "id": "d2", "beat": "drive", "sentences": ["Now turn the second dial, until the needle sits on the brass mark."] },
-    { "id": "d2ok", "beat": "drive", "sentences": ["On the mark. That is tuning. Dials set, so the output meets the target."] },
-    { "id": "t0", "beat": "twist", "sentences": [
-      "One example is easy. Here are four, each with its own target.",
-      "A tuner that turns the dials by itself will race you, one small step every second.",
-      "The ember columns show how far the needles are from their marks. Pull the lever to start."
-    ]},
-    { "id": "twin", "beat": "twist", "sentences": ["All four needles on their marks, ahead of the tuner."] },
-    { "id": "tlose", "beat": "twist", "sentences": ["The tuner got there first. Each step, it turns every dial a little, toward a smaller miss."] },
-    { "id": "thint", "beat": "twist", "sentences": ["The second dial moves needles two and four the most."] },
-    { "id": "click", "beat": "click", "sentences": [
-      "To tune itself, a network needs one number that says how wrong it is.",
-      "That number is the next instrument."
-    ]}
-  ]
+  "draw_rate_steps_per_s": 8
+ },
+ "exercises": [
+  {
+   "id": "e1",
+   "title": "What a weight does",
+   "kind": "set-commit",
+   "answerSpace": "continuous",
+   "rounds": 3,
+   "catches": [
+    "m.weight-adds"
+   ],
+   "clips": {
+    "ask": "e1a",
+    "ask_b": "e1b",
+    "ok": "e1ok",
+    "miss": "e1miss",
+    "narrow": "e1n"
+   }
+  },
+  {
+   "id": "e2",
+   "title": "Where the needle lands",
+   "kind": "predict-place",
+   "answerSpace": "continuous",
+   "rounds": 3,
+   "catches": [
+    "m.passthrough",
+    "m.sum-is-output"
+   ],
+   "clips": {
+    "ask": "e2",
+    "ok": "e2ok",
+    "miss": "e2miss",
+    "narrow": "e2n"
+   }
+  },
+  {
+   "id": "e3",
+   "title": "One turn ahead",
+   "kind": "predict-place",
+   "answerSpace": "continuous",
+   "rounds": 4,
+   "catches": [
+    "m.click-same-size"
+   ],
+   "clips": {
+    "ask": "e3",
+    "ok": "e3ok",
+    "miss": "e3miss",
+    "narrow": "e3n"
+   }
+  },
+  {
+   "id": "e4",
+   "title": "As low as it goes",
+   "kind": "make-happen",
+   "answerSpace": "continuous",
+   "rounds": 2,
+   "catches": [
+    "m.output-any-number"
+   ],
+   "clips": {
+    "ask": "e4",
+    "ask_b": "e4b",
+    "ok": "e4ok",
+    "ok_b": "e4okb",
+    "miss": "e4miss",
+    "narrow": "e4n"
+   }
+  },
+  {
+   "id": "e5",
+   "title": "Assemble the neuron",
+   "kind": "assemble",
+   "answerSpace": "construct",
+   "rounds": 1,
+   "catches": [
+    "m.valve-per-input"
+   ],
+   "clips": {
+    "ask": "e5",
+    "ok": "e5ok",
+    "miss": "e5miss",
+    "narrow": "e5n"
+   }
+  },
+  {
+   "id": "e6",
+   "title": "Set the miss",
+   "kind": "set-commit",
+   "answerSpace": "continuous",
+   "rounds": 3,
+   "catches": [
+    "m.miss-unsigned"
+   ],
+   "clips": {
+    "ask": "e6",
+    "ok": "e6ok",
+    "miss": "e6miss",
+    "narrow": "e6n"
+   }
+  },
+  {
+   "id": "e7",
+   "title": "Fix it",
+   "kind": "repair",
+   "answerSpace": "continuous",
+   "rounds": 2,
+   "catches": [
+    "m.change-input"
+   ],
+   "clips": {
+    "ask": "e7",
+    "ok": "e7ok",
+    "narrow": "e7n"
+   }
+  },
+  {
+   "id": "e8",
+   "title": "Two examples, one setting",
+   "kind": "set-tolerance",
+   "answerSpace": "continuous",
+   "rounds": 2,
+   "catches": [
+    "m.setting-per-example"
+   ],
+   "clips": {
+    "ask": "e8",
+    "ok": "e8ok",
+    "narrow": "e8n"
+   }
+  },
+  {
+   "id": "L1",
+   "title": "Tuner L1",
+   "kind": "tune",
+   "answerSpace": "continuous",
+   "rounds": 1,
+   "catches": [],
+   "clips": {
+    "ask": "t0",
+    "hint": "thint",
+    "say": "l1"
+   }
+  },
+  {
+   "id": "L2",
+   "title": "Tuner L2",
+   "kind": "tune",
+   "answerSpace": "continuous",
+   "rounds": 1,
+   "catches": [
+    "m.one-right-setting"
+   ],
+   "clips": {
+    "ask": "t1",
+    "more": "l2more",
+    "say": "l2"
+   }
+  },
+  {
+   "id": "L3",
+   "title": "Tuner L3",
+   "kind": "tune",
+   "answerSpace": "continuous",
+   "rounds": 1,
+   "catches": [
+    "m.always-exact"
+   ],
+   "clips": {
+    "ask": "l3go",
+    "more": "l3more",
+    "say": "l3",
+    "closing": "ttuned"
+   }
+  }
+ ],
+ "misconceptions": [
+  {
+   "id": "m.weight-adds",
+   "belief": "A weight is added to its input, and turning it down only adds less.",
+   "truth": "A weight multiplies its input; below zero the product is negative and pulls the sum down.",
+   "catcher": "e1",
+   "refute": "r2",
+   "contrast": "k2"
+  },
+  {
+   "id": "m.passthrough",
+   "belief": "The output is the inputs passed through, added or averaged; the dials are decoration.",
+   "truth": "Each input is multiplied by its weight, and the products are added.",
+   "catcher": "e2",
+   "refute": "r1",
+   "contrast": "k1"
+  },
+  {
+   "id": "m.sum-is-output",
+   "belief": "The gauge shows the sum.",
+   "truth": "The sum is made before the valve; the gauge shows what passes.",
+   "catcher": "e2",
+   "refute": "r10",
+   "contrast": "k9"
+  },
+  {
+   "id": "m.click-same-size",
+   "belief": "One click moves the needle by the same amount on every dial.",
+   "truth": "One click moves the sum by that dial's input times the click; a bigger input moves it further.",
+   "catcher": "e3",
+   "refute": "r11",
+   "contrast": "k8"
+  },
+  {
+   "id": "m.output-any-number",
+   "belief": "The output can be any number, including below zero.",
+   "truth": "The valve stops every sum below zero, so the output rests at zero.",
+   "catcher": "e4",
+   "refute": "r3",
+   "contrast": "k3"
+  },
+  {
+   "id": "m.valve-per-input",
+   "belief": "Each input has its own valve (the valve acts before the sum).",
+   "truth": "The products are added first; the valve acts once, on the sum.",
+   "catcher": "e5",
+   "refute": "r4",
+   "contrast": "k4"
+  },
+  {
+   "id": "m.miss-unsigned",
+   "belief": "The miss is the size of the gap, or the output minus the target.",
+   "truth": "The miss is the target minus the output, with its sign: positive means the output must rise.",
+   "catcher": "e6",
+   "refute": "r5",
+   "contrast": "k5"
+  },
+  {
+   "id": "m.change-input",
+   "belief": "To fix the output, change the input.",
+   "truth": "Inputs are given; tuning changes only the weights.",
+   "catcher": "e7",
+   "refute": "r6",
+   "contrast": "k6"
+  },
+  {
+   "id": "m.setting-per-example",
+   "belief": "Each example gets its own dial setting.",
+   "truth": "One setting serves every example; tuning looks for the setting that meets all of them.",
+   "catcher": "e8",
+   "refute": "r7",
+   "contrast": "k7"
+  },
+  {
+   "id": "m.one-right-setting",
+   "belief": "There is exactly one right setting.",
+   "truth": "Several settings can meet every mark.",
+   "catcher": "L2",
+   "refute": "r8"
+  },
+  {
+   "id": "m.always-exact",
+   "belief": "There is always a setting that meets every mark.",
+   "truth": "Contradictory examples leave a smallest total miss above zero.",
+   "catcher": "L3",
+   "refute": "r9"
+  }
+ ],
+ "clips": [
+  {
+   "id": "c1a",
+   "beat": "watch",
+   "sentences": [
+    {
+     "text": "{machine}This is Plate One: a drawing of a machine that turns numbers into one number.",
+     "set": {
+      "x1": 0,
+      "x2": 0,
+      "w1": 0,
+      "w2": 0,
+      "t": null,
+      "gaugeOn": 0,
+      "chamberOn": 0
+     },
+     "shot": "full",
+     "lamp": "machine"
+    },
+    {
+     "text": "{neuron}A machine like this is called a neuron.|",
+     "lamp": "machine",
+     "term": "neuron"
+    },
+    {
+     "text": "{purpose}Neurons wired together by the billions are what AI systems are built from; this plate draws one."
+    },
+    {
+     "text": "{tubes}Numbers go in on the left, drawn as blue liquid in these two glass tubes.",
+     "set": {
+      "x1": 2,
+      "x2": 1
+     },
+     "lights": [
+      "tube1",
+      "tube2"
+     ],
+     "shot": "left",
+     "lamp": "tubes"
+    },
+    {
+     "text": "{input}Each number that goes in is called an input.|",
+     "lights": [
+      "tube1",
+      "tube2"
+     ],
+     "term": "input"
+    }
+   ]
+  },
+  {
+   "id": "c1b",
+   "beat": "watch",
+   "sentences": [
+    {
+     "text": "{x1}The first tube holds the first input, and its value is written at the end of the tube.",
+     "tags": {
+      "x1": "2"
+     },
+     "lights": [
+      "tube1"
+     ],
+     "lamp": "vial1",
+     "asserts": [
+      "x1 > 0"
+     ]
+    },
+    {
+     "text": "{x2}The second tube holds the second input.",
+     "tags": {
+      "x1": "2",
+      "x2": "1"
+     },
+     "lights": [
+      "tube2"
+     ],
+     "lamp": "vial2",
+     "asserts": [
+      "x2 > 0",
+      "x2 != x1"
+     ]
+    },
+    {
+     "text": "{scale}Read an input on the scale under its tube: the liquid ends at its value.",
+     "tags": {
+      "x1": "2",
+      "x2": "1"
+     },
+     "lights": [
+      "tube1"
+     ],
+     "lamp": "vial1"
+    },
+    {
+     "text": "{other}Other inputs fill the tubes to other levels: here the first tube is full, and the second is empty.",
+     "set": {
+      "x1": 3,
+      "x2": 0
+     },
+     "tags": {
+      "x1": "3",
+      "x2": "0"
+     },
+     "lights": [
+      "tube1",
+      "tube2"
+     ],
+     "asserts": [
+      "x1 == tube_max",
+      "x2 == 0"
+     ]
+    },
+    {
+     "text": "{back1}Now the tubes go back to the first inputs.",
+     "set": {
+      "x1": 2,
+      "x2": 1
+     },
+     "tags": {
+      "x1": "2",
+      "x2": "1"
+     },
+     "lights": [
+      "tube1",
+      "tube2"
+     ],
+     "asserts": [
+      "x1 == 2",
+      "x2 == 1"
+     ]
+    },
+    {
+     "text": "{given}Inputs come from outside the neuron; nothing inside it changes them.",
+     "tags": {
+      "x1": "2",
+      "x2": "1"
+     },
+     "lights": [
+      "tube1",
+      "tube2"
+     ]
+    },
+    {
+     "text": "{recap1}So far: a neuron, and two inputs held in two tubes.",
+     "tags": {
+      "x1": "2",
+      "x2": "1"
+     },
+     "lamp": "tubes"
+    }
+   ]
+  },
+  {
+   "id": "c2a",
+   "beat": "watch",
+   "sentences": [
+    {
+     "text": "{dials}Each input flows out of its tube through a dial, drawn as a red knob on a scale.",
+     "tags": {
+      "x1": "2",
+      "x2": "1"
+     },
+     "lights": [
+      "dial1",
+      "dial2"
+     ],
+     "shot": "full",
+     "lamp": "dials"
+    },
+    {
+     "text": "{weight}The setting of a dial is called a weight: it says how much its input counts.|",
+     "set": {
+      "w1": 1.5
+     },
+     "tags": {
+      "x1": "2",
+      "x2": "1",
+      "w1": "+1.5"
+     },
+     "lights": [
+      "dial1"
+     ],
+     "term": "weight",
+     "asserts": [
+      "w1 > 0",
+      "w1 > prev.w1"
+     ]
+    },
+    {
+     "text": "{multiply}The dial multiplies its input by its weight.",
+     "tags": {
+      "x1": "2",
+      "x2": "1",
+      "w1": "+1.5"
+     },
+     "lights": [
+      "dial1",
+      "pipe1"
+     ],
+     "lamp": "dial1"
+    },
+    {
+     "text": "{stays}The input stays in its tube; the dial makes a new number from it.",
+     "tags": {
+      "x1": "2",
+      "x2": "1",
+      "w1": "+1.5"
+     },
+     "lights": [
+      "tube1",
+      "win1"
+     ]
+    },
+    {
+     "text": "{product}That new number, the input times the weight, is called the product.|",
+     "tags": {
+      "x1": "2",
+      "w1": "+1.5",
+      "p1": "3.0"
+     },
+     "lights": [
+      "win1"
+     ],
+     "term": "product",
+     "asserts": [
+      "p1 == x1 * w1",
+      "p1 != x1 + w1"
+     ]
+    },
+    {
+     "text": "{note}The working is written in the note, one line per step.",
+     "tags": {
+      "x1": "2",
+      "w1": "+1.5",
+      "p1": "3.0"
+     },
+     "note": [
+      "product 1: 2 × 1.5 = 3.0"
+     ],
+     "lights": [
+      "note"
+     ],
+     "lamp": "note"
+    }
+   ]
+  },
+  {
+   "id": "c2b",
+   "beat": "watch",
+   "sentences": [
+    {
+     "text": "{one}Turn the weight to one: the product equals the input, so the input passes as it is.",
+     "set": {
+      "w1": 1
+     },
+     "tags": {
+      "x1": "2",
+      "w1": "+1",
+      "p1": "2.0"
+     },
+     "note": [
+      "product 1: 2 × 1 = 2.0"
+     ],
+     "lights": [
+      "dial1",
+      "win1",
+      "note"
+     ],
+     "asserts": [
+      "w1 == 1",
+      "p1 == x1",
+      "p1 != x1 + w1"
+     ]
+    },
+    {
+     "text": "{three}Turn it higher: now the product is three times the input.",
+     "set": {
+      "w1": 3
+     },
+     "tags": {
+      "x1": "2",
+      "w1": "+3",
+      "p1": "6.0"
+     },
+     "note": [
+      "product 1: 2 × 3 = 6.0"
+     ],
+     "lights": [
+      "dial1",
+      "win1",
+      "note"
+     ],
+     "asserts": [
+      "w1 > prev.w1",
+      "p1 == 3 * x1",
+      "p1 != x1 + w1"
+     ]
+    },
+    {
+     "text": "{half}Turn it between zero and one: the product is smaller than the input.",
+     "set": {
+      "w1": 0.5
+     },
+     "tags": {
+      "x1": "2",
+      "w1": "+0.5",
+      "p1": "1.0"
+     },
+     "note": [
+      "product 1: 2 × 0.5 = 1.0"
+     ],
+     "lights": [
+      "dial1",
+      "win1",
+      "note"
+     ],
+     "asserts": [
+      "0 < w1",
+      "w1 < 1",
+      "0 < p1",
+      "p1 < x1",
+      "p1 != x1 + w1"
+     ]
+    },
+    {
+     "text": "{zero}At zero the product is zero, whatever the input: this input no longer counts.",
+     "set": {
+      "w1": 0
+     },
+     "tags": {
+      "x1": "2",
+      "w1": "0",
+      "p1": "0.0"
+     },
+     "note": [
+      "product 1: 2 × 0 = 0.0"
+     ],
+     "lights": [
+      "dial1",
+      "win1",
+      "note"
+     ],
+     "asserts": [
+      "w1 == 0",
+      "p1 == 0"
+     ]
+    },
+    {
+     "text": "{neg}Below zero the product is negative, drawn as flow running backward.",
+     "set": {
+      "w1": -1
+     },
+     "tags": {
+      "x1": "2",
+      "w1": "−1",
+      "p1": "−2.0"
+     },
+     "note": [
+      "product 1: 2 × (−1) = −2.0"
+     ],
+     "lights": [
+      "dial1",
+      "win1",
+      "note"
+     ],
+     "asserts": [
+      "w1 < 0",
+      "p1 < 0",
+      "p1 != x1 + w1"
+     ]
+    },
+    {
+     "text": "{recap2}A weight multiplies its input: above one the product is larger than the input, between zero and one smaller, at zero it is zero, and below zero it is negative.",
+     "tags": {
+      "x1": "2",
+      "w1": "−1",
+      "p1": "−2.0"
+     },
+     "note": [
+      "product 1: 2 × (−1) = −2.0"
+     ],
+     "lights": [
+      "dial1",
+      "win1"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "c3a",
+   "beat": "watch",
+   "sentences": [
+    {
+     "text": "{back2}Turn the first dial back to its first setting.",
+     "set": {
+      "w1": 1.5
+     },
+     "tags": {
+      "x1": "2",
+      "x2": "1",
+      "w1": "+1.5",
+      "p1": "3.0"
+     },
+     "note": [
+      "product 1: 2 × 1.5 = 3.0"
+     ],
+     "lights": [
+      "dial1",
+      "win1"
+     ],
+     "lamp": "dial1",
+     "asserts": [
+      "w1 == 1.5",
+      "x1 == 2"
+     ]
+    },
+    {
+     "text": "{dial2}The second input has its own dial, and its own weight.",
+     "set": {
+      "w2": -0.5
+     },
+     "tags": {
+      "x1": "2",
+      "x2": "1",
+      "w1": "+1.5",
+      "w2": "−0.5",
+      "p1": "3.0"
+     },
+     "note": [
+      "product 1: 2 × 1.5 = 3.0"
+     ],
+     "lights": [
+      "dial2"
+     ],
+     "lamp": "dial2",
+     "asserts": [
+      "w2 < 0"
+     ]
+    },
+    {
+     "text": "{p2}Its product is made the same way: the second input times the second weight.",
+     "tags": {
+      "x1": "2",
+      "x2": "1",
+      "w1": "+1.5",
+      "w2": "−0.5",
+      "p1": "3.0",
+      "p2": "−0.5"
+     },
+     "note": [
+      "product 1: 2 × 1.5 = 3.0",
+      "product 2: 1 × (−0.5) = −0.5"
+     ],
+     "lights": [
+      "win2",
+      "note"
+     ],
+     "asserts": [
+      "p2 == x2 * w2"
+     ]
+    },
+    {
+     "text": "{chamber}Both products flow into this chamber, drawn as a glass column.",
+     "set": {
+      "chamberOn": 1
+     },
+     "tags": {
+      "p1": "3.0",
+      "p2": "−0.5"
+     },
+     "note": [
+      "product 1: 2 × 1.5 = 3.0",
+      "product 2: 1 × (−0.5) = −0.5"
+     ],
+     "lights": [
+      "chamber"
+     ],
+     "lamp": "chamber"
+    },
+    {
+     "text": "{dashed}The dashed line across the column marks zero.",
+     "tags": {
+      "p1": "3.0",
+      "p2": "−0.5"
+     },
+     "note": [
+      "product 1: 2 × 1.5 = 3.0",
+      "product 2: 1 × (−0.5) = −0.5"
+     ],
+     "lights": [
+      "chamber"
+     ]
+    },
+    {
+     "text": "{sum}The chamber adds the products, and the total is called the sum.|",
+     "tags": {
+      "p1": "3.0",
+      "p2": "−0.5",
+      "sum": "2.5"
+     },
+     "note": [
+      "product 1: 2 × 1.5 = 3.0",
+      "product 2: 1 × (−0.5) = −0.5",
+      "sum: 3.0 + (−0.5) = 2.5"
+     ],
+     "lights": [
+      "chamber",
+      "note"
+     ],
+     "term": "sum",
+     "asserts": [
+      "sum == p1 + p2"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "c3b",
+   "beat": "watch",
+   "sentences": [
+    {
+     "text": "{signs}A positive product raises the level, and a negative product draws liquid out, so the level drops.",
+     "tags": {
+      "p1": "3.0",
+      "p2": "−0.5",
+      "sum": "2.5"
+     },
+     "note": [
+      "product 1: 2 × 1.5 = 3.0",
+      "product 2: 1 × (−0.5) = −0.5",
+      "sum: 3.0 + (−0.5) = 2.5"
+     ],
+     "lights": [
+      "win1",
+      "win2",
+      "chamber"
+     ],
+     "asserts": [
+      "p1 > 0",
+      "p2 < 0",
+      "p2 < sum",
+      "sum < p1"
+     ]
+    },
+    {
+     "text": "{newin}Keep the dials, and give the neuron new inputs.",
+     "set": {
+      "x1": 1,
+      "x2": 3
+     },
+     "tags": {
+      "x1": "1",
+      "x2": "3",
+      "w1": "+1.5",
+      "w2": "−0.5",
+      "p1": "1.5",
+      "p2": "−1.5",
+      "sum": "0.0"
+     },
+     "note": [
+      "product 1: 1 × 1.5 = 1.5",
+      "product 2: 3 × (−0.5) = −1.5",
+      "sum: 1.5 + (−1.5) = 0.0"
+     ],
+     "lights": [
+      "tube1",
+      "tube2"
+     ],
+     "shot": "full",
+     "lamp": "tubes",
+     "asserts": [
+      "w1 == prev.w1",
+      "w2 == prev.w2",
+      "x1 != prev.x1"
+     ]
+    },
+    {
+     "text": "{cancel}Now the two products are equal and opposite, so the sum is zero.",
+     "tags": {
+      "x1": "1",
+      "x2": "3",
+      "w1": "+1.5",
+      "w2": "−0.5",
+      "p1": "1.5",
+      "p2": "−1.5",
+      "sum": "0.0"
+     },
+     "note": [
+      "product 1: 1 × 1.5 = 1.5",
+      "product 2: 3 × (−0.5) = −1.5",
+      "sum: 1.5 + (−1.5) = 0.0"
+     ],
+     "lights": [
+      "win1",
+      "win2",
+      "chamber"
+     ],
+     "lamp": "chamber",
+     "asserts": [
+      "p1 == -p2",
+      "sum == 0"
+     ]
+    },
+    {
+     "text": "{further}Turn the second dial further below zero.",
+     "set": {
+      "w2": -1
+     },
+     "tags": {
+      "x1": "1",
+      "x2": "3",
+      "w1": "+1.5",
+      "w2": "−1",
+      "p1": "1.5",
+      "p2": "−3.0",
+      "sum": "−1.5"
+     },
+     "note": [
+      "product 1: 1 × 1.5 = 1.5",
+      "product 2: 3 × (−1) = −3.0",
+      "sum: 1.5 + (−3.0) = −1.5"
+     ],
+     "lights": [
+      "dial2"
+     ],
+     "lamp": "dial2",
+     "asserts": [
+      "w2 < prev.w2",
+      "w2 < 0"
+     ]
+    },
+    {
+     "text": "{wins}Its product is now further from zero than the first product, so the sum is below zero.",
+     "tags": {
+      "x1": "1",
+      "x2": "3",
+      "w1": "+1.5",
+      "w2": "−1",
+      "p1": "1.5",
+      "p2": "−3.0",
+      "sum": "−1.5"
+     },
+     "note": [
+      "product 1: 1 × 1.5 = 1.5",
+      "product 2: 3 × (−1) = −3.0",
+      "sum: 1.5 + (−3.0) = −1.5"
+     ],
+     "lights": [
+      "win2",
+      "chamber"
+     ],
+     "lamp": "chamber",
+     "asserts": [
+      "abs(p2) > abs(p1)",
+      "sum < 0"
+     ]
+    },
+    {
+     "text": "{recap3}Each input times its weight, then all the products added: that is the sum.",
+     "tags": {
+      "x1": "1",
+      "x2": "3",
+      "w1": "+1.5",
+      "w2": "−1",
+      "p1": "1.5",
+      "p2": "−3.0",
+      "sum": "−1.5"
+     },
+     "note": [
+      "product 1: 1 × 1.5 = 1.5",
+      "product 2: 3 × (−1) = −3.0",
+      "sum: 1.5 + (−3.0) = −1.5"
+     ],
+     "lights": [
+      "win1",
+      "win2",
+      "chamber"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "c4a",
+   "beat": "watch",
+   "sentences": [
+    {
+     "text": "{meets}After the chamber, the sum reaches a part that lets flow go forward only.",
+     "tags": {
+      "sum": "−1.5"
+     },
+     "note": [
+      "product 1: 1 × 1.5 = 1.5",
+      "product 2: 3 × (−1) = −3.0",
+      "sum: 1.5 + (−3.0) = −1.5"
+     ],
+     "lights": [
+      "valve"
+     ],
+     "lamp": "valve"
+    },
+    {
+     "text": "{valve}This part is called a valve: a sum above zero passes, and a sum below zero is stopped.|",
+     "tags": {
+      "sum": "−1.5"
+     },
+     "note": [
+      "product 1: 1 × 1.5 = 1.5",
+      "product 2: 3 × (−1) = −3.0",
+      "sum: 1.5 + (−3.0) = −1.5"
+     ],
+     "lights": [
+      "valve"
+     ],
+     "term": "valve"
+    },
+    {
+     "text": "{gauge}The needle on this gauge shows what passes; here nothing passes, so it stays at zero.",
+     "set": {
+      "gaugeOn": 1
+     },
+     "tags": {
+      "sum": "−1.5",
+      "out": "0.0"
+     },
+     "note": [
+      "product 1: 1 × 1.5 = 1.5",
+      "product 2: 3 × (−1) = −3.0",
+      "sum: 1.5 + (−3.0) = −1.5"
+     ],
+     "lights": [
+      "gauge"
+     ],
+     "lamp": "gauge",
+     "asserts": [
+      "out == 0"
+     ]
+    },
+    {
+     "text": "{output}The gauge reads the output: the one number that comes out.|",
+     "tags": {
+      "sum": "−1.5",
+      "out": "0.0"
+     },
+     "note": [
+      "product 1: 1 × 1.5 = 1.5",
+      "product 2: 3 × (−1) = −3.0",
+      "sum: 1.5 + (−3.0) = −1.5"
+     ],
+     "lights": [
+      "gauge"
+     ],
+     "term": "output"
+    },
+    {
+     "text": "{stopped}Here the sum is below zero, so the valve is shut, and the output is zero.",
+     "tags": {
+      "sum": "−1.5",
+      "out": "0.0"
+     },
+     "note": [
+      "product 1: 1 × 1.5 = 1.5",
+      "product 2: 3 × (−1) = −3.0",
+      "sum: 1.5 + (−3.0) = −1.5",
+      "valve: −1.5 is below 0, so output 0.0"
+     ],
+     "lights": [
+      "valve",
+      "gauge",
+      "note"
+     ],
+     "asserts": [
+      "sum < 0",
+      "out == 0"
+     ]
+    },
+    {
+     "text": "{differ}The sum is below zero and the output is zero: they are not the same number.",
+     "tags": {
+      "sum": "−1.5",
+      "out": "0.0"
+     },
+     "note": [
+      "product 1: 1 × 1.5 = 1.5",
+      "product 2: 3 × (−1) = −3.0",
+      "sum: 1.5 + (−3.0) = −1.5",
+      "valve: −1.5 is below 0, so output 0.0"
+     ],
+     "lights": [
+      "chamber",
+      "gauge"
+     ],
+     "asserts": [
+      "sum != out"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "c4b",
+   "beat": "watch",
+   "sentences": [
+    {
+     "text": "{back}Keep the dials, and give the neuron new inputs.",
+     "set": {
+      "x1": 3,
+      "x2": 2
+     },
+     "tags": {
+      "x1": "3",
+      "x2": "2",
+      "w1": "+1.5",
+      "w2": "−1",
+      "p1": "4.5",
+      "p2": "−2.0",
+      "sum": "2.5",
+      "out": "2.5"
+     },
+     "note": [
+      "product 1: 3 × 1.5 = 4.5",
+      "product 2: 2 × (−1) = −2.0",
+      "sum: 4.5 + (−2.0) = 2.5",
+      "valve: 2.5 is above 0, so output 2.5"
+     ],
+     "lights": [
+      "tube1",
+      "tube2"
+     ],
+     "shot": "full",
+     "asserts": [
+      "w1 == prev.w1",
+      "w2 == prev.w2",
+      "x1 != prev.x1"
+     ]
+    },
+    {
+     "text": "{passes}The sum is above zero, so the valve opens, and the output equals the sum.",
+     "tags": {
+      "x1": "3",
+      "x2": "2",
+      "w1": "+1.5",
+      "w2": "−1",
+      "p1": "4.5",
+      "p2": "−2.0",
+      "sum": "2.5",
+      "out": "2.5"
+     },
+     "note": [
+      "product 1: 3 × 1.5 = 4.5",
+      "product 2: 2 × (−1) = −2.0",
+      "sum: 4.5 + (−2.0) = 2.5",
+      "valve: 2.5 is above 0, so output 2.5"
+     ],
+     "lights": [
+      "valve",
+      "gauge",
+      "note"
+     ],
+     "lamp": "valve",
+     "asserts": [
+      "sum > 0",
+      "out == sum"
+     ]
+    },
+    {
+     "text": "{graph}This graph draws the valve: the sum along the bottom, the output up the side.",
+     "tags": {
+      "sum": "2.5",
+      "out": "2.5"
+     },
+     "note": [
+      "product 1: 3 × 1.5 = 4.5",
+      "product 2: 2 × (−1) = −2.0",
+      "sum: 4.5 + (−2.0) = 2.5",
+      "valve: 2.5 is above 0, so output 2.5"
+     ],
+     "lights": [
+      "graph"
+     ],
+     "lamp": "graph"
+    },
+    {
+     "text": "{flat}Below zero the line lies flat at zero; above zero it rises with the sum.",
+     "tags": {
+      "sum": "2.5",
+      "out": "2.5"
+     },
+     "note": [
+      "product 1: 3 × 1.5 = 4.5",
+      "product 2: 2 × (−1) = −2.0",
+      "sum: 4.5 + (−2.0) = 2.5",
+      "valve: 2.5 is above 0, so output 2.5"
+     ],
+     "lights": [
+      "graph"
+     ]
+    },
+    {
+     "text": "{bend}So the line has one bend, at zero.",
+     "tags": {
+      "sum": "2.5",
+      "out": "2.5"
+     },
+     "note": [
+      "product 1: 3 × 1.5 = 4.5",
+      "product 2: 2 × (−1) = −2.0",
+      "sum: 4.5 + (−2.0) = 2.5",
+      "valve: 2.5 is above 0, so output 2.5"
+     ],
+     "lights": [
+      "graph"
+     ]
+    },
+    {
+     "text": "{recap4}The output comes after the valve: when the sum is below zero, the output is zero; when the sum is above zero, the output equals the sum.",
+     "tags": {
+      "sum": "2.5",
+      "out": "2.5"
+     },
+     "note": [
+      "product 1: 3 × 1.5 = 4.5",
+      "product 2: 2 × (−1) = −2.0",
+      "sum: 4.5 + (−2.0) = 2.5",
+      "valve: 2.5 is above 0, so output 2.5"
+     ],
+     "lights": [
+      "chamber",
+      "valve",
+      "gauge"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "c5a",
+   "beat": "watch",
+   "sentences": [
+    {
+     "text": "{target}The output we want is called the target: the right answer for these inputs, given with them.|",
+     "set": {
+      "t": 3.0
+     },
+     "tags": {
+      "out": "2.5",
+      "t": "3.0"
+     },
+     "note": [
+      "product 1: 3 × 1.5 = 4.5",
+      "product 2: 2 × (−1) = −2.0",
+      "sum: 4.5 + (−2.0) = 2.5",
+      "valve: 2.5 is above 0, so output 2.5"
+     ],
+     "lights": [
+      "mark"
+     ],
+     "lamp": "mark",
+     "term": "target"
+    },
+    {
+     "text": "{mark}It is drawn as this brass mark on the gauge.",
+     "tags": {
+      "out": "2.5",
+      "t": "3.0"
+     },
+     "note": [
+      "product 1: 3 × 1.5 = 4.5",
+      "product 2: 2 × (−1) = −2.0",
+      "sum: 4.5 + (−2.0) = 2.5",
+      "valve: 2.5 is above 0, so output 2.5"
+     ],
+     "lights": [
+      "mark"
+     ]
+    },
+    {
+     "text": "{miss}The gap from the needle to the mark is called the miss.|",
+     "tags": {
+      "out": "2.5",
+      "t": "3.0",
+      "miss": "+0.5"
+     },
+     "note": [
+      "product 1: 3 × 1.5 = 4.5",
+      "product 2: 2 × (−1) = −2.0",
+      "sum: 4.5 + (−2.0) = 2.5",
+      "valve: 2.5 is above 0, so output 2.5"
+     ],
+     "lights": [
+      "miss"
+     ],
+     "lamp": "gauge",
+     "term": "miss"
+    },
+    {
+     "text": "{minus}The miss is the target minus the output: start at the needle and go to the mark.",
+     "tags": {
+      "out": "2.5",
+      "t": "3.0",
+      "miss": "+0.5"
+     },
+     "note": [
+      "product 1: 3 × 1.5 = 4.5",
+      "product 2: 2 × (−1) = −2.0",
+      "sum: 4.5 + (−2.0) = 2.5",
+      "valve: 2.5 is above 0, so output 2.5",
+      "miss: 3.0 − 2.5 = +0.5"
+     ],
+     "lights": [
+      "miss",
+      "note"
+     ],
+     "asserts": [
+      "miss == t - out"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "c5b",
+   "beat": "watch",
+   "sentences": [
+    {
+     "text": "{pos}Here the needle is below the mark, so the miss is positive: the output must rise.",
+     "tags": {
+      "out": "2.5",
+      "t": "3.0",
+      "miss": "+0.5"
+     },
+     "note": [
+      "product 1: 3 × 1.5 = 4.5",
+      "product 2: 2 × (−1) = −2.0",
+      "sum: 4.5 + (−2.0) = 2.5",
+      "valve: 2.5 is above 0, so output 2.5",
+      "miss: 3.0 − 2.5 = +0.5"
+     ],
+     "lights": [
+      "miss"
+     ],
+     "asserts": [
+      "out < t",
+      "miss > 0"
+     ]
+    },
+    {
+     "text": "{negm}Turn the first dial up: the needle passes the mark, and the miss is negative, so the output must fall.",
+     "set": {
+      "w1": 2
+     },
+     "tags": {
+      "w1": "+2",
+      "out": "4.0",
+      "t": "3.0",
+      "miss": "−1.0"
+     },
+     "note": [
+      "product 1: 3 × 2 = 6.0",
+      "product 2: 2 × (−1) = −2.0",
+      "sum: 6.0 + (−2.0) = 4.0",
+      "valve: 4.0 is above 0, so output 4.0",
+      "miss: 3.0 − 4.0 = −1.0"
+     ],
+     "lights": [
+      "dial1",
+      "miss"
+     ],
+     "asserts": [
+      "w1 > prev.w1",
+      "out > t",
+      "miss < 0"
+     ]
+    },
+    {
+     "text": "{onmark}Turn the second dial down a little: the needle sits on the mark, and the miss is zero.",
+     "set": {
+      "w2": -1.5
+     },
+     "tags": {
+      "w2": "−1.5",
+      "out": "3.0",
+      "t": "3.0",
+      "miss": "0.0"
+     },
+     "note": [
+      "product 1: 3 × 2 = 6.0",
+      "product 2: 2 × (−1.5) = −3.0",
+      "sum: 6.0 + (−3.0) = 3.0",
+      "valve: 3.0 is above 0, so output 3.0",
+      "miss: 3.0 − 3.0 = 0.0"
+     ],
+     "lights": [
+      "dial2",
+      "mark",
+      "miss"
+     ],
+     "asserts": [
+      "w2 < prev.w2",
+      "miss == 0"
+     ]
+    },
+    {
+     "text": "{recap5}The target is the output we want; the miss is the target minus the output, with its sign.",
+     "tags": {
+      "out": "3.0",
+      "t": "3.0",
+      "miss": "0.0"
+     },
+     "note": [
+      "product 1: 3 × 2 = 6.0",
+      "product 2: 2 × (−1.5) = −3.0",
+      "sum: 6.0 + (−3.0) = 3.0",
+      "valve: 3.0 is above 0, so output 3.0",
+      "miss: 3.0 − 3.0 = 0.0"
+     ],
+     "lights": [
+      "mark",
+      "miss"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "c6a",
+   "beat": "watch",
+   "sentences": [
+    {
+     "text": "{again}Start again: new inputs, a new target, and both dials at zero.",
+     "set": {
+      "x1": 2,
+      "x2": 1,
+      "w1": 0,
+      "w2": 0,
+      "t": 2.5
+     },
+     "tags": {
+      "x1": "2",
+      "x2": "1",
+      "w1": "0",
+      "w2": "0",
+      "out": "0.0",
+      "t": "2.5",
+      "miss": "+2.5"
+     },
+     "note": [
+      "product 1: 2 × 0 = 0.0",
+      "product 2: 1 × 0 = 0.0",
+      "sum: 0.0 + 0.0 = 0.0",
+      "valve: 0.0 is not above 0, so output 0.0",
+      "miss: 2.5 − 0.0 = +2.5"
+     ],
+     "lights": [
+      "tube1",
+      "tube2",
+      "mark",
+      "dial1",
+      "dial2"
+     ],
+     "shot": "drive",
+     "lamp": "dials",
+     "asserts": [
+      "w1 == 0",
+      "w2 == 0",
+      "t != prev.t",
+      "x1 != prev.x1"
+     ]
+    },
+    {
+     "text": "{tuning}Changing the weights to bring the output to the target is called tuning.|",
+     "tags": {
+      "x1": "2",
+      "x2": "1",
+      "w1": "0",
+      "w2": "0",
+      "out": "0.0",
+      "t": "2.5",
+      "miss": "+2.5"
+     },
+     "note": [
+      "product 1: 2 × 0 = 0.0",
+      "product 2: 1 × 0 = 0.0",
+      "sum: 0.0 + 0.0 = 0.0",
+      "valve: 0.0 is not above 0, so output 0.0",
+      "miss: 2.5 − 0.0 = +2.5"
+     ],
+     "lights": [
+      "dial1",
+      "dial2"
+     ],
+     "lamp": "dials",
+     "term": "tuning"
+    },
+    {
+     "text": "{locked}Only the dials turn: the input tubes are locked.",
+     "tags": {
+      "x1": "2",
+      "x2": "1",
+      "w1": "0",
+      "w2": "0",
+      "out": "0.0",
+      "t": "2.5",
+      "miss": "+2.5"
+     },
+     "note": [
+      "product 1: 2 × 0 = 0.0",
+      "product 2: 1 × 0 = 0.0",
+      "sum: 0.0 + 0.0 = 0.0",
+      "valve: 0.0 is not above 0, so output 0.0",
+      "miss: 2.5 − 0.0 = +2.5"
+     ],
+     "lights": [
+      "lock1",
+      "lock2"
+     ],
+     "lamp": "tubes"
+    },
+    {
+     "text": "{case}An input is the case in front of the neuron; changing it would answer a different question.",
+     "tags": {
+      "x1": "2",
+      "x2": "1",
+      "w1": "0",
+      "w2": "0",
+      "out": "0.0",
+      "t": "2.5",
+      "miss": "+2.5"
+     },
+     "note": [
+      "product 1: 2 × 0 = 0.0",
+      "product 2: 1 × 0 = 0.0",
+      "sum: 0.0 + 0.0 = 0.0",
+      "valve: 0.0 is not above 0, so output 0.0",
+      "miss: 2.5 − 0.0 = +2.5"
+     ],
+     "lights": [
+      "tube1",
+      "tube2"
+     ],
+     "lamp": "tubes"
+    },
+    {
+     "text": "{own}The dials are the only part that belongs to the neuron, so tuning turns only the dials.",
+     "tags": {
+      "x1": "2",
+      "x2": "1",
+      "w1": "0",
+      "w2": "0",
+      "out": "0.0",
+      "t": "2.5",
+      "miss": "+2.5"
+     },
+     "note": [
+      "product 1: 2 × 0 = 0.0",
+      "product 2: 1 × 0 = 0.0",
+      "sum: 0.0 + 0.0 = 0.0",
+      "valve: 0.0 is not above 0, so output 0.0",
+      "miss: 2.5 − 0.0 = +2.5"
+     ],
+     "lights": [
+      "dial1",
+      "dial2"
+     ],
+     "lamp": "dials"
+    },
+    {
+     "text": "{recap6}Tuning turns only the dials; the inputs are given to the neuron.",
+     "tags": {
+      "x1": "2",
+      "x2": "1",
+      "w1": "0",
+      "w2": "0",
+      "out": "0.0",
+      "t": "2.5",
+      "miss": "+2.5"
+     },
+     "note": [
+      "product 1: 2 × 0 = 0.0",
+      "product 2: 1 × 0 = 0.0",
+      "sum: 0.0 + 0.0 = 0.0",
+      "valve: 0.0 is not above 0, so output 0.0",
+      "miss: 2.5 − 0.0 = +2.5"
+     ],
+     "lights": [
+      "dial1",
+      "dial2",
+      "lock1",
+      "lock2"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "c7a",
+   "beat": "watch",
+   "sentences": [
+    {
+     "text": "{start}Both dials are at zero, so the output is zero, and the miss is positive.",
+     "tags": {
+      "w1": "0",
+      "w2": "0",
+      "out": "0.0",
+      "t": "2.5",
+      "miss": "+2.5"
+     },
+     "note": [
+      "product 1: 2 × 0 = 0.0",
+      "product 2: 1 × 0 = 0.0",
+      "sum: 0.0 + 0.0 = 0.0",
+      "valve: 0.0 is not above 0, so output 0.0",
+      "miss: 2.5 − 0.0 = +2.5"
+     ],
+     "lights": [
+      "gauge",
+      "miss"
+     ],
+     "lamp": "gauge",
+     "asserts": [
+      "w1 == 0",
+      "w2 == 0",
+      "out == 0",
+      "miss > 0"
+     ]
+    },
+    {
+     "text": "{click}Each turn of a knob to the next mark on its scale is called a click.|",
+     "tags": {
+      "w1": "0",
+      "w2": "0",
+      "out": "0.0",
+      "t": "2.5",
+      "miss": "+2.5"
+     },
+     "note": [
+      "product 1: 2 × 0 = 0.0",
+      "product 2: 1 × 0 = 0.0",
+      "sum: 0.0 + 0.0 = 0.0",
+      "valve: 0.0 is not above 0, so output 0.0",
+      "miss: 2.5 − 0.0 = +2.5"
+     ],
+     "lights": [
+      "dial1",
+      "detent"
+     ],
+     "lamp": "dial1",
+     "term": "click"
+    },
+    {
+     "text": "{rise}A positive miss means the output must rise, so turn the first dial up.",
+     "tags": {
+      "w1": "0",
+      "w2": "0",
+      "out": "0.0",
+      "t": "2.5",
+      "miss": "+2.5"
+     },
+     "note": [
+      "product 1: 2 × 0 = 0.0",
+      "product 2: 1 × 0 = 0.0",
+      "sum: 0.0 + 0.0 = 0.0",
+      "valve: 0.0 is not above 0, so output 0.0",
+      "miss: 2.5 − 0.0 = +2.5"
+     ],
+     "lights": [
+      "dial1"
+     ],
+     "lamp": "dial1"
+    },
+    {
+     "text": "{c1}One click: the product grows, and the miss gets smaller.",
+     "set": {
+      "w1": 0.5
+     },
+     "tags": {
+      "w1": "+0.5",
+      "p1": "1.0",
+      "out": "1.0",
+      "t": "2.5",
+      "miss": "+1.5"
+     },
+     "note": [
+      "product 1: 2 × 0.5 = 1.0",
+      "product 2: 1 × 0 = 0.0",
+      "sum: 1.0 + 0.0 = 1.0",
+      "valve: 1.0 is above 0, so output 1.0",
+      "miss: 2.5 − 1.0 = +1.5"
+     ],
+     "lights": [
+      "dial1",
+      "win1",
+      "miss"
+     ],
+     "asserts": [
+      "w1 == prev.w1 + click",
+      "p1 > prev.p1",
+      "abs(miss) < abs(prev.miss)",
+      "miss > 0"
+     ]
+    },
+    {
+     "text": "{c2}Another click, and the miss gets smaller again.",
+     "set": {
+      "w1": 1
+     },
+     "tags": {
+      "w1": "+1",
+      "p1": "2.0",
+      "out": "2.0",
+      "t": "2.5",
+      "miss": "+0.5"
+     },
+     "note": [
+      "product 1: 2 × 1 = 2.0",
+      "product 2: 1 × 0 = 0.0",
+      "sum: 2.0 + 0.0 = 2.0",
+      "valve: 2.0 is above 0, so output 2.0",
+      "miss: 2.5 − 2.0 = +0.5"
+     ],
+     "lights": [
+      "dial1",
+      "miss"
+     ],
+     "asserts": [
+      "w1 == prev.w1 + click",
+      "p1 > prev.p1",
+      "abs(miss) < abs(prev.miss)",
+      "miss > 0"
+     ]
+    },
+    {
+     "text": "{c3}A third click is too far: the needle passes the mark, and the miss is negative.",
+     "set": {
+      "w1": 1.5
+     },
+     "tags": {
+      "w1": "+1.5",
+      "p1": "3.0",
+      "out": "3.0",
+      "t": "2.5",
+      "miss": "−0.5"
+     },
+     "note": [
+      "product 1: 2 × 1.5 = 3.0",
+      "product 2: 1 × 0 = 0.0",
+      "sum: 3.0 + 0.0 = 3.0",
+      "valve: 3.0 is above 0, so output 3.0",
+      "miss: 2.5 − 3.0 = −0.5"
+     ],
+     "lights": [
+      "dial1",
+      "miss"
+     ],
+     "asserts": [
+      "w1 == 3 * click",
+      "miss < 0",
+      "prev.miss > 0"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "c7b",
+   "beat": "watch",
+   "sentences": [
+    {
+     "text": "{short}The first dial alone cannot land on this mark: one click short, or one click past.",
+     "tags": {
+      "w1": "+1.5",
+      "out": "3.0",
+      "t": "2.5",
+      "miss": "−0.5"
+     },
+     "note": [
+      "product 1: 2 × 1.5 = 3.0",
+      "product 2: 1 × 0 = 0.0",
+      "sum: 3.0 + 0.0 = 3.0",
+      "valve: 3.0 is above 0, so output 3.0",
+      "miss: 2.5 − 3.0 = −0.5"
+     ],
+     "lights": [
+      "dial1",
+      "miss"
+     ],
+     "asserts": [
+      "miss < 0",
+      "t - (out - x1 * click) > 0"
+     ]
+    },
+    {
+     "text": "{size}Each click of the first dial moves the needle twice as far as a click of the second, because its input is twice as big.",
+     "tags": {
+      "x1": "2",
+      "x2": "1",
+      "w1": "+1.5",
+      "w2": "0",
+      "out": "3.0",
+      "t": "2.5",
+      "miss": "−0.5"
+     },
+     "note": [
+      "product 1: 2 × 1.5 = 3.0",
+      "product 2: 1 × 0 = 0.0",
+      "sum: 3.0 + 0.0 = 3.0",
+      "valve: 3.0 is above 0, so output 3.0",
+      "miss: 2.5 − 3.0 = −0.5"
+     ],
+     "lights": [
+      "dial1",
+      "dial2",
+      "gauge"
+     ],
+     "asserts": [
+      "x1 == 2 * x2",
+      "sum > 0"
+     ]
+    },
+    {
+     "text": "{pull}So turn the second dial one click below zero.",
+     "set": {
+      "w2": -0.5
+     },
+     "tags": {
+      "w1": "+1.5",
+      "w2": "−0.5",
+      "p1": "3.0",
+      "p2": "−0.5",
+      "out": "2.5",
+      "t": "2.5",
+      "miss": "0.0"
+     },
+     "note": [
+      "product 1: 2 × 1.5 = 3.0",
+      "product 2: 1 × (−0.5) = −0.5",
+      "sum: 3.0 + (−0.5) = 2.5",
+      "valve: 2.5 is above 0, so output 2.5",
+      "miss: 2.5 − 2.5 = 0.0"
+     ],
+     "lights": [
+      "dial2",
+      "win2"
+     ],
+     "lamp": "dial2",
+     "asserts": [
+      "w2 == prev.w2 - click",
+      "w2 < 0"
+     ]
+    },
+    {
+     "text": "{met}The needle is on the mark, and the miss is zero: the neuron is tuned for these inputs and this target.",
+     "tags": {
+      "x1": "2",
+      "x2": "1",
+      "w1": "+1.5",
+      "w2": "−0.5",
+      "p1": "3.0",
+      "p2": "−0.5",
+      "sum": "2.5",
+      "out": "2.5",
+      "t": "2.5",
+      "miss": "0.0"
+     },
+     "note": [
+      "product 1: 2 × 1.5 = 3.0",
+      "product 2: 1 × (−0.5) = −0.5",
+      "sum: 3.0 + (−0.5) = 2.5",
+      "valve: 2.5 is above 0, so output 2.5",
+      "miss: 2.5 − 2.5 = 0.0"
+     ],
+     "lights": [
+      "mark",
+      "miss",
+      "note"
+     ],
+     "lamp": "mark",
+     "asserts": [
+      "miss == 0"
+     ]
+    },
+    {
+     "text": "{recap7}Tuning by hand means: read the miss, turn a dial the way that makes it smaller, and repeat.",
+     "tags": {
+      "w1": "+1.5",
+      "w2": "−0.5",
+      "out": "2.5",
+      "t": "2.5",
+      "miss": "0.0"
+     },
+     "note": [
+      "product 1: 2 × 1.5 = 3.0",
+      "product 2: 1 × (−0.5) = −0.5",
+      "sum: 3.0 + (−0.5) = 2.5",
+      "valve: 2.5 is above 0, so output 2.5",
+      "miss: 2.5 − 2.5 = 0.0"
+     ],
+     "lights": [
+      "miss",
+      "dial1",
+      "dial2"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "c8a",
+   "beat": "watch",
+   "sentences": [
+    {
+     "text": "{example}A set of inputs together with its target is called an example.|",
+     "tags": {
+      "x1": "2",
+      "x2": "1",
+      "t": "2.5"
+     },
+     "note": [
+      "product 1: 2 × 1.5 = 3.0",
+      "product 2: 1 × (−0.5) = −0.5",
+      "sum: 3.0 + (−0.5) = 2.5",
+      "valve: 2.5 is above 0, so output 2.5",
+      "miss: 2.5 − 2.5 = 0.0"
+     ],
+     "lights": [
+      "tube1",
+      "tube2",
+      "mark",
+      "bracket"
+     ],
+     "lamp": "machine",
+     "term": "example"
+    },
+    {
+     "text": "{four}Here are four examples. Their inputs wait in a rack on the left, sets one to four, and each has its own target.",
+     "tags": {
+      "w1": "+1.5",
+      "w2": "−0.5"
+     },
+     "lights": [
+      "fig3"
+     ],
+     "shot": "wide",
+     "lamp": "inputs",
+     "fig3": [
+      {
+       "x": [
+        2,
+        1
+       ],
+       "t": "2.5",
+       "out": "2.5",
+       "miss": "0.0"
+      },
+      {
+       "x": [
+        1,
+        2
+       ],
+       "t": "2.0",
+       "out": "0.5",
+       "miss": "+1.5"
+      },
+      {
+       "x": [
+        3,
+        1
+       ],
+       "t": "3.5",
+       "out": "4.0",
+       "miss": "−0.5"
+      },
+      {
+       "x": [
+        1,
+        1
+       ],
+       "t": "1.5",
+       "out": "1.0",
+       "miss": "+0.5"
+      }
+     ]
+    },
+    {
+     "text": "{onebyone}The machine runs one example at a time: {s1}set one, {s2}then two, {s3}then three, {s4}then four, and each output lands on its own small gauge.",
+     "tags": {
+      "w1": "+1.5",
+      "w2": "−0.5"
+     },
+     "lights": [
+      "fig3"
+     ],
+     "lamp": "fig3",
+     "fig3": [
+      {
+       "x": [
+        2,
+        1
+       ],
+       "t": "2.5",
+       "out": "2.5",
+       "miss": "0.0"
+      },
+      {
+       "x": [
+        1,
+        2
+       ],
+       "t": "2.0",
+       "out": "0.5",
+       "miss": "+1.5"
+      },
+      {
+       "x": [
+        3,
+        1
+       ],
+       "t": "3.5",
+       "out": "4.0",
+       "miss": "−0.5"
+      },
+      {
+       "x": [
+        1,
+        1
+       ],
+       "t": "1.5",
+       "out": "1.0",
+       "miss": "+0.5"
+      }
+     ]
+    },
+    {
+     "text": "{lamps}Under the dials, one lamp per example lights while its needle is on its mark: the setting is right only when all four are lit.",
+     "tags": {
+      "w1": "+1.5",
+      "w2": "−0.5"
+     },
+     "lights": [
+      "fig3"
+     ],
+     "lamp": "lampbar",
+     "fig3": [
+      {
+       "x": [
+        2,
+        1
+       ],
+       "t": "2.5",
+       "out": "2.5",
+       "miss": "0.0"
+      },
+      {
+       "x": [
+        1,
+        2
+       ],
+       "t": "2.0",
+       "out": "0.5",
+       "miss": "+1.5"
+      },
+      {
+       "x": [
+        3,
+        1
+       ],
+       "t": "3.5",
+       "out": "4.0",
+       "miss": "−0.5"
+      },
+      {
+       "x": [
+        1,
+        1
+       ],
+       "t": "1.5",
+       "out": "1.0",
+       "miss": "+0.5"
+      }
+     ],
+     "asserts": [
+      "e1_miss == 0",
+      "e2_miss != 0",
+      "e3_miss != 0",
+      "e4_miss != 0"
+     ]
+    },
+    {
+     "text": "{oneset}The neuron has one set of dials, and that one setting serves every example.",
+     "tags": {
+      "w1": "+1.5",
+      "w2": "−0.5"
+     },
+     "lights": [
+      "dial1",
+      "dial2",
+      "fig3"
+     ],
+     "lamp": "dials",
+     "fig3": [
+      {
+       "x": [
+        2,
+        1
+       ],
+       "t": "2.5",
+       "out": "2.5",
+       "miss": "0.0"
+      },
+      {
+       "x": [
+        1,
+        2
+       ],
+       "t": "2.0",
+       "out": "0.5",
+       "miss": "+1.5"
+      },
+      {
+       "x": [
+        3,
+        1
+       ],
+       "t": "3.5",
+       "out": "4.0",
+       "miss": "−0.5"
+      },
+      {
+       "x": [
+        1,
+        1
+       ],
+       "t": "1.5",
+       "out": "1.0",
+       "miss": "+0.5"
+      }
+     ]
+    },
+    {
+     "text": "{nomark}Once tuned, the neuron is given new inputs that have no brass mark.",
+     "tags": {
+      "w1": "+1.5",
+      "w2": "−0.5"
+     },
+     "lights": [
+      "fig3"
+     ],
+     "lamp": "fig3",
+     "fig3": [
+      {
+       "x": [
+        2,
+        1
+       ],
+       "t": "2.5",
+       "out": "2.5",
+       "miss": "0.0"
+      },
+      {
+       "x": [
+        1,
+        2
+       ],
+       "t": "2.0",
+       "out": "0.5",
+       "miss": "+1.5"
+      },
+      {
+       "x": [
+        3,
+        1
+       ],
+       "t": "3.5",
+       "out": "4.0",
+       "miss": "−0.5"
+      },
+      {
+       "x": [
+        1,
+        1
+       ],
+       "t": "1.5",
+       "out": "1.0",
+       "miss": "+0.5"
+      }
+     ]
+    },
+    {
+     "text": "{suit}It answers them with the one setting it has, so that setting must suit every example.",
+     "tags": {
+      "w1": "+1.5",
+      "w2": "−0.5"
+     },
+     "lights": [
+      "dial1",
+      "dial2",
+      "fig3"
+     ],
+     "lamp": "fig3",
+     "fig3": [
+      {
+       "x": [
+        2,
+        1
+       ],
+       "t": "2.5",
+       "out": "2.5",
+       "miss": "0.0"
+      },
+      {
+       "x": [
+        1,
+        2
+       ],
+       "t": "2.0",
+       "out": "0.5",
+       "miss": "+1.5"
+      },
+      {
+       "x": [
+        3,
+        1
+       ],
+       "t": "3.5",
+       "out": "4.0",
+       "miss": "−0.5"
+      },
+      {
+       "x": [
+        1,
+        1
+       ],
+       "t": "1.5",
+       "out": "1.0",
+       "miss": "+0.5"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "c8b",
+   "beat": "watch",
+   "sentences": [
+    {
+     "text": "{firstok}With the setting tuned by hand, the first example has its needle on its mark.",
+     "tags": {
+      "w1": "+1.5",
+      "w2": "−0.5"
+     },
+     "lights": [
+      "e1"
+     ],
+     "lamp": "e1",
+     "fig3": [
+      {
+       "x": [
+        2,
+        1
+       ],
+       "t": "2.5",
+       "out": "2.5",
+       "miss": "0.0"
+      },
+      {
+       "x": [
+        1,
+        2
+       ],
+       "t": "2.0",
+       "out": "0.5",
+       "miss": "+1.5"
+      },
+      {
+       "x": [
+        3,
+        1
+       ],
+       "t": "3.5",
+       "out": "4.0",
+       "miss": "−0.5"
+      },
+      {
+       "x": [
+        1,
+        1
+       ],
+       "t": "1.5",
+       "out": "1.0",
+       "miss": "+0.5"
+      }
+     ],
+     "asserts": [
+      "e1_miss == 0"
+     ]
+    },
+    {
+     "text": "{others}The other three needles are off their marks.",
+     "tags": {
+      "w1": "+1.5",
+      "w2": "−0.5"
+     },
+     "lights": [
+      "e2",
+      "e3",
+      "e4"
+     ],
+     "lamp": "fig3",
+     "fig3": [
+      {
+       "x": [
+        2,
+        1
+       ],
+       "t": "2.5",
+       "out": "2.5",
+       "miss": "0.0"
+      },
+      {
+       "x": [
+        1,
+        2
+       ],
+       "t": "2.0",
+       "out": "0.5",
+       "miss": "+1.5"
+      },
+      {
+       "x": [
+        3,
+        1
+       ],
+       "t": "3.5",
+       "out": "4.0",
+       "miss": "−0.5"
+      },
+      {
+       "x": [
+        1,
+        1
+       ],
+       "t": "1.5",
+       "out": "1.0",
+       "miss": "+0.5"
+      }
+     ],
+     "asserts": [
+      "e2_miss != 0",
+      "e3_miss != 0",
+      "e4_miss != 0"
+     ]
+    },
+    {
+     "text": "{worked}Load set two into the machine: its output falls well short of its target.",
+     "tags": {
+      "w1": "+1.5",
+      "w2": "−0.5",
+      "out": "0.5",
+      "t": "2.0"
+     },
+     "lights": [
+      "e2"
+     ],
+     "lamp": "machine",
+     "fig3": [
+      {
+       "x": [
+        2,
+        1
+       ],
+       "t": "2.5",
+       "out": "2.5",
+       "miss": "0.0"
+      },
+      {
+       "x": [
+        1,
+        2
+       ],
+       "t": "2.0",
+       "out": "0.5",
+       "miss": "+1.5"
+      },
+      {
+       "x": [
+        3,
+        1
+       ],
+       "t": "3.5",
+       "out": "4.0",
+       "miss": "−0.5"
+      },
+      {
+       "x": [
+        1,
+        1
+       ],
+       "t": "1.5",
+       "out": "1.0",
+       "miss": "+0.5"
+      }
+     ],
+     "asserts": [
+      "out == 0.5",
+      "t == 2",
+      "out < t"
+     ]
+    },
+    {
+     "text": "{moveall}Turn the second dial up one click to help it, and the machine runs all four examples again, one after another: every needle moves.",
+     "set": {
+      "w2": 0
+     },
+     "tags": {
+      "w1": "+1.5",
+      "w2": "0"
+     },
+     "lights": [
+      "dial2",
+      "fig3"
+     ],
+     "lamp": "fig3",
+     "fig3": [
+      {
+       "x": [
+        2,
+        1
+       ],
+       "t": "2.5",
+       "out": "3.0",
+       "miss": "−0.5"
+      },
+      {
+       "x": [
+        1,
+        2
+       ],
+       "t": "2.0",
+       "out": "1.5",
+       "miss": "+0.5"
+      },
+      {
+       "x": [
+        3,
+        1
+       ],
+       "t": "3.5",
+       "out": "4.5",
+       "miss": "−1.0"
+      },
+      {
+       "x": [
+        1,
+        1
+       ],
+       "t": "1.5",
+       "out": "1.5",
+       "miss": "0.0"
+      }
+     ],
+     "asserts": [
+      "w2 == prev.w2 + click",
+      "abs(e2_miss) < abs(prev.e2_miss)",
+      "e1_out != prev.e1_out",
+      "e2_out != prev.e2_out",
+      "e3_out != prev.e3_out",
+      "e4_out != prev.e4_out"
+     ]
+    },
+    {
+     "text": "{broke}The first needle leaves its mark, the fourth lands on its mark, and the third moves further away.",
+     "tags": {
+      "w1": "+1.5",
+      "w2": "0"
+     },
+     "lights": [
+      "e1",
+      "e3",
+      "e4"
+     ],
+     "fig3": [
+      {
+       "x": [
+        2,
+        1
+       ],
+       "t": "2.5",
+       "out": "3.0",
+       "miss": "−0.5"
+      },
+      {
+       "x": [
+        1,
+        2
+       ],
+       "t": "2.0",
+       "out": "1.5",
+       "miss": "+0.5"
+      },
+      {
+       "x": [
+        3,
+        1
+       ],
+       "t": "3.5",
+       "out": "4.5",
+       "miss": "−1.0"
+      },
+      {
+       "x": [
+        1,
+        1
+       ],
+       "t": "1.5",
+       "out": "1.5",
+       "miss": "0.0"
+      }
+     ],
+     "asserts": [
+      "e1_miss != 0",
+      "prev.e1_miss == 0",
+      "e4_miss == 0",
+      "abs(e3_miss) > abs(prev.e3_miss)"
+     ]
+    },
+    {
+     "text": "{recap8}One setting serves every example, and a turn meant for one example moves them all.",
+     "tags": {
+      "w1": "+1.5",
+      "w2": "0"
+     },
+     "lights": [
+      "dial1",
+      "dial2",
+      "fig3"
+     ],
+     "fig3": [
+      {
+       "x": [
+        2,
+        1
+       ],
+       "t": "2.5",
+       "out": "3.0",
+       "miss": "−0.5"
+      },
+      {
+       "x": [
+        1,
+        2
+       ],
+       "t": "2.0",
+       "out": "1.5",
+       "miss": "+0.5"
+      },
+      {
+       "x": [
+        3,
+        1
+       ],
+       "t": "3.5",
+       "out": "4.5",
+       "miss": "−1.0"
+      },
+      {
+       "x": [
+        1,
+        1
+       ],
+       "t": "1.5",
+       "out": "1.5",
+       "miss": "0.0"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "c9a",
+   "beat": "watch",
+   "sentences": [
+    {
+     "text": "{putback}Put the second dial back one click.",
+     "set": {
+      "w2": -0.5
+     },
+     "tags": {
+      "w1": "+1.5",
+      "w2": "−0.5"
+     },
+     "lights": [
+      "dial2",
+      "fig3"
+     ],
+     "lamp": "dial2",
+     "fig3": [
+      {
+       "x": [
+        2,
+        1
+       ],
+       "t": "2.5",
+       "out": "2.5",
+       "miss": "0.0"
+      },
+      {
+       "x": [
+        1,
+        2
+       ],
+       "t": "2.0",
+       "out": "0.5",
+       "miss": "+1.5"
+      },
+      {
+       "x": [
+        3,
+        1
+       ],
+       "t": "3.5",
+       "out": "4.0",
+       "miss": "−0.5"
+      },
+      {
+       "x": [
+        1,
+        1
+       ],
+       "t": "1.5",
+       "out": "1.0",
+       "miss": "+0.5"
+      }
+     ],
+     "asserts": [
+      "w2 == prev.w2 - click",
+      "e1_miss == 0"
+     ]
+    },
+    {
+     "text": "{sizes}The size of a miss is the miss without its sign.",
+     "tags": {
+      "w1": "+1.5",
+      "w2": "−0.5"
+     },
+     "lights": [
+      "e3"
+     ],
+     "lamp": "fig3",
+     "fig3": [
+      {
+       "x": [
+        2,
+        1
+       ],
+       "t": "2.5",
+       "out": "2.5",
+       "miss": "0.0"
+      },
+      {
+       "x": [
+        1,
+        2
+       ],
+       "t": "2.0",
+       "out": "0.5",
+       "miss": "+1.5"
+      },
+      {
+       "x": [
+        3,
+        1
+       ],
+       "t": "3.5",
+       "out": "4.0",
+       "miss": "−0.5"
+      },
+      {
+       "x": [
+        1,
+        1
+       ],
+       "t": "1.5",
+       "out": "1.0",
+       "miss": "+0.5"
+      }
+     ],
+     "asserts": [
+      "e3_miss < 0"
+     ]
+    },
+    {
+     "text": "{total}The total miss adds the four sizes, and the tally under the gauges adds them up.",
+     "tags": {
+      "w1": "+1.5",
+      "w2": "−0.5",
+      "total": "2.5"
+     },
+     "lights": [
+      "tally"
+     ],
+     "lamp": "tally",
+     "fig3": [
+      {
+       "x": [
+        2,
+        1
+       ],
+       "t": "2.5",
+       "out": "2.5",
+       "miss": "0.0"
+      },
+      {
+       "x": [
+        1,
+        2
+       ],
+       "t": "2.0",
+       "out": "0.5",
+       "miss": "+1.5"
+      },
+      {
+       "x": [
+        3,
+        1
+       ],
+       "t": "3.5",
+       "out": "4.0",
+       "miss": "−0.5"
+      },
+      {
+       "x": [
+        1,
+        1
+       ],
+       "t": "1.5",
+       "out": "1.0",
+       "miss": "+0.5"
+      }
+     ],
+     "asserts": [
+      "total == abs(e1_miss) + abs(e2_miss) + abs(e3_miss) + abs(e4_miss)"
+     ]
+    },
+    {
+     "text": "{plate3}Plate Three measures many misses more carefully.",
+     "tags": {
+      "w1": "+1.5",
+      "w2": "−0.5",
+      "total": "2.5"
+     },
+     "lights": [
+      "tally"
+     ],
+     "fig3": [
+      {
+       "x": [
+        2,
+        1
+       ],
+       "t": "2.5",
+       "out": "2.5",
+       "miss": "0.0"
+      },
+      {
+       "x": [
+        1,
+        2
+       ],
+       "t": "2.0",
+       "out": "0.5",
+       "miss": "+1.5"
+      },
+      {
+       "x": [
+        3,
+        1
+       ],
+       "t": "3.5",
+       "out": "4.0",
+       "miss": "−0.5"
+      },
+      {
+       "x": [
+        1,
+        1
+       ],
+       "t": "1.5",
+       "out": "1.0",
+       "miss": "+0.5"
+      }
+     ]
+    },
+    {
+     "text": "{tuner}A tuner is a procedure that turns the dials by itself.|",
+     "tags": {
+      "w1": "+1.5",
+      "w2": "−0.5",
+      "total": "2.5"
+     },
+     "lights": [
+      "dial1",
+      "dial2",
+      "tuner"
+     ],
+     "lamp": "dials",
+     "term": "tuner",
+     "fig3": [
+      {
+       "x": [
+        2,
+        1
+       ],
+       "t": "2.5",
+       "out": "2.5",
+       "miss": "0.0"
+      },
+      {
+       "x": [
+        1,
+        2
+       ],
+       "t": "2.0",
+       "out": "0.5",
+       "miss": "+1.5"
+      },
+      {
+       "x": [
+        3,
+        1
+       ],
+       "t": "3.5",
+       "out": "4.0",
+       "miss": "−0.5"
+      },
+      {
+       "x": [
+        1,
+        1
+       ],
+       "t": "1.5",
+       "out": "1.0",
+       "miss": "+0.5"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "c9b",
+   "beat": "watch",
+   "sentences": [
+    {
+     "text": "{step}At each step it turns every dial a little, so that the total miss gets smaller.",
+     "set": {
+      "w1": 1.525,
+      "w2": -0.35
+     },
+     "tags": {
+      "w1": "+1.52",
+      "w2": "−0.35",
+      "total": "2.41"
+     },
+     "lights": [
+      "dial1",
+      "dial2",
+      "fig3",
+      "tally"
+     ],
+     "fig3": [
+      {
+       "x": [
+        2,
+        1
+       ],
+       "t": "2.50",
+       "out": "2.69",
+       "miss": "−0.19"
+      },
+      {
+       "x": [
+        1,
+        2
+       ],
+       "t": "2.00",
+       "out": "0.82",
+       "miss": "+1.18"
+      },
+      {
+       "x": [
+        3,
+        1
+       ],
+       "t": "3.50",
+       "out": "4.21",
+       "miss": "−0.71"
+      },
+      {
+       "x": [
+        1,
+        1
+       ],
+       "t": "1.50",
+       "out": "1.17",
+       "miss": "+0.33"
+      }
+     ],
+     "asserts": [
+      "total < prev.total",
+      "abs(w1 - prev.w1) < click",
+      "abs(w2 - prev.w2) < click",
+      "w1 != prev.w1",
+      "w2 != prev.w2"
+     ]
+    },
+    {
+     "text": "{twogrow}Here two misses shrink, and two grow.",
+     "tags": {
+      "w1": "+1.52",
+      "w2": "−0.35",
+      "total": "2.41"
+     },
+     "lights": [
+      "e1",
+      "e2",
+      "e3",
+      "e4"
+     ],
+     "lamp": "fig3",
+     "fig3": [
+      {
+       "x": [
+        2,
+        1
+       ],
+       "t": "2.50",
+       "out": "2.69",
+       "miss": "−0.19"
+      },
+      {
+       "x": [
+        1,
+        2
+       ],
+       "t": "2.00",
+       "out": "0.82",
+       "miss": "+1.18"
+      },
+      {
+       "x": [
+        3,
+        1
+       ],
+       "t": "3.50",
+       "out": "4.21",
+       "miss": "−0.71"
+      },
+      {
+       "x": [
+        1,
+        1
+       ],
+       "t": "1.50",
+       "out": "1.17",
+       "miss": "+0.33"
+      }
+     ],
+     "asserts": [
+      "abs(e1_miss) > abs(prev.e1_miss)",
+      "abs(e2_miss) < abs(prev.e2_miss)",
+      "abs(e3_miss) > abs(prev.e3_miss)",
+      "abs(e4_miss) < abs(prev.e4_miss)"
+     ]
+    },
+    {
+     "text": "{offclick}The tuner is not held to the clicks: it can turn a dial by part of one.",
+     "tags": {
+      "w1": "+1.52",
+      "w2": "−0.35",
+      "total": "2.41"
+     },
+     "lights": [
+      "dial1",
+      "detent"
+     ],
+     "lamp": "dial1",
+     "fig3": [
+      {
+       "x": [
+        2,
+        1
+       ],
+       "t": "2.50",
+       "out": "2.69",
+       "miss": "−0.19"
+      },
+      {
+       "x": [
+        1,
+        2
+       ],
+       "t": "2.00",
+       "out": "0.82",
+       "miss": "+1.18"
+      },
+      {
+       "x": [
+        3,
+        1
+       ],
+       "t": "3.50",
+       "out": "4.21",
+       "miss": "−0.71"
+      },
+      {
+       "x": [
+        1,
+        1
+       ],
+       "t": "1.50",
+       "out": "1.17",
+       "miss": "+0.33"
+      }
+     ],
+     "asserts": [
+      "w1 * 2 != round(w1 * 2)"
+     ]
+    },
+    {
+     "text": "{run}Step by step, the total miss shrinks, until every miss is almost zero.",
+     "set": {
+      "w1": 1.0106,
+      "w2": 0.4829
+     },
+     "tags": {
+      "w1": "+1.01",
+      "w2": "+0.48",
+      "total": "0.05"
+     },
+     "lights": [
+      "fig3",
+      "tally"
+     ],
+     "fig3": [
+      {
+       "x": [
+        2,
+        1
+       ],
+       "t": "2.50",
+       "out": "2.50",
+       "miss": "0.00"
+      },
+      {
+       "x": [
+        1,
+        2
+       ],
+       "t": "2.00",
+       "out": "1.97",
+       "miss": "+0.03"
+      },
+      {
+       "x": [
+        3,
+        1
+       ],
+       "t": "3.50",
+       "out": "3.51",
+       "miss": "−0.01"
+      },
+      {
+       "x": [
+        1,
+        1
+       ],
+       "t": "1.50",
+       "out": "1.49",
+       "miss": "+0.01"
+      }
+     ],
+     "asserts": [
+      "total < prev.total",
+      "abs(e1_miss) < 0.05",
+      "abs(e2_miss) < 0.05",
+      "abs(e3_miss) < 0.05",
+      "abs(e4_miss) < 0.05"
+     ]
+    },
+    {
+     "text": "{lit}Every needle now sits on its mark, near enough that all four lamps light.",
+     "tags": {
+      "w1": "+1.01",
+      "w2": "+0.48",
+      "total": "0.05"
+     },
+     "lights": [
+      "e1",
+      "e2",
+      "e3",
+      "e4"
+     ],
+     "lamp": "lampbar",
+     "fig3": [
+      {
+       "x": [
+        2,
+        1
+       ],
+       "t": "2.50",
+       "out": "2.50",
+       "miss": "0.00"
+      },
+      {
+       "x": [
+        1,
+        2
+       ],
+       "t": "2.00",
+       "out": "1.97",
+       "miss": "+0.03"
+      },
+      {
+       "x": [
+        3,
+        1
+       ],
+       "t": "3.50",
+       "out": "3.51",
+       "miss": "−0.01"
+      },
+      {
+       "x": [
+        1,
+        1
+       ],
+       "t": "1.50",
+       "out": "1.49",
+       "miss": "+0.01"
+      }
+     ]
+    },
+    {
+     "text": "{plate5}How the tuner works is drawn on Plate Five.",
+     "tags": {
+      "w1": "+1.01",
+      "w2": "+0.48",
+      "total": "0.05"
+     },
+     "fig3": [
+      {
+       "x": [
+        2,
+        1
+       ],
+       "t": "2.50",
+       "out": "2.50",
+       "miss": "0.00"
+      },
+      {
+       "x": [
+        1,
+        2
+       ],
+       "t": "2.00",
+       "out": "1.97",
+       "miss": "+0.03"
+      },
+      {
+       "x": [
+        3,
+        1
+       ],
+       "t": "3.50",
+       "out": "3.51",
+       "miss": "−0.01"
+      },
+      {
+       "x": [
+        1,
+        1
+       ],
+       "t": "1.50",
+       "out": "1.49",
+       "miss": "+0.01"
+      }
+     ]
+    },
+    {
+     "text": "{recap9}A tuner turns every dial a little each step, and the total miss gets smaller.",
+     "tags": {
+      "w1": "+1.01",
+      "w2": "+0.48",
+      "total": "0.05"
+     },
+     "lights": [
+      "tuner",
+      "tally"
+     ],
+     "fig3": [
+      {
+       "x": [
+        2,
+        1
+       ],
+       "t": "2.50",
+       "out": "2.50",
+       "miss": "0.00"
+      },
+      {
+       "x": [
+        1,
+        2
+       ],
+       "t": "2.00",
+       "out": "1.97",
+       "miss": "+0.03"
+      },
+      {
+       "x": [
+        3,
+        1
+       ],
+       "t": "3.50",
+       "out": "3.51",
+       "miss": "−0.01"
+      },
+      {
+       "x": [
+        1,
+        1
+       ],
+       "t": "1.50",
+       "out": "1.49",
+       "miss": "+0.01"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "c10a",
+   "beat": "watch",
+   "sentences": [
+    {
+     "text": "{learning}Tuning the weights from many examples, with a tuner, is called learning.|",
+     "tags": {
+      "w1": "+1.01",
+      "w2": "+0.48"
+     },
+     "lights": [
+      "tuner"
+     ],
+     "term": "learning"
+    },
+    {
+     "text": "{never}Learning turns only the dials; the inputs stay locked.",
+     "tags": {
+      "w1": "+1.01",
+      "w2": "+0.48"
+     },
+     "lights": [
+      "dial1",
+      "dial2",
+      "lock1",
+      "lock2"
+     ]
+    },
+    {
+     "text": "{pullnet}Wire many neurons together, so that the outputs of some become the inputs of others,",
+     "shot": "wall",
+     "lamp": "fig2"
+    },
+    {
+     "text": "{network}and you have a neural network.|",
+     "term": "network"
+    },
+    {
+     "text": "{billions}Large networks have billions of dials."
+    },
+    {
+     "text": "{tuned}Nobody sets them by hand: a tuner sets them, until the outputs are as close to their targets as one setting allows."
+    },
+    {
+     "text": "{recap10}Many neurons, wired together and tuned from examples, make a neural network that learns.",
+     "lamp": "fig2"
+    }
+   ]
+  },
+  {
+   "id": "d1",
+   "beat": "drive",
+   "sentences": [
+    "{d1}Your turn. Take the first dial, and turn it two clicks up."
+   ]
+  },
+  {
+   "id": "d1ok",
+   "beat": "drive",
+   "sentences": [
+    "{d1ok}The needle rose: the first input now counts."
+   ]
+  },
+  {
+   "id": "d1hint",
+   "beat": "drive",
+   "sentences": [
+    "{d1hint}Drag the first dial, or press the right arrow key twice."
+   ]
+  },
+  {
+   "id": "d2",
+   "beat": "drive",
+   "sentences": [
+    "{d2}Now turn the second dial until the needle sits on the brass mark."
+   ]
+  },
+  {
+   "id": "d2ok",
+   "beat": "drive",
+   "sentences": [
+    "{d2ok}On the mark. Chapter Seven met this same mark with another setting: one example can be met in more than one way."
+   ]
+  },
+  {
+   "id": "d2hint",
+   "beat": "drive",
+   "sentences": [
+    "{d2hint}The needle is below the mark, so the second dial goes up."
+   ]
+  },
+  {
+   "id": "d3",
+   "beat": "drive",
+   "sentences": [
+    "{d3}New inputs, and a new mark. Set both dials yourself."
+   ]
+  },
+  {
+   "id": "d3ok",
+   "beat": "drive",
+   "sentences": [
+    "{d3ok}On the mark, with no help."
+   ]
+  },
+  {
+   "id": "e1a",
+   "beat": "bench",
+   "sentences": [
+    "{e1a}Set the first dial so that its product will match the goal written in ink, then press the knob in."
+   ]
+  },
+  {
+   "id": "e1b",
+   "beat": "bench",
+   "sentences": [
+    "{e1b}The first dial is locked. Bring the sum down to its goal with the second dial."
+   ]
+  },
+  {
+   "id": "e1ok",
+   "beat": "bench",
+   "sentences": [
+    "{e1ok}Matched."
+   ]
+  },
+  {
+   "id": "e1miss",
+   "beat": "bench",
+   "sentences": [
+    "{e1miss}Not this product. The note shows the input times your weight."
+   ]
+  },
+  {
+   "id": "e1n",
+   "beat": "bench",
+   "sentences": [
+    "{e1n}The product is the input times the weight. Below zero, the product is negative."
+   ]
+  },
+  {
+   "id": "e2",
+   "beat": "bench",
+   "sentences": [
+    "{e2}Place one pencil where the sum will be, and one where the needle will land, then lift the cover."
+   ]
+  },
+  {
+   "id": "e2ok",
+   "beat": "bench",
+   "sentences": [
+    "{e2ok}Both marks are right: the sum, then the output after the valve."
+   ]
+  },
+  {
+   "id": "e2miss",
+   "beat": "bench",
+   "sentences": [
+    "{e2miss}A mark is off. The note now shows every step for this case."
+   ]
+  },
+  {
+   "id": "e2n",
+   "beat": "bench",
+   "sentences": [
+    "{e2n}Multiply each input by its weight, add the two products, then apply the valve."
+   ]
+  },
+  {
+   "id": "e3",
+   "beat": "bench",
+   "sentences": [
+    "{e3}The arrow shows which dial will turn, and how many clicks. Place the pencil where the needle will land, then press it in."
+   ]
+  },
+  {
+   "id": "e3ok",
+   "beat": "bench",
+   "sentences": [
+    "{e3ok}The needle lands on your mark."
+   ]
+  },
+  {
+   "id": "e3miss",
+   "beat": "bench",
+   "sentences": [
+    "{e3miss}The needle lands away from your mark. The note shows how far each click moved the sum."
+   ]
+  },
+  {
+   "id": "e3n",
+   "beat": "bench",
+   "sentences": [
+    "{e3n}One click moves the sum by that dial's input times one click; below zero, the needle stays at zero."
+   ]
+  },
+  {
+   "id": "e4",
+   "beat": "bench",
+   "sentences": [
+    "{e4}Get the needle as low as you can, then press Done."
+   ]
+  },
+  {
+   "id": "e4b",
+   "beat": "bench",
+   "sentences": [
+    "{e4b}The needle rests at zero. Turn the dials until it leaves zero, and watch the sum."
+   ]
+  },
+  {
+   "id": "e4ok",
+   "beat": "bench",
+   "sentences": [
+    "{e4ok}Watch one more click: the sum falls again, and the needle stays at zero. The valve lets nothing below zero through."
+   ]
+  },
+  {
+   "id": "e4okb",
+   "beat": "bench",
+   "sentences": [
+    "{e4okb}The sum had to climb past zero before the needle could move."
+   ]
+  },
+  {
+   "id": "e4miss",
+   "beat": "bench",
+   "sentences": [
+    "{e4miss}The needle can still go lower."
+   ]
+  },
+  {
+   "id": "e4n",
+   "beat": "bench",
+   "sentences": [
+    "{e4n}Watch the sum and the needle together as the sum crosses zero."
+   ]
+  },
+  {
+   "id": "e5",
+   "beat": "bench",
+   "sentences": [
+    "{e5}Build the neuron from its parts, then run the three test examples."
+   ]
+  },
+  {
+   "id": "e5ok",
+   "beat": "bench",
+   "sentences": [
+    "{e5ok}All three needles meet their marks. The products are added first, and the valve acts on the sum."
+   ]
+  },
+  {
+   "id": "e5miss",
+   "beat": "bench",
+   "sentences": [
+    "{e5miss}A test needle missed its mark. Follow one example through your machine."
+   ]
+  },
+  {
+   "id": "e5n",
+   "beat": "bench",
+   "sentences": [
+    "{e5n}Each input goes through its own dial first; the chamber adds; the valve comes after everything is added."
+   ]
+  },
+  {
+   "id": "e6",
+   "beat": "bench",
+   "sentences": [
+    "{e6}Turn the dial until the miss is the value written in ink, then press the knob in."
+   ]
+  },
+  {
+   "id": "e6ok",
+   "beat": "bench",
+   "sentences": [
+    "{e6ok}That is the miss."
+   ]
+  },
+  {
+   "id": "e6miss",
+   "beat": "bench",
+   "sentences": [
+    "{e6miss}Not this miss. The miss is the target minus the output."
+   ]
+  },
+  {
+   "id": "e6n",
+   "beat": "bench",
+   "sentences": [
+    "{e6n}Start at the needle and go to the mark: up the scale is positive, down is negative."
+   ]
+  },
+  {
+   "id": "e7",
+   "beat": "bench",
+   "sentences": [
+    "{e7}The needle is off its mark. Put it on the mark."
+   ]
+  },
+  {
+   "id": "e7ok",
+   "beat": "bench",
+   "sentences": [
+    "{e7ok}On the mark, and the inputs are as they came."
+   ]
+  },
+  {
+   "id": "e7n",
+   "beat": "bench",
+   "sentences": [
+    "{e7n}Only the weights can change. The inputs are given."
+   ]
+  },
+  {
+   "id": "e8",
+   "beat": "bench",
+   "sentences": [
+    "{e8}Two examples, one set of dials. Put both needles on their marks."
+   ]
+  },
+  {
+   "id": "e8ok",
+   "beat": "bench",
+   "sentences": [
+    "{e8ok}Both needles on their marks, with one setting."
+   ]
+  },
+  {
+   "id": "e8n",
+   "beat": "bench",
+   "sentences": [
+    "{e8n}A click moves each needle by its own input times the click, so the two needles move by different amounts. Turn the dial that moves the far needle more."
+   ]
+  },
+  {
+   "id": "k2",
+   "beat": "bench",
+   "sentences": [
+    "{k2}Plate B has a larger input. Set its dial so that its product reads the same as plate A."
+   ]
+  },
+  {
+   "id": "k1",
+   "beat": "bench",
+   "sentences": [
+    "{k1}Same inputs, different dials, different needles. Turn plate B's dials until both needles read the same."
+   ]
+  },
+  {
+   "id": "k9",
+   "beat": "bench",
+   "sentences": [
+    "{k9}Both needles read zero, but the sums differ. Turn plate B's second dial until its sum matches plate A."
+   ]
+  },
+  {
+   "id": "k8",
+   "beat": "bench",
+   "sentences": [
+    "{k8}Plate B's first dial turns one click up. Turn plate A's first dial until its needle has moved as far as B's."
+   ]
+  },
+  {
+   "id": "k3",
+   "beat": "bench",
+   "sentences": [
+    "{k3}Plate A's needle is above zero; plate B's rests at zero. Turn plate B's second dial up until its needle leaves zero."
+   ]
+  },
+  {
+   "id": "k4",
+   "beat": "bench",
+   "sentences": [
+    "{k4}The same example flows through both builds. Move plate B's valve until both needles read the same."
+   ]
+  },
+  {
+   "id": "k5",
+   "beat": "bench",
+   "sentences": [
+    "{k5}Plate A's needle is below its mark; plate B's is above. Turn plate B's dial until its miss equals plate A's."
+   ]
+  },
+  {
+   "id": "k6",
+   "beat": "bench",
+   "sentences": [
+    "{k6}Plate B got a larger input. Using only plate A's dials, make A read the same as B."
+   ]
+  },
+  {
+   "id": "k7",
+   "beat": "bench",
+   "sentences": [
+    "{k7}Both plates show the same two examples. Plate B meets both marks. Make plate A meet both, with one setting."
+   ]
+  },
+  {
+   "id": "r2",
+   "beat": "bench",
+   "sentences": [
+    "{r2}It looks like a weight adds to its input. It does not. It multiplies the input, and below zero it makes the product negative."
+   ]
+  },
+  {
+   "id": "r1",
+   "beat": "bench",
+   "sentences": [
+    "{r1}It looks like the inputs pass straight through. They do not. Each input is multiplied by its weight, then the products are added."
+   ]
+  },
+  {
+   "id": "r10",
+   "beat": "bench",
+   "sentences": [
+    "{r10}It looks like the gauge shows the sum. It does not. The sum is made before the valve; the gauge shows what passes."
+   ]
+  },
+  {
+   "id": "r11",
+   "beat": "bench",
+   "sentences": [
+    "{r11}It looks like every click moves the needle the same distance. It does not. A click moves the sum by that dial's input times the click."
+   ]
+  },
+  {
+   "id": "r3",
+   "beat": "bench",
+   "sentences": [
+    "{r3}It looks like the needle can go below zero. It cannot. The sum goes below zero; the valve stops it, so the output rests at zero."
+   ]
+  },
+  {
+   "id": "r4",
+   "beat": "bench",
+   "sentences": [
+    "{r4}It looks like each input has its own valve. It does not. The products are added first, and the valve acts on the sum."
+   ]
+  },
+  {
+   "id": "r5",
+   "beat": "bench",
+   "sentences": [
+    "{r5}It looks like the miss is the size of the gap, or the output minus the target. It is the target minus the output: start at the needle and go to the mark."
+   ]
+  },
+  {
+   "id": "r6",
+   "beat": "bench",
+   "sentences": [
+    "{r6}It looks like the input is the thing to change. It is not. An input is the case in front of the neuron; only the weights are turned."
+   ]
+  },
+  {
+   "id": "r7",
+   "beat": "bench",
+   "sentences": [
+    "{r7}It looks like each example gets its own setting. It does not. One setting serves both; look for where both needles land together."
+   ]
+  },
+  {
+   "id": "r8",
+   "beat": "race",
+   "sentences": [
+    "{r8}It looks like there is one right setting. There is not. Each lettered pair of ticks meets every mark."
+   ]
+  },
+  {
+   "id": "r9",
+   "beat": "race",
+   "sentences": [
+    "{r9}It looks like some setting must meet every mark. None does. Two examples with the same inputs want different outputs."
+   ]
+  },
+  {
+   "id": "skip",
+   "beat": "bench",
+   "sentences": [
+    "{skip}Three right on the first try. You can be the tuner now, or keep working here."
+   ]
+  },
+  {
+   "id": "t0",
+   "beat": "race",
+   "sentences": [
+    "{t0}You are the tuner now: your job is to make the total miss small.",
+    "{col}Four examples, one setting. The tally on the right adds up the four misses.",
+    "{job}Turn the dials until every needle sits on its mark."
+   ]
+  },
+  {
+   "id": "t1",
+   "beat": "race",
+   "sentences": [
+    "{t1}Four new examples. Tune the dials until every needle sits on its mark."
+   ]
+  },
+  {
+   "id": "thint",
+   "beat": "race",
+   "sentences": [
+    "{thint}The second dial moves needles two and four the most."
+   ]
+  },
+  {
+   "id": "l1",
+   "beat": "race",
+   "sentences": [
+    "{l1}Every needle on its mark."
+   ]
+  },
+  {
+   "id": "l2more",
+   "beat": "race",
+   "sentences": [
+    "{l2more}Now find a different setting that also puts every needle on its mark."
+   ]
+  },
+  {
+   "id": "l2",
+   "beat": "race",
+   "sentences": [
+    "{l2}Each lettered pair of ticks meets every mark: there is more than one right setting."
+   ]
+  },
+  {
+   "id": "l3go",
+   "beat": "race",
+   "sentences": [
+    "{l3go}This time, get the total miss as small as you can, then press Done."
+   ]
+  },
+  {
+   "id": "l3more",
+   "beat": "race",
+   "sentences": [
+    "{l3more}A smaller total is still on the clicks. Keep tuning."
+   ]
+  },
+  {
+   "id": "l3",
+   "beat": "race",
+   "sentences": [
+    "{l3}Two examples have the same inputs and different targets. No setting meets both, so no total miss reaches zero."
+   ]
+  },
+  {
+   "id": "ttuned",
+   "beat": "race",
+   "sentences": [
+    "{ttuned}You read the misses, turned the dial that shrank them, and did it again.",
+    "{tuning}That is tuning: you were the tuner."
+   ]
+  },
+  {
+   "id": "payoff",
+   "beat": "click",
+   "sentences": [
+    "{payoff}One neuron: inputs times weights, added, through a valve, tuned until its misses are as small as one setting allows.",
+    "{line}Drawn against the first input, one neuron's output is a line that bends once.",
+    "{marks}These marks need a line that bends twice.",
+    "{question}What if the answer needs two bends?"
+   ]
+  },
+  {
+   "id": "close",
+   "beat": "click",
+   "sentences": [
+    "{close}One neuron bends its line once; the next sheet wires several together.",
+    "Thanks for tuning with me.",
+    "See you there."
+   ]
+  }
+ ]
 }

@@ -4,14 +4,12 @@
 h1{margin:0;font:600 clamp(28px,3.1vw,64px)/1.04 "Plex Cond",sans-serif;letter-spacing:.035em;text-transform:uppercase;text-wrap:balance}
 .sub{margin:.55em 0 0;font:italic 400 clamp(17px,1.35vw,26px)/1.35 "Caslon",Georgia,serif;color:#3b3f48;text-wrap:pretty}
 .act{grid-area:act;display:flex;flex-direction:column;align-items:flex-end;gap:10px;padding-bottom:4px}
-.primary{display:inline-grid;place-items:center;min-height:52px;padding:0 30px;border:0;border-radius:3px;font:600 16px/1 "Plex Cond",sans-serif;letter-spacing:.14em;
-  text-transform:uppercase;text-decoration:none;color:var(--paper);background:var(--ink);cursor:pointer;white-space:nowrap;
-  box-shadow:0 0 0 1px var(--ink),0 0 0 4px var(--paper),0 0 0 5px var(--ink)}
-.primary:hover{background:#2c3446}
+.act .btn{min-height:52px;padding:0 30px;font-size:16px}
+.act .p-phone{max-width:calc(100% - 6px);white-space:normal;text-align:center;line-height:1.2}
 .primary:focus-visible,a:focus-visible,summary:focus-visible{outline:2px solid var(--blue);outline-offset:4px}
 .p-returning,.p-phone,.ph-note{display:none}
 :root[data-state=returning] .p-new,:root[data-state=phone] .p-new{display:none}
-:root[data-state=returning] .p-returning,:root[data-state=phone] .p-phone{display:inline-grid}
+:root[data-state=returning] .p-returning,:root[data-state=phone] .p-phone{display:inline-flex}
 :root[data-state=phone] .ph-note{display:block}
 .trust,.ph-note{margin:0;font:500 12px/1.3 "Plex Mono",monospace;letter-spacing:.12em;text-transform:uppercase;color:var(--dim)}
 .ph-note{text-transform:none;letter-spacing:.02em;font:italic 400 15px/1.3 "Caslon",serif}
@@ -43,7 +41,7 @@ h1{margin:0;font:600 clamp(28px,3.1vw,64px)/1.04 "Plex Cond",sans-serif;letter-s
 .det figcaption b{display:block;margin-bottom:4px;font:600 14px/1.2 "Plex Cond",sans-serif;letter-spacing:.14em;text-transform:uppercase;color:var(--ink)}
 .det figcaption i{display:block;margin-top:4px;color:var(--dim)}
 
-.bh,.u{display:grid;grid-template-columns:clamp(84px,7vw,140px) clamp(48px,4vw,72px) minmax(0,1fr) clamp(88px,7vw,130px) clamp(56px,4.4vw,80px) clamp(120px,10vw,190px);gap:0 clamp(10px,1.2vw,24px);align-items:center}
+.bh,.u{--pnf:clamp(20px,1.6vw,28px);display:grid;grid-template-columns:clamp(84px,7vw,140px) max-content minmax(0,1fr) clamp(88px,7vw,130px) clamp(56px,4.4vw,80px) clamp(120px,10vw,190px);gap:0 clamp(10px,1.2vw,24px);align-items:center}
 .bh{padding:6px 0;border-top:3px solid var(--ink);border-bottom:1px solid var(--ink);font:500 10.5px/1 "Plex Mono",monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--dim)}
 .items,.plates{list-style:none;margin:0;padding:0}
 .item{border-bottom:1px solid var(--ink)}
@@ -60,7 +58,8 @@ details[open]>summary::after{content:"−"}
 .fig img{border:1px solid var(--ink)}
 .sil{stroke:var(--hatch);--ln:var(--hatch);--wm:1.4;--wt:1.2;--wh:1;--wb:2;--da:6 2 1.2 2 1.2 2;--hx:none;--ik:var(--hatch)}
 .drawn .sil{--ln:var(--ink);--da:none;--ik:var(--ink);--hx:url(#hd)}
-.pn{font:400 clamp(20px,1.6vw,28px)/1 "Caslon",serif;text-align:center}
+.pn{font:400 var(--pnf)/1 "Caslon",serif;text-align:center}
+.pn::before,.bh>:nth-child(2)::before{content:var(--pw,"");display:block;height:0;padding-right:.4em;visibility:hidden;font:400 var(--pnf)/1 "Caslon",serif;letter-spacing:0;text-transform:none}
 .desc{display:flex;flex-direction:column;gap:2px;min-width:0}
 .ti{font:600 17px/1.2 "Plex Cond",sans-serif;letter-spacing:.04em}
 a.ti{text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:3px}
@@ -93,7 +92,6 @@ details.fold>summary.fs::after{content:none}
 .nb{fill:none;stroke:none}
 .pw{fill:none;stroke:var(--pwc,var(--glass));stroke-width:3.4;stroke-linecap:round}
 .nd{fill:none;stroke:var(--bl,var(--blue));stroke-width:3.8;stroke-linecap:round}
-.tn{fill:none;stroke:var(--ink);stroke-width:2.2;stroke-dasharray:7 4;stroke-linecap:round}
 .po{fill:none;stroke:var(--ln,var(--ink));stroke-width:var(--po,9);stroke-dasharray:var(--da,none)}
 .pi{fill:none;stroke:var(--pi,var(--glass));stroke-width:5.6}
 .flow{fill:none;stroke:var(--bl,var(--blue));stroke-width:2.6;stroke-dasharray:6 5}
@@ -134,13 +132,11 @@ details.fold>summary.fs::after{content:none}
 .run .run-lb{animation:type .45s steps(5,end) .7s forwards}
 .race .rn{transform:rotate(150deg);transform-box:fill-box;transform-origin:center}
 .race.run .rn-y{animation:ry 1.5s cubic-bezier(.25,.1,.2,1) .2s forwards}
-.race.run .rn-t{animation:rt 1.5s cubic-bezier(.5,0,.3,1) .2s forwards}
 .dims.fresh{animation:fade .5s ease-out 1.05s both}
 @keyframes draw{to{stroke-dashoffset:0}}
 @keyframes type{to{clip-path:inset(0 -6% 0 0)}}
 @keyframes fade{from{opacity:0}}
 @keyframes ry{to{transform:rotate(298.8deg)}}
-@keyframes rt{60%{transform:rotate(262deg)}to{transform:rotate(281deg)}}
 :root:not(.js) .run-ld{stroke-dashoffset:0}:root:not(.js) .run-lb{clip-path:none}
 
 @media (max-width:1279px){.asm-wide{display:none}.asm-mid{display:block}}
@@ -148,7 +144,7 @@ details.fold>summary.fs::after{content:none}
   .foot{grid-template-columns:minmax(0,1fr)}}
 @media (max-width:759px){
   .bh{display:none}
-  .u{grid-template-columns:clamp(64px,20vw,96px) 30px minmax(0,1fr);align-items:start;row-gap:4px}
+  .u{grid-template-columns:clamp(64px,20vw,96px) max-content minmax(0,1fr);align-items:start;row-gap:4px}
   .fig,.pn{grid-row:span 2}.pn{text-align:left;padding-top:2px}
   .meta{grid-column:3;display:flex;flex-wrap:wrap;align-items:center;gap:4px 14px}
   .uses b{display:inline;font-weight:500}
@@ -163,5 +159,5 @@ details.fold>summary.fs::after{content:none}
   .det{grid-template-columns:clamp(84px,23vw,120px) minmax(0,1fr)}.det figcaption{font-size:15px;line-height:1.4}
   .colophon{font-size:14px;line-height:1.45}.col1{font-size:17px}}
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}
-  .co .ld,.run-ld{stroke-dashoffset:0}.co .lb,.run-lb{clip-path:none}.race .rn-y{transform:rotate(298.8deg)}.race .rn-t{transform:rotate(281deg)}}
+  .co .ld,.run-ld{stroke-dashoffset:0}.co .lb,.run-lb{clip-path:none}.race .rn-y{transform:rotate(298.8deg)}}
 @media (min-width:2200px){.sheet{zoom:1.32}}

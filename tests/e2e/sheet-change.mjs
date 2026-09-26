@@ -3,14 +3,9 @@
 // before the click. Compositor frames of each turn at 1366 and 1920: at most 2 over 20 ms. Frame strip at 1366 (start, middle, end, each way)
 // lands in out/shots/. Usage: node tests/e2e/sheet-change.mjs [site url]   (default: dist/ under pages-sim)
 import { mkdirSync } from 'node:fs';
-import { startPagesSim } from '../lib/pages-sim.mjs';
-import { launch } from '../lib/browser.mjs';
+import { harness, frames as painted, until } from '../lib/harness.mjs';
 
-const sim = process.argv[2] ? null : await startPagesSim();
-const url = process.argv[2] ?? sim.url;
-const browser = await launch();
-const faults = [];
-const fail = (m) => faults.push(m);
+const { url, browser, faults, fault: fail, end } = await harness('sheet-change', { path: '' });
 mkdirSync('out/shots', { recursive: true });
 
 /** Records each play() of a media element on the page: file name and outcome. */
@@ -50,7 +45,7 @@ async function strip(page, tag, want) {
   if (snd.map((r) => r.src).join() !== (want.sound ?? '')) fail(`${tag}: sound ${snd.map((r) => r.src)}, want ${want.sound ?? 'none'}`);
   if (want.shots) for (const [k, f] of [['start', 0.05], ['mid', 0.4], ['end', 1]]) {
     await page.evaluate((t) => window.__vtA.forEach((a) => { a.currentTime = t; }), f * vt.ms);
-    await page.waitForTimeout(100);
+    await painted(page);
     await page.screenshot({ path: `out/shots/sheet-change-${tag}-${k}.png` });
   }
   await page.evaluate(() => { window.__vtA.forEach((a) => a.finish()); window.__vtA = null; });
@@ -67,13 +62,13 @@ for (const motion of ['no-preference', 'reduce']) {
   page.on('pageerror', (e) => errors.push(e.message));
   page.on('request', (r) => /\.(opus|m4a)$/.test(r.url()) && audio.push(r.url()));
   await page.goto(url + '?state=new');
-  await page.waitForTimeout(600);
+  await page.waitForLoadState('networkidle');
   if (audio.length) fail(`${motion}: Sheet 0 loaded ${audio.length} audio files before the click`);
   const full = motion === 'no-preference';
   await Promise.all([page.waitForURL(/\/u\/01-neuron\/$/), page.click('a.primary.p-new')]);
   await strip(page, full ? 'forward' : 'reduced-forward', full
     ? { types: 'forward', anims: ['::view-transition-image-pair(front) cut-away', '::view-transition-old(front) hold-away', '::view-transition-group(leaf) fold-away',
-      '::view-transition-old(leaf) leaf-shade'],
+      '::view-transition-new(leaf) leaf-shade'],
       min: 900, ms: 1100, sound: 'page-turn.opus', shots: true }
     : { types: 'forward', anims: [], ms: 150 });
   const paint = await page.evaluate(() => ({ fcp: performance.getEntriesByName('first-contentful-paint')[0]?.startTime ?? -1,
@@ -98,6 +93,9 @@ const mark = () => addEventListener('pagereveal', (e) => e.viewTransition?.ready
   e.viewTransition.finished.finally(() => performance.mark('turn-end'));
 }));
 
+/** Waits for the turn's end mark in the new sheet, and three frames more for its last frames to reach the trace. */
+const turned = async (page) => { await until(page, () => performance.getEntriesByName('turn-end').length > 0, null, 10000); await painted(page, 3); };
+
 /** Frames presented inside each marked turn, from a Chromium trace: frames, gaps over 20 ms, worst gap. */
 function frames(trace) {
   const ev = JSON.parse(trace).traceEvents ?? [];
@@ -117,12 +115,12 @@ for (const [width, height] of [[1366, 768], [1920, 1080]]) {
   await ctx.addInitScript(mark);
   const page = await ctx.newPage();
   await page.goto(url + '?state=new');
-  await page.waitForTimeout(600);
+  await page.waitForLoadState('networkidle');
   await browser.startTracing(page, { categories: ['disabled-by-default-devtools.timeline.frame', 'blink.user_timing'] });
   await Promise.all([page.waitForURL(/\/u\/01-neuron\/$/), page.click('a.primary.p-new')]);
-  await page.waitForTimeout(1600);
+  await turned(page);
   await Promise.all([page.waitForURL((u) => u.href === url), page.click('.top .back')]);
-  await page.waitForTimeout(1600);
+  await turned(page);
   const turns = frames((await browser.stopTracing()).toString());
   if (turns.length !== 2) fail(`${width}: ${turns.length} turns traced, want 2`);
   turns.forEach((t, i) => { if (t.over > 2) fail(`${width} ${i ? 'back' : 'forward'}: ${t.over} frames over 20 ms`); });
@@ -130,8 +128,4 @@ for (const [width, height] of [[1366, 768], [1920, 1080]]) {
   await ctx.close();
 }
 
-await browser.close();
-await sim?.close();
-faults.forEach((f) => console.error(`sheet-change: ${f}`));
-console.log(`sheet-change: ${faults.length} faults`);
-process.exit(faults.length ? 1 : 0);
+await end(`sheet-change: ${faults.length} faults`);

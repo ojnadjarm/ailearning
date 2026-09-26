@@ -6,6 +6,9 @@ const ARGS = ['--enable-features=Vulkan', '--use-angle=vulkan', '--enable-gpu', 
 /** Launches the browser once per run. */
 export const launch = () => chromium.launch({ headless: true, args: ARGS });
 
+/** Launches one browser that several runs connect to (the e2e runner). */
+export const serve = () => chromium.launchServer({ headless: true, args: ARGS });
+
 /** Opens a page at a viewport and collects errors and failed requests into `log`. */
 export async function open(browser, url, { width = 1920, height = 1080 } = {}) {
   const ctx = await browser.newContext({ viewport: { width, height }, ignoreHTTPSErrors: true });

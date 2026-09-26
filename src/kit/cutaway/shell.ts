@@ -21,15 +21,15 @@ export class Shell {
         <p class="eyebrow">${t.eyebrow}</p>
         <h1 id="t-begin">${t.title}</h1>
         <p class="lede">${t.lede}</p>
-        <button class="primary" type="button" data-k="begin">Begin</button>
+        <button class="btn primary" type="button" data-k="begin">Begin</button>
         <p class="keys">${t.keys}</p>
       </section>
       <p class="caption" data-k="caption" aria-live="polite" hidden></p>
       <nav class="bar" aria-label="Playback">
-        <button class="icon" type="button" data-k="toggle" aria-label="Pause">${ICON.pause}</button>
-        <button class="icon" type="button" data-k="replay" aria-label="Replay from the start">${ICON.replay}</button>
+        <button class="btn icon" type="button" data-k="toggle" aria-label="Pause">${ICON.pause}</button>
+        <button class="btn icon" type="button" data-k="replay" aria-label="Replay from the start">${ICON.replay}</button>
         <span class="grow" data-k="status">Watch</span>
-        <button class="chip" type="button" data-k="cc" aria-pressed="false">CC</button>
+        <button class="btn toggle" type="button" data-k="cc" aria-pressed="false">CC</button>
       </nav>`;
     root.querySelectorAll<HTMLElement>('[data-k]').forEach((n) => { this.el[n.dataset.k!] = n; });
     this.el.toggle.addEventListener('click', () => this.onToggle());

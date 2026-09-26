@@ -1,5 +1,5 @@
 /** The 12-part phantom library (parts list figures) and the three detail views of Plate I (Watch, Drive, Play). */
-import { f, path, line, rect, circ, poly, centre, ticks, arrow } from './draft.mjs';
+import { f, path, line, rect, circ, poly, centre, hatched, pipe, ticks, arrow } from './draft.mjs';
 import { TARGET } from './parts.mjs';
 
 const S = {
@@ -16,15 +16,15 @@ const S = {
   course: () => path('M8 38C22 34 20 14 36 14S54 26 64 8', 'm') + circ(36, 14, 4, 't') + line(36, 10, 36, 4, 'h'),
   frame: () => rect(12, 6, 48, 34, 'm') + rect(17, 11, 38, 24, 'h') + path('M20 32C30 31 36 18 52 14', 'm'),
 };
-export const SILS = Object.keys(S);
+const SILS = Object.keys(S);
 
 /** One hidden <symbol> per silhouette, 72 × 44 units. */
 export const silhouetteDefs = () => SILS.map((k) => `<symbol id="s-${k}" viewBox="0 0 72 44">${S[k]()}</symbol>`).join('');
 
 /** Detail A · Watch: the input tube with its callout typing on, and the spoken line under it. */
 export function detailA() {
-  let s = rect(34, 108, 150, 44, 'm gl') + rect(38, 114, 96, 32, 'bl') + rect(24, 100, 10, 60, 'hx') + rect(24, 100, 10, 60, 't') + rect(184, 100, 10, 60, 'hx') + rect(184, 100, 10, 60, 't');
-  s += line(40, 118, 178, 118, 'h') + path('M194 130H232', 'po') + path('M194 130H232', 'pi') + path('M194 130H232', 'flow');
+  let s = rect(34, 108, 150, 44, 'm gl') + rect(38, 114, 96, 32, 'bl') + hatched(24, 100, 10, 60, 't') + hatched(184, 100, 10, 60, 't');
+  s += line(40, 118, 178, 118, 'h') + pipe('M194 130H232', true);
   for (let i = 0; i <= 12; i++) s += line(38 + i * 11.5, 158, 38 + i * 11.5, i % 4 ? 163 : 168, 'h');
   s += circ(62, 100, 3.2, 'ik') + `<path class="ld run-ld" pathLength="1" d="M62 100L90 62H118"/>` + `<text class="lb bl run-lb" x="122" y="70">INPUT</text>`;
   s += `<text class="cc" x="130" y="206" text-anchor="middle">…the input fills its tube,</text>`;
@@ -42,12 +42,12 @@ export function detailB() {
   return s;
 }
 
-/** Detail C · Play: the output gauge; the learner's needle and the tuner's race to the target once. */
+/** Detail C · Play: the output gauge; the learner, the tuner, swings the needle onto the target once. */
 export function detailC() {
   const c = 130, a = 150 + 240 * TARGET;
   let s = circ(c, c, 92, 'm gl') + circ(c, c, 80, 'h') + ticks(c, c, 80, 150, 390, 20, 4, ['0', '.2', '.4', '.6', '.8', '1'], 8);
   s += `<g transform="translate(${c} ${c}) rotate(${f(a + 90)})">${poly([[0, -92], [-8, -106], [8, -106]], 'yl t')}</g>`;
-  s += `<g transform="translate(${c} ${c})"><g class="rn rn-t">${circ(0, 0, 70, 'nb')}${line(0, 0, 66, 0, 'tn')}</g><g class="rn rn-y">${circ(0, 0, 70, 'nb')}${line(0, 0, 66, 0, 'nd')}</g></g>`;
+  s += `<g transform="translate(${c} ${c})"><g class="rn rn-y">${circ(0, 0, 70, 'nb')}${line(0, 0, 66, 0, 'nd')}</g></g>`;
   s += circ(c, c, 7, 'bl') + circ(c, c, 2.4, 'paper');
   return s;
 }

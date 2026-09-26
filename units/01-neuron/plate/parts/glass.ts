@@ -2,13 +2,13 @@ import * as THREE from 'three';
 import type { LineMaterial } from 'three/addons/lines/LineMaterial.js';
 import type { LineSegments2 } from 'three/addons/lines/LineSegments2.js';
 import { Ink, Z, FONT } from '../ink';
-import { hatch, polyline, rect } from '../geom';
-import type { Part } from './part';
+import { hatch, offset, polyline, rect } from '../../../../src/kit/cutaway/geom';
+import type { Part } from '../../../../src/kit/cutaway/parts/part';
 
 const WALL = 5;
 
 /** Bolted flange in section: outline plus dense hatching. */
-export function flange(ink: Ink, g: THREE.Group, x0: number, y0: number, x1: number, y1: number): void {
+function flange(ink: Ink, g: THREE.Group, x0: number, y0: number, x1: number, y1: number): void {
   g.add(ink.shape([x0, y0, x1, y0, x1, y1, x0, y1], ink.fill('paper'), Z.part));
   g.add(ink.segs(hatch(() => true, [x0, y0, x1, y1], 3.4), ink.line('hatch', 'hair'), Z.part + 0.1));
   g.add(ink.segs(rect(x0, y0, x1, y1), ink.line('ink', 'thin'), Z.line));
@@ -94,23 +94,6 @@ export class Chamber implements Part {
     this.liquid.scale.y = Math.max(0.001, y - this.y0);
     this.meniscus.position.y = y;
   }
-}
-
-/** Offset a polyline sideways by d (mitred joints). */
-function offset(pts: number[], d: number): number[] {
-  const n = pts.length / 2, out: number[] = [];
-  for (let i = 0; i < n; i++) {
-    const a = Math.max(0, i - 1), b = Math.min(n - 1, i + 1);
-    let nx = 0, ny = 0;
-    for (const [p, q] of [[a, i], [i, b]]) {
-      if (p === q) continue;
-      const dx = pts[2 * q] - pts[2 * p], dy = pts[2 * q + 1] - pts[2 * p + 1], l = Math.hypot(dx, dy) || 1;
-      nx += -dy / l; ny += dx / l;
-    }
-    const l = Math.hypot(nx, ny) || 1, cos = i > 0 && i < n - 1 ? Math.max(0.5, l / 2) : 1;
-    out.push(pts[2 * i] + (nx / l) * (d / cos), pts[2 * i + 1] + (ny / l) * (d / cos));
-  }
-  return out;
 }
 
 /** Pipe in section: two ink walls and a dashed blue core whose weight is the flow and whose dashes run with its sign. */

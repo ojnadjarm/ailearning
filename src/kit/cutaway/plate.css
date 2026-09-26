@@ -1,3 +1,4 @@
+@import "./buttons.css";
 :root {
   --paper: #f2ecdf; --ink: #1c2230; --dim: #6b6a66; --line: rgba(28, 34, 48, 0.28); --signal: #1d5fb0;
   --glass: rgba(242, 236, 223, 0.86); --gutter: max(16px, env(safe-area-inset-left)); --bar-h: 56px;
@@ -31,10 +32,6 @@ h2 { font-size: clamp(20px, 3vw, 26px); line-height: 1.15; }
 .lede { margin: 0 auto 24px; max-width: 30rem; color: #3b3f48; font: 400 clamp(16px, 2vw, 18px)/1.5 "Caslon", Georgia, serif; text-wrap: pretty; }
 .keys { margin: 18px 0 0; color: var(--dim); font-size: 14px; }
 
-.primary { min-height: 48px; padding: 0 30px; border: 0; border-radius: 3px; font-weight: 600; font-size: 16px; letter-spacing: 0.14em; text-transform: uppercase;
-  color: var(--paper); background: var(--ink); box-shadow: 0 0 0 1px var(--ink), 0 0 0 4px var(--paper), 0 0 0 5px var(--ink); }
-.primary:hover { background: #2c3446; }
-.primary.loading { background: linear-gradient(90deg, var(--ink) var(--p, 0%), #7d7f86 var(--p, 0%)); }
 .cta { position: absolute; left: 50%; bottom: calc(var(--bottom) + var(--bar-h) + 18px); transform: translateX(-50%); animation: rise 0.5s ease-out both; }
 .end { bottom: calc(var(--bottom) + var(--bar-h) + 18px); }
 @keyframes rise { from { opacity: 0; transform: translate(-50%, 8px); } to { opacity: 1; transform: translate(-50%, 0); } }
@@ -47,14 +44,7 @@ h2 { font-size: clamp(20px, 3vw, 26px); line-height: 1.15; }
   width: min(calc(100vw - 2 * var(--gutter)), 34rem); height: var(--bar-h); padding: 0 6px; border: 1px solid var(--line); border-radius: 3px;
   background: var(--glass); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); opacity: 0; transition: opacity 0.4s; }
 body.live .bar { opacity: 1; }
-.icon { display: grid; place-items: center; width: 44px; height: 44px; border: 0; border-radius: 3px; background: transparent; }
-.icon svg { width: 22px; height: 22px; fill: var(--ink); }
-.icon:hover { background: rgba(28, 34, 48, 0.07); }
-.icon:disabled { opacity: 0.3; cursor: default; background: transparent; }
 .grow { flex: 1; min-width: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; text-align: center; color: var(--dim);
   font: 500 12px/1 "Plex Mono", ui-monospace, monospace; letter-spacing: 0.12em; text-transform: uppercase; }
-.chip { min-width: 44px; height: 44px; padding: 0 12px; border: 1px solid var(--line); border-radius: 3px; background: transparent;
-  font: 500 13px/1 "Plex Mono", ui-monospace, monospace; letter-spacing: 0.08em; color: var(--dim); }
-.chip[aria-pressed="true"] { color: var(--paper); background: var(--ink); border-color: var(--ink); }
 
 @media (prefers-reduced-motion: reduce) { .cta { animation: none; } .bar { transition: none; } }

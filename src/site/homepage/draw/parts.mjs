@@ -1,14 +1,11 @@
 /** The machine: one part per ring on a common axis (local units, axis y = 0, body from -w/2 to w/2). */
-import { f, path, line, rect, circ, poly, text, centre, wall, boltSide, rivets, couplings, ticks, gear, arrow } from './draft.mjs';
-
-/** A pipe as a double line (ink outside, glass inside) with an optional flow core. */
-const pipe = (d, flow = false) => path(d, 'po') + path(d, 'pi') + (flow ? path(d, 'flow') : '');
+import { f, path, line, rect, circ, poly, text, centre, hatched, pipe, wall, boltSide, rivets, couplings, ticks, gear, arrow } from './draft.mjs';
 
 /** Glass tube along x with end flanges; liquid fills to `fill` (0..1) in class `liq`. */
 function tubeX(x, y, w, h, fill, liq = 'bl') {
   return rect(x, y - h / 2, w, h, 'm gl') + rect(x + 2, y - h / 2 + 3, (w - 4) * fill, h - 6, liq)
-    + rect(x - 5, y - h / 2 - 4, 5, h + 8, 'hx') + rect(x - 5, y - h / 2 - 4, 5, h + 8, 't')
-    + rect(x + w, y - h / 2 - 4, 5, h + 8, 'hx') + rect(x + w, y - h / 2 - 4, 5, h + 8, 't')
+    + hatched(x - 5, y - h / 2 - 4, 5, h + 8, 't')
+    + hatched(x + w, y - h / 2 - 4, 5, h + 8, 't')
     + line(x + 3, y - h / 2 + 2.5, x + w - 3, y - h / 2 + 2.5, 'h dt');
 }
 
@@ -37,7 +34,7 @@ export const BED = {
   key: 'bed', w: 64, up: 48, down: 100,
   draw() {
     return wall(-32, -42, 64, 112, 8, 'hx', 5) + rect(-24, -34, 48, 96, 'sh') + circ(0, 0, 19, 'm gl') + circ(0, 0, 11, 't')
-      + rect(-11, -5, 22, 10, 'core') + centre(0, 0, 26) + rect(-46, 70, 92, 14, 'hx') + rect(-46, 70, 92, 14, 'm')
+      + rect(-11, -5, 22, 10, 'core') + centre(0, 0, 26) + hatched(-46, 70, 92, 14, 'm')
       + boltSide(-37, 66) + boltSide(37, 66) + line(-62, 84, 62, 84, 'm')
       + Array.from({ length: 13 }, (_, i) => line(-58 + i * 10, 84, -66 + i * 10, 96, 'h')).join('');
   },
@@ -60,7 +57,7 @@ export const PARTS = [
       s += circ(-18, 18, 13, 'm gl') + line(-26, 13, -10, 23, 't') + centre(-18, 18, 18) + text(-18, 48, 'b', 'np');
       s += pipe('M-18 5V-16', false);
       s += rect(44, -104, 5, 170, 'hx') + rect(50, -100, 26, 162, 'm gl') + rect(53, -97, 20, 156, 'bl lvl')
-        + rect(44, -108, 38, 8, 'hx') + rect(44, -108, 38, 8, 't') + rect(44, 62, 38, 8, 'hx') + rect(44, 62, 38, 8, 't');
+        + hatched(44, -108, 38, 8, 't') + hatched(44, 62, 38, 8, 't');
       for (let i = 0; i <= 12; i++) s += line(78, -94 + i * 13, i % 3 ? 83 : 88, -94 + i * 13, 'h dt');
       s += line(38, -16, 90, -16, 'c');
       s += pipe('M82 40H90', true) + circ(108, 26, 26, 'm gl') + circ(108, 26, 21.5, 'h') + ticks(108, 26, 21.5, 150, 390, 10, 2, null, 4);
@@ -80,7 +77,7 @@ export const PARTS = [
       s += circ(0, 0, 80, 'c');
       s += gear(-20, 12, 42, 16) + gear(25.2, -25.9, 24, 9, 0.34);
       s += path('M50 -58A40 40 0 0 1 58 -18', 'h dt') + arrow(58, -18, 1.8, 9, 3.2);
-      s += rect(-8, -112, 16, 28, 'm gl') + rect(-16, -88, 32, 6, 'hx') + rect(-16, -88, 32, 6, 't');
+      s += rect(-8, -112, 16, 28, 'm gl') + hatched(-16, -88, 32, 6, 't');
       s += circ(0, -136, 27, 'm gl') + circ(0, -136, 22, 'h') + ticks(0, -136, 22, 160, 380, 8, 2, null, 4) + line(0, -136, -14, -148, 't') + circ(0, -136, 2.6, 'ik');
       s += text(0, -118, 'LOSS', 'np');
       return s + couplings(180, 16);
@@ -112,10 +109,10 @@ export const PARTS = [
       s += rect(-78, top, 8, 280, 'hx') + rect(70, top, 8, 280, 'hx') + rect(-70, top, 140, 280, 'sh');
       s += line(-78, top, -78, 40, 'b') + line(78, top, 78, 40, 'b') + line(-70, top, -70, 40, 't') + line(70, top, 70, 40, 't');
       s += path(`M-86 ${top}L-70 ${top - 18}H70L86 ${top}Z`, 'm gl') + path(`M-86 ${top}L-70 ${top - 18}H70L86 ${top}Z`, 'hs');
-      s += rect(-92, 40, 184, 16, 'hx') + rect(-92, 40, 184, 16, 'm') + rect(-100, 56, 200, 26, 'm gl') + rect(-100, 56, 200, 26, 'hs');
+      s += hatched(-92, 40, 184, 16, 'm') + rect(-100, 56, 200, 26, 'm gl') + rect(-100, 56, 200, 26, 'hs');
       for (let k = 0; k < 5; k++) {
         const y0 = 40 - 56 * (k + 1);
-        if (k) s += rect(-70, y0 + 56 - 4, 140, 7, 'hx') + rect(-70, y0 + 56 - 4, 140, 7, 'h');
+        if (k) s += hatched(-70, y0 + 56 - 4, 140, 7, 'h');
         const gx = -62, gy = y0 + 10, c = 8.5;
         s += rect(gx, gy, 4 * c, 4 * c, 't gl');
         for (let i = 1; i < 4; i++) s += line(gx + i * c, gy, gx + i * c, gy + 4 * c, 'h') + line(gx, gy + i * c, gx + 4 * c, gy + i * c, 'h');
@@ -149,7 +146,7 @@ export const PARTS = [
       let s = rect(-80, -10, 24, 20, 'm gl') + rect(56, -10, 24, 20, 'm gl');
       s += rect(-48, -64, 96, 128, 'm gl');
       for (let x = -40; x <= 40; x += 10) s += line(x, -64, x, 64, 'h dt');
-      s += rect(-58, -74, 10, 148, 'hx') + rect(-58, -74, 10, 148, 'm') + rect(48, -74, 10, 148, 'hx') + rect(48, -74, 10, 148, 'm');
+      s += hatched(-58, -74, 10, 148, 'm') + hatched(48, -74, 10, 148, 'm');
       s += rect(-24, -14, 48, 28, 'm gl');
       for (let i = 0; i < 4; i++) s += rect(-21 + i * 11.5, -10, 9, 20, 'h');
       s += text(-16.5, 5, '4', 'num') + text(-5, 5, '0', 'num') + text(6.5, 5, '9', 'num') + text(18, 5, '1', 'num');
@@ -175,7 +172,7 @@ export const PARTS = [
       for (let i = 1; i < 6; i++) s += line(x + 8, y + 8 + i * 17.6, x + w - 8, y + 8 + i * 17.6, 'h dt');
       s += path(`M${x + 14} ${y + h - 18}C${x + 44} ${y + h - 22} ${x + 60} ${y + 34} ${x + w - 14} ${y + 20}`, 'm') + stipple(x + 10, y + 10, w - 20, h - 20, 9, 3);
       [[10, -10], [20, -20]].forEach(([dx, dy]) => { const [a, b, c, d] = F(dx, dy); s += path(`M${x + w} ${b + d}H${a + c}V${b}M${a} ${b}V${y}`, 'hd'); });
-      s += rect(-40, 64, 80, 10, 'hx') + rect(-40, 64, 80, 10, 't');
+      s += hatched(-40, 64, 80, 10, 't');
       return s + couplings(150, 14);
     },
   },

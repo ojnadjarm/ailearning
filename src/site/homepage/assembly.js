@@ -1,5 +1,5 @@
 /** Horizontal dimension from x1 to x2 at height y, extension lines from ey1/ey2, label above the line. */
-export function dim(x1, x2, y, label, ey1, ey2, cls = '') {
+function dim(x1, x2, y, label, ey1, ey2, cls = '') {
   const r = (n) => Math.round(n * 10) / 10, a = 13, w = 4.2;
   const head = (x, d) => `<polygon class="ik" points="${r(x)},${y} ${r(x + d * a)},${r(y - w)} ${r(x + d * a)},${r(y + w)}"/>`;
   return `<g class="dim ${cls}"><path class="h" d="M${r(x1)} ${r(ey1)}V${r(y + 10)}M${r(x2)} ${r(ey2)}V${r(y + 10)}"/>`

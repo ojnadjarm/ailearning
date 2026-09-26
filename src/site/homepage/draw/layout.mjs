@@ -1,7 +1,7 @@
 /** Rows of parts along the centre line per breakpoint → positions in drawing units (pure). */
 import { BED, PARTS } from './parts.mjs';
 
-export const GAP = 44;
+const GAP = 44;
 export const ROWS = {
   wide: [[1, 2, 3, 4, 5, 6, 7, 8, 9]],
   mid: [[1, 2, 3, 4], [5, 6, 7, 8, 9]],

@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import type { Ink } from './ink';
-
-export interface Box { x: number; y: number; w: number; h: number }
+import { INSET, INSET_BEFORE, INSET_SECTION } from '../unit/layout';
+import { frameIn, type Box, type Inset } from '../unit/frame';
 
 /** Renderer + orthographic camera: frames a box of drawing units into the free part of the viewport and draws on demand. */
 export class Stage {
@@ -11,17 +11,21 @@ export class Stage {
   /** Screen px per drawing unit and the camera centre, from the last `frame`. */
   s = 1; cx = 0; cy = 0;
   W = 1; H = 1;
-  private inset = { top: 28, bottom: 164 };
   private shots: Box[] = [];
 
   constructor(readonly el: HTMLElement, private ink: Ink) {
-    this.renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance' });
+    // preserveDrawingBuffer: an idle canvas is otherwise captured white in the sheet change's outgoing snapshot
+    this.renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance', preserveDrawingBuffer: true });
     this.renderer.setPixelRatio(Math.min(2, devicePixelRatio));
     this.renderer.setClearColor(ink.theme.paper);
     el.appendChild(this.renderer.domElement);
     this.camera.position.z = 50;
     this.scene.add(this.camera);
+    this.scene.matrixWorldAutoUpdate = false;
   }
+
+  /** The chrome the frame keeps clear: the caption and bar once the player is live, only the top before Begin. */
+  private inset(): Inset { const c = document.body.classList; return !c.contains('live') ? INSET_BEFORE : c.contains('in-section') ? INSET_SECTION : INSET; }
 
   /** The framings the unit will use; text is rasterised for the tightest one. */
   setShots(shots: Box[]): void { this.shots = shots; }
@@ -29,26 +33,34 @@ export class Stage {
   resize(): void {
     this.W = Math.max(1, this.el.clientWidth); this.H = Math.max(1, this.el.clientHeight);
     this.renderer.setSize(this.W, this.H, false);
-    const k = Math.max(1, ...this.shots.map((b) => this.fit(b))) * this.renderer.getPixelRatio();
+    const k = Math.max(1, ...this.shots.map((b) => frameIn(b, this.W, this.H, this.inset()).s)) * this.renderer.getPixelRatio();
     this.ink.raster(Math.min(6, k));
   }
 
-  private fit(b: Box): number { return Math.min(this.W / b.w, (this.H - this.inset.top - this.inset.bottom) / b.h); }
-
-  /** Frame box b (drawing units) into the viewport minus the chrome insets. */
+  /** Frame box b (drawing units) into the viewport minus the chrome insets, never past the sheet's side edges. */
   frame(b: Box): void {
-    const s = this.fit(b), uc = this.inset.top + (this.H - this.inset.top - this.inset.bottom) / 2;
-    this.s = s; this.cx = b.x; this.cy = b.y + (uc - this.H / 2) / s;
-    const hw = this.W / (2 * s), hh = this.H / (2 * s), c = this.camera;
-    c.left = this.cx - hw; c.right = this.cx + hw; c.top = this.cy + hh; c.bottom = this.cy - hh;
+    const { s, cx, cy, view } = frameIn(b, this.W, this.H, this.inset()), c = this.camera;
+    this.s = s; this.cx = cx; this.cy = cy;
+    [c.left, c.bottom, c.right, c.top] = view;
     c.updateProjectionMatrix();
     this.ink.setPx(s);
   }
-  /** Box b cut down in height so that framing it spans the full width of the viewport. */
-  across(b: Box): Box { return { ...b, h: Math.min(b.h, (b.w * (this.H - this.inset.top - this.inset.bottom)) / this.W) }; }
   /** Visible width and height in drawing units. */
   span(): [number, number] { return [this.W / this.s, this.H / this.s]; }
   toScreen(x: number, y: number): [number, number] { return [(x - this.cx) * this.s + this.W / 2, this.H / 2 - (y - this.cy) * this.s]; }
   toWorld(px: number, py: number): [number, number] { return [(px - this.W / 2) / this.s + this.cx, (this.H / 2 - py) / this.s + this.cy]; }
-  render(): void { this.renderer.render(this.scene, this.camera); }
+  render(): void { updateShown(this.scene); this.renderer.render(this.scene, this.camera); }
+}
+
+/** Three's matrix update (`updateMatrixWorld`) over drawn subtrees only: a hidden one is neither drawn nor read, so it catches up when shown. */
+function updateShown(o: THREE.Object3D, force = false): void {
+  if (!o.visible) return;
+  if (o.updateMatrixWorld !== THREE.Object3D.prototype.updateMatrixWorld) return o.updateMatrixWorld(force);
+  if (o.matrixAutoUpdate) o.updateMatrix();
+  if (o.matrixWorldNeedsUpdate || force) {
+    if (o.matrixWorldAutoUpdate) { if (o.parent) o.matrixWorld.multiplyMatrices(o.parent.matrixWorld, o.matrix); else o.matrixWorld.copy(o.matrix); }
+    o.matrixWorldNeedsUpdate = false;
+    force = true;
+  }
+  for (const c of o.children) updateShown(c, force);
 }

@@ -11,6 +11,8 @@ export const THEME = {
   target: '#e9ae2c',
   targetInk: '#a8740c',
   vignette: '#3a2f1c',
+  /** The learner's own marks (pencil guesses), never a goal. */
+  pencil: '#55606e',
   /** Line weights in drawing units: hairline, thin, medium, bold. */
   hair: 0.7,
   thin: 1.25,

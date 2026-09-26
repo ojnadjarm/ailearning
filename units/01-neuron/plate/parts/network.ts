@@ -1,9 +1,9 @@
 import * as THREE from 'three';
 import type { LineMaterial } from 'three/addons/lines/LineMaterial.js';
 import { Ink, Z } from '../ink';
-import { arcPts, bezierPts, circle, polyline, roundRectPts } from '../geom';
+import { arcPts, bezierPts, circle, polyline, roundRectPts } from '../../../../src/kit/cutaway/geom';
 import { rng } from 'explainer-kit';
-import type { Part } from './part';
+import type { Part } from '../../../../src/kit/cutaway/parts/part';
 
 const LAYERS = [3, 4, 4, 2];
 const LX = [-600, -200, 200, 600];
@@ -15,7 +15,7 @@ export class NetworkFigure implements Part {
   private flows: { mat: LineMaterial; phase: number }[] = [];
   private knobs: { g: THREE.Group; to: number }[] = [];
   private needles: { g: THREE.Group; from: number; to: number }[] = [];
-  constructor(private ink: Ink, cy: number) {
+  constructor(ink: Ink, cy: number) {
     const r = rng(11), g = this.root;
     const mods = LAYERS.map((n, l) => Array.from({ length: n }, (_, i) => [LX[l], cy + ((n - 1) / 2 - i) * DY]));
     const outl: number[] = [], small: number[] = [];

@@ -4,7 +4,13 @@ export type Progress =
   | { type: 'step'; beat: string; index: number; phase: 'start' | 'done' }
   | { type: 'hint'; beat: string; index: number }
   | { type: 'attempt'; beat: string; index: number; pass: boolean; tries: number }
-  | { type: 'complete'; beat: string };
+  | { type: 'detect'; beat: string; task: string; m: string }
+  | { type: 'giveup'; beat: string; index: number }
+  | { type: 'complete'; beat: string }
+  | { type: 'seek'; from: number; to: number }
+  | { type: 'span'; index: number; t: number }
+  | { type: 'term'; id: string }
+  | { type: 'stop'; chapter: string };
 
 type Of<K extends Progress['type']> = Extract<Progress, { type: K }>;
 

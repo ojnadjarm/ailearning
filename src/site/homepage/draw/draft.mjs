@@ -7,15 +7,19 @@ export const line = (x1, y1, x2, y2, c = 'h') => `<path class="${c}" d="M${f(x1)
 export const rect = (x, y, w, h, c, rx = 0) => `<rect class="${c}" x="${f(x)}" y="${f(y)}" width="${f(w)}" height="${f(h)}"${rx ? ` rx="${rx}"` : ''}/>`;
 export const circ = (cx, cy, r, c) => `<circle class="${c}" cx="${f(cx)}" cy="${f(cy)}" r="${f(r)}"/>`;
 export const poly = (a, c) => `<polygon class="${c}" points="${pts(a)}"/>`;
-export const pline = (a, c) => `<polyline class="${c}" points="${pts(a)}"/>`;
 export const text = (x, y, s, c, anchor = 'middle') => `<text class="${c}" x="${f(x)}" y="${f(y)}" text-anchor="${anchor}">${s}</text>`;
-export const g = (inner, attrs = '') => `<g${attrs ? ' ' + attrs : ''}>${inner}</g>`;
+
+/** Hatched rectangle outlined in class `c` (a cut solid). */
+export const hatched = (x, y, w, h, c) => rect(x, y, w, h, 'hx') + rect(x, y, w, h, c);
+
+/** A pipe as a double line (ink outside, glass inside) with an optional flow core. */
+export const pipe = (d, flow = false) => path(d, 'po') + path(d, 'pi') + (flow ? path(d, 'flow') : '');
 
 /** Centre mark: a dash-dot cross through a round part's centre. */
 export const centre = (cx, cy, s) => line(cx - s, cy, cx + s, cy, 'c') + line(cx, cy - s, cx, cy + s, 'c');
 
 /** Closed wobbling rectangle path: the torn edge of a broken-out section. */
-export function wobbleRect(x, y, w, h, amp = 2.6, seed = 1) {
+function wobbleRect(x, y, w, h, amp = 2.6, seed = 1) {
   const c = [[x, y], [x + w, y], [x + w, y + h], [x, y + h]];
   let d = '', k = 0;
   for (let e = 0; e < 4; e++) {
@@ -36,18 +40,6 @@ export function wall(x, y, w, h, t, pat = 'hx', rx = 6, wob = 0) {
   return `<path class="${pat}" fill-rule="evenodd" d="${o}${i}"/>` + `<path class="b" d="${o}"/>` + `<path class="t" d="${i}"/>`;
 }
 
-/** Wobbling break line from (x1,y1) to (x2,y2): where the cover was torn away. */
-export function breakLine(x1, y1, x2, y2, amp = 3.2, seed = 1) {
-  const n = Math.max(6, Math.round(Math.hypot(x2 - x1, y2 - y1) / 11));
-  const nx = -(y2 - y1), ny = x2 - x1, L = Math.hypot(nx, ny) || 1;
-  let d = `M${f(x1)} ${f(y1)}`;
-  for (let i = 1; i <= n; i++) {
-    const t = i / n, w = i === n ? 0 : Math.sin(i * 2.3 + seed) * amp * (0.6 + 0.4 * Math.sin(i * 0.7 + seed * 3));
-    d += `L${f(x1 + (x2 - x1) * t + (nx / L) * w)} ${f(y1 + (y2 - y1) * t + (ny / L) * w)}`;
-  }
-  return path(d, 't');
-}
-
 /** Hex bolt head seen side-on, with its thread shank hidden line. */
 export const boltSide = (x, y, horiz = false) => horiz
   ? rect(x - 4, y - 7, 8, 14, 'h gl') + line(x - 4, y - 2.5, x + 4, y - 2.5, 'h') + line(x - 4, y + 2.5, x + 4, y + 2.5, 'h')
@@ -64,9 +56,9 @@ export function rivets(x1, y1, x2, y2, step = 34, r = 2.4) {
 /** Axial coupling: hatched spigot on the left face, bolted flange on the right face, both on the axis. */
 export function couplings(w, r = 16, end = false) {
   const L = -w / 2, R = w / 2;
-  const left = rect(L - 18, -r, 18, r * 2, 'hx') + rect(L - 18, -r, 18, r * 2, 'm') + line(L - 18, -r + 4, L, -r + 4, 'h dt') + line(L - 18, r - 4, L, r - 4, 'h dt')
+  const left = hatched(L - 18, -r, 18, r * 2, 'm') + line(L - 18, -r + 4, L, -r + 4, 'h dt') + line(L - 18, r - 4, L, r - 4, 'h dt')
     + rect(L - 18, -5, 18, 10, 'core');
-  return end ? left : left + rect(R, -r - 12, 12, (r + 12) * 2, 'hx') + rect(R, -r - 12, 12, (r + 12) * 2, 'm')
+  return end ? left : left + hatched(R, -r - 12, 12, (r + 12) * 2, 'm')
     + boltSide(R + 6, -r - 5, true) + boltSide(R + 6, r + 5, true) + rect(R, -5, 12, 10, 'core');
 }
 

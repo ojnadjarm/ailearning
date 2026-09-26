@@ -7,8 +7,10 @@ import { join, relative, extname } from 'node:path';
 import { spawnSync } from 'node:child_process';
 
 const LEAK = [/\/home\//, /\.ts\.net\b/, /[\w.+-]+@[\w-]+\.[a-z]{2,}\b/i, /~\/agents/, /\bprivate\//, /:8[04][79]0\b/];
-const WORDING = [/\bT\d{2}[a-z]?\b/, /ateli[e]r/i, /\bfleet\b/i, /orchestrat[o]r/i, /\bdrop\b(?!-shadow)/i, /\bthe owner\b/i, /\btickets?\b/i];
+const WORDING = [/\bT\d{2,}[a-z]?\b/, /ateli[e]r/i, /\bfleet\b/i, /orchestrat[o]r/i, /\bdrop\b(?!-shadow)/i, /\bthe owner\b/i, /\btickets?\b/i];
 const VENDORED = /^src\/kit\//;
+/** A three.js shader variable in the bundle that reads like an internal id (dist only). */
+const BUNDLED_IDS = /\bT121\b/g;
 const RAW_AUDIO = new Set(['.wav', '.flac', '.aiff', '.mp3']);
 const TEXT = new Set(['', '.ts', '.js', '.mjs', '.cjs', '.json', '.html', '.css', '.md', '.txt', '.sh', '.yml', '.yaml', '.svg', '.xml']);
 const SKIP_DIR = new Set(['node_modules', '.git', '.vite', 'out', '.render']);
@@ -48,8 +50,8 @@ for (const file of dist ? walk(scanRoot) : committable()) {
   const patterns = [...LEAK, ...(dist || !VENDORED.test(rel) ? WORDING : [])];
   const spans = allow.filter((a) => a.path.test(rel)).map((a) => a.re);
   readFileSync(file, 'utf8').split('\n').forEach((line, i) => {
-    const denyLine = spans.reduce((l, re) => l.replace(re, ' '), line);
-    for (const [re, text] of [...patterns.map((p) => [p, line]), ...deny.map((p) => [p, denyLine])]) {
+    const denyLine = spans.reduce((l, re) => l.replace(re, ' '), line), own = dist ? line.replace(BUNDLED_IDS, ' ') : line;
+    for (const [re, text] of [...patterns.map((p) => [p, own]), ...deny.map((p) => [p, denyLine])]) {
       const m = text.match(re);
       if (m) hits.push(`${rel}:${i + 1}: ${re} matched ${JSON.stringify(m[0])}`);
     }

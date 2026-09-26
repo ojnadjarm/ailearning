@@ -13,9 +13,9 @@ export function lede(s, first) {
   const ret = s.cta.returning.replace('{plate}', first.plate).replace('{beat}', 'Watch');
   return `<div class="lede"><h1>${esc(s.promise[0])}</h1><p class="sub">${esc(s.subline)}</p></div>
 <div class="act">
-<a class="primary p-new" href="${first.href}">${esc(s.cta.new)}</a>
-<a class="primary p-returning" href="${first.href}" data-tpl="${esc(s.cta.returning)}">${esc(ret)}</a>
-<button class="primary p-phone" type="button" data-share>${esc(s.cta.phone)}</button>
+<a class="btn primary p-new" href="${first.href}">${esc(s.cta.new)}</a>
+<a class="btn primary p-returning" href="${first.href}" data-tpl="${esc(s.cta.returning)}">${esc(ret)}</a>
+<button class="btn primary p-phone" type="button" data-share>${esc(s.cta.phone)}</button>
 <p class="trust">${esc(s.trust)}</p><p class="ph-note">Plates are drawn for a desktop. The map works here.</p></div>`;
 }
 
@@ -41,7 +41,7 @@ export function how(s) {
   const det = (cls, svg, i, extra = '') => `<figure class="det"><svg viewBox="0 0 260 260" aria-hidden="true" class="${cls}"><circle class="dcf" cx="130" cy="130" r="124"/><g clip-path="url(#dclip)">${svg}</g></svg>`
     + `<figcaption><b>Detail ${'ABC'[i]} · ${esc(s.strip[i].label)}</b>${extra}${esc(s.strip[i].line)}${i === 0 ? ` <i>${esc(s.sound)}</i>` : ''}</figcaption></figure>`;
   return `<section class="how" aria-labelledby="how-h"><h2 id="how-h">How a plate works <span>Details of Plate I, enlarged</span></h2>
-<div class="details">${det('da', detailA(), 0)}${det('db', detailB(), 1)}${det('dc race', detailC(), 2, '<span class="gm"><i class="flag" aria-hidden="true"></i>Race the tuner</span> ')}</div></section>`;
+<div class="details">${det('da', detailA(), 0)}${det('db', detailB(), 1)}${det('dc race', detailC(), 2, '<span class="gm"><i class="flag" aria-hidden="true"></i>Tuning</span> ')}</div></section>`;
 }
 
 // TODO(progress store): link the colophon to the about page (progress download, load, reset) once it exists.

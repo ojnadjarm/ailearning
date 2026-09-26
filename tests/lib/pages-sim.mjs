@@ -1,11 +1,14 @@
-// Serves dist/ the way GitHub Pages does: only under BASE, /dir → 301 /dir/, dir/ → index.html, misses → 404 with 404.html.
+// Serves dist/ the way GitHub Pages does: only under BASE, /dir → 301 /dir/, dir/ → index.html, misses → 404 with 404.html,
+// text types gzip-encoded when the client accepts it.
 import { createServer } from 'node:http';
 import { readFile, stat } from 'node:fs/promises';
 import { join, extname, normalize } from 'node:path';
 import { pathToFileURL } from 'node:url';
+import { gzipSync } from 'node:zlib';
 
 const TYPES = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript', '.css': 'text/css', '.json': 'application/json', '.woff2': 'font/woff2',
   '.opus': 'audio/ogg', '.m4a': 'audio/mp4', '.svg': 'image/svg+xml', '.png': 'image/png', '.avif': 'image/avif', '.txt': 'text/plain; charset=utf-8', '.xml': 'application/xml' };
+const TEXT = new Set(['.html', '.js', '.css', '.json', '.svg', '.txt', '.xml']);
 const isFile = (p) => stat(p).then((s) => s.isFile(), () => false);
 const isDir = (p) => stat(p).then((s) => s.isDirectory(), () => false);
 
@@ -14,8 +17,10 @@ export async function startPagesSim({ dir = 'dist', base = process.env.BASE ?? '
   const server = createServer(async (req, res) => {
     const path = decodeURIComponent(new URL(req.url, 'http://x').pathname);
     const send = async (code, file) => {
-      res.writeHead(code, { 'content-type': TYPES[file ? extname(file) : '.html'] ?? 'application/octet-stream', 'cache-control': 'max-age=600' });
-      res.end(file ? await readFile(file) : 'Not Found');
+      const ext = file ? extname(file) : '.html', body = file ? await readFile(file) : Buffer.from('Not Found');
+      const gz = TEXT.has(ext) && /\bgzip\b/.test(req.headers['accept-encoding'] ?? '');
+      res.writeHead(code, { 'content-type': TYPES[ext] ?? 'application/octet-stream', 'cache-control': 'max-age=600', vary: 'accept-encoding', ...(gz ? { 'content-encoding': 'gzip' } : {}) });
+      res.end(gz ? gzipSync(body) : body);
     };
     const miss = async () => ((await isFile(join(dir, '404.html'))) ? send(404, join(dir, '404.html')) : send(404));
     if (path === base.slice(0, -1)) { res.writeHead(301, { location: base }); return res.end(); }

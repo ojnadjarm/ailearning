@@ -52,15 +52,18 @@ export class Callout implements Part {
   }
 }
 
-/** Numbered balloon (patent style) on a short leader. */
+/** Numbered balloon (patent style) on a short leader that ends on its part with a dot. */
 export class Balloon implements Part {
   readonly root = new THREE.Group();
   private leg: LineSegments2;
   private head = new THREE.Group();
+  private dot: THREE.Mesh;
   private last = -1;
   constructor(private ink: Ink, private pts: number[], n: number, private r = 15) {
     const [x, y] = pts.slice(-2);
     this.leg = ink.segs([], ink.line('ink', 'hair'), Z.callout);
+    this.dot = ink.disc(pts[0], pts[1], 3.6, ink.fill('ink'), Z.callout + 0.1, 20);
+    this.root.add(this.dot);
     this.head.position.set(x, y, 0);
     this.head.add(ink.disc(0, 0, r, ink.fill('paper'), Z.callout + 0.1, 40), ink.segs(circle(0, 0, r, 48), ink.line('ink', 'thin'), Z.callout + 0.2));
     const t = ink.text(2 * r, 2 * r, (c, th) => { c.fillStyle = th.ink; c.font = `500 ${TYPE.balloon}px ${FONT.serif}`; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText(String(n), r, r + 1); }, 0.5, 0.5);
@@ -77,7 +80,10 @@ export class Balloon implements Part {
     this.ink.setSegs(this.leg, polyline(partial(lead, clamp01(p / 0.6))));
     const s = clamp01((p - 0.5) / 0.35);
     this.head.scale.setScalar(Math.max(0.001, s < 1 ? s * (1.15 - 0.15 * s) : 1));
+    this.dot.scale.setScalar(Math.max(0.001, clamp01(p * 6)));
   }
+  /** The badge centre while it is drawn, else null (a click target: see explainer-kit `Marker`). */
+  at(): [number, number] | null { return this.last > 0.5 ? [this.pts[this.pts.length - 2], this.pts[this.pts.length - 1]] : null; }
   private shorten(): number[] {
     const n = this.pts.length, x = this.pts[n - 2], y = this.pts[n - 1], px = this.pts[n - 4], py = this.pts[n - 3], l = Math.hypot(x - px, y - py) || 1;
     return [x - ((x - px) / l) * this.r, y - ((y - py) / l) * this.r];

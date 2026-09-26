@@ -2,17 +2,15 @@
 // nothing spills out of the sheet, one primary above the fold, promise in the first screen, dial ≥ 44 px, no question marks,
 // ≤ 3.5 screens on a phone, links only to built pages (U01 is the one live unit), no engine or three.js requests, 0 failed requests.
 // Then behaviour: keys turn the dial, stored progress → returning, bad or throwing storage → new, reduced motion, no JavaScript.
+// Parts list: every row at 400–2560, the numeral fits its column with a clear gap, text wraps inside its row.
+// Phone share button at 360 and 400: after a press its label never shows the address and it stays inside the sheet.
 import { mkdirSync, readFileSync } from 'node:fs';
-import { startPagesSim } from '../lib/pages-sim.mjs';
-import { launch, open } from '../lib/browser.mjs';
+import { harness, frames, settled, until } from '../lib/harness.mjs';
 
 const SIZES = [[400, 800], [400, 860], [768, 1024], [1366, 768], [1920, 1080], [2560, 1440]];
 const AUTHOR = readFileSync('README.md', 'utf8').match(/Directed by \[[^\]]+\]\((https:[^)]+)\)/)[1];
-const sim = await startPagesSim();
-const U01 = sim.url + 'u/01-neuron/';
-const browser = await launch();
-const faults = [];
-const fail = (m) => faults.push(m);
+const { site, browser, faults, fault: fail, open, end } = await harness('home');
+const U01 = site + 'u/01-neuron/';
 mkdirSync('out/shots', { recursive: true });
 
 /** Layout facts of the loaded page. */
@@ -75,9 +73,9 @@ const measure = (page) => page.evaluate(() => {
 for (const state of ['new', 'returning', 'phone']) {
   for (const [width, height] of SIZES) {
     const tag = `home ${state} ${width}x${height}`;
-    const { page, log, close } = await open(browser, `${sim.url}?state=${state}`, { width, height });
+    const { page, log, close } = await open(`${site}?state=${state}`, { width, height });
     await page.evaluate(() => document.fonts.ready);
-    await page.waitForTimeout(1800);
+    await settled(page);
     const m = await measure(page);
     if (m.state !== state) fail(`${tag}: data-state ${m.state}`);
     if (m.sw !== m.iw) fail(`${tag}: scrollWidth ${m.sw} != ${m.iw}`);
@@ -89,7 +87,7 @@ for (const state of ['new', 'returning', 'phone']) {
     if (m.hitPx < 44) fail(`${tag}: dial hit area ${m.hitPx} px`);
     if (m.question) fail(`${tag}: a question mark in the copy`);
     if (width <= 400 && m.height / 860 > 3.5) fail(`${tag}: ${(m.height / 860).toFixed(2)} screens of 860 (max 3.5)`);
-    const bad = m.links.filter((h) => h !== sim.url && h !== U01);
+    const bad = m.links.filter((h) => h !== site && h !== U01);
     if (bad.length) fail(`${tag}: links to ${bad.join(', ')}`);
     if (state === 'phone' && m.u01Link) fail(`${tag}: U01 links to a lesson on a phone`);
     if (state !== 'phone' && !m.links.includes(U01)) fail(`${tag}: no link to U01`);
@@ -101,14 +99,47 @@ for (const state of ['new', 'returning', 'phone']) {
     if (height !== 800) {
       // A full-page capture here drops the finished draw-on callouts; a viewport as tall as the page keeps them.
       await page.evaluate(() => document.querySelector('.how').scrollIntoView({ block: 'center' }));
-      await page.waitForTimeout(1800);
+      await settled(page);
       await page.setViewportSize({ width, height: m.height });
-      await page.waitForTimeout(150);
+      await frames(page);
       await page.screenshot({ path: `out/shots/home-${state}-${width}.png` });
     }
     console.log(`${tag}: ${(m.height / height).toFixed(2)} screens, margins ${m.left.toFixed(1)}/${m.right.toFixed(1)}, primary "${m.primaries[0]?.text}", links ${m.links.length}`);
     await close();
   }
+}
+
+/** Parts list geometry, every ring open: each numeral fits its cell with a clear gap, text stays in its row and cells never overlap. */
+const rows = (page) => page.evaluate(() => {
+  document.querySelectorAll('.bom details').forEach((d) => { d.open = true; });
+  const ink = (e) => { const r = document.createRange(); r.selectNodeContents(e); return r.getBoundingClientRect(); };
+  const cut = (a, b) => Math.min(a.right, b.right) - Math.max(a.left, b.left) > 1 && Math.min(a.bottom, b.bottom) - Math.max(a.top, b.top) > 1;
+  const out = [], bh = document.querySelector('.bh'), head = getComputedStyle(bh).display !== 'none' && bh.children[1].getBoundingClientRect();
+  for (const u of document.querySelectorAll('.u')) {
+    const pn = u.querySelector('.pn'), n = pn.textContent, pb = pn.getBoundingClientRect(), pi = ink(pn), ub = u.getBoundingClientRect();
+    const em = parseFloat(getComputedStyle(pn).fontSize), gap = u.querySelector('.desc').getBoundingClientRect().left - pi.right;
+    if (pi.left < pb.left - 0.5 || pi.right > pb.right + 0.5) out.push(`${n}: numeral ${pi.width.toFixed(0)} px in a ${pb.width.toFixed(0)} px cell`);
+    if (gap < 0.5 * em) out.push(`${n}: gap to the title ${gap.toFixed(1)} px (min ${0.5 * em} px)`);
+    if (head && Math.abs(head.width - pb.width) > 0.5) out.push(`${n}: Plate column ${pb.width.toFixed(1)} px, header ${head.width.toFixed(1)} px`);
+    const cells = [...u.querySelectorAll('.fig, .pn, .desc, .uses, .min, .st')].filter((e) => e.getClientRects().length);
+    for (const e of u.querySelectorAll('.pn, .ti, .ln, .gm, .uses, .min, .st')) {
+      const r = ink(e);
+      if (e.scrollWidth > e.clientWidth + 1) out.push(`${n} .${e.className}: clipped (${e.scrollWidth} > ${e.clientWidth})`);
+      if (r.width && (r.right > ub.right + 1 || r.left < ub.left - 1 || r.right > innerWidth)) out.push(`${n} .${e.className}: text outside its row`);
+    }
+    cells.forEach((a, i) => cells.slice(i + 1).forEach((b) => {
+      if (cut(a.getBoundingClientRect(), b.getBoundingClientRect())) out.push(`${n}: .${a.className} overlaps .${b.className}`);
+    }));
+  }
+  return { n: document.querySelectorAll('.u').length, out };
+});
+for (const [width, height] of [[400, 860], [768, 1024], [1366, 768], [1920, 1080], [2560, 1440]]) {
+  const { page, close } = await open(`${site}?state=new`, { width, height });
+  await page.evaluate(() => document.fonts.ready);
+  const r = await rows(page);
+  r.out.forEach((f) => fail(`parts list ${width}: ${f}`));
+  console.log(`parts list ${width}: ${r.n} rows, ${r.out.length} faults`);
+  await close();
 }
 
 /** Opens the homepage at 1920 with an init script (storage fixtures) and optional context options. */
@@ -118,8 +149,8 @@ async function at(init, ctxOpts = {}) {
   const errors = [];
   page.on('pageerror', (e) => errors.push(e.message));
   if (init) await page.addInitScript(init);
-  await page.goto(sim.url, { waitUntil: 'load' });
-  await page.waitForTimeout(200);
+  await page.goto(site, { waitUntil: 'load' });
+  if (ctxOpts.javaScriptEnabled !== false) await frames(page);
   return { page, errors, close: () => ctx.close() };
 }
 const cta = (page) => page.evaluate(() => {
@@ -145,8 +176,8 @@ const cta = (page) => page.evaluate(() => {
     const ctx = await browser.newContext({ viewport: { width, height } });
     const page = await ctx.newPage();
     await page.addInitScript((v) => localStorage.setItem('plates:v1:progress', v), all);
-    await page.goto(sim.url, { waitUntil: 'load' });
-    await page.waitForTimeout(1800);
+    await page.goto(site, { waitUntil: 'load' });
+    await settled(page);
     const c = await crossings(page);
     c.forEach((x) => fail(`all seated ${width}: ${x}`));
     console.log(`all seated ${width}: ${c.length} leader crossings`);
@@ -167,17 +198,44 @@ for (const [name, init, want] of cases) {
   if (JSON.stringify(got) !== JSON.stringify(want)) fail(`${name}: ${JSON.stringify(got)}, want ${JSON.stringify(want)}`);
   errors.forEach((e) => fail(`${name}: page error ${e}`));
   if (name === 'stored progress on U01') {
-    await page.waitForTimeout(1400);
+    await until(page, () => !['', '0px', '-0px'].includes(document.querySelector('.asm-wide .slot[data-ring="1"]').style.getPropertyValue('--dx')), null, 5000);
     const dx = await page.evaluate(() => document.querySelector('.asm-wide .slot[data-ring="1"]').style.getPropertyValue('--dx'));
     if (!dx || dx === '0px' || dx === '-0px') fail(`${name}: ring 1 did not slide (--dx ${dx})`);
   }
   console.log(`${name}: ${got.state}, "${got.text}"`);
   await close();
 }
+/** The phone's share button after a press: its label never shows the address, and the button with its hatch stays inside the sheet. */
+const shareFit = (page) => page.evaluate(() => {
+  const b = document.querySelector('[data-share]'), r = b.getBoundingClientRect(), sh = document.querySelector('.sheet').getBoundingClientRect();
+  return { text: b.textContent, right: r.right + 6, bottom: r.bottom + 6, sheet: sh.right, sw: document.documentElement.scrollWidth, iw: innerWidth };
+});
+for (const [path, init, want] of [
+  ['no share sheet, clipboard refused', () => { Object.defineProperty(navigator, 'share', { value: undefined }); Object.defineProperty(navigator, 'clipboard', { value: { writeText: () => Promise.reject(new Error('denied')) } }); }, 'Copy link'],
+  ['share sheet cancelled', () => { Object.defineProperty(navigator, 'share', { value: () => Promise.reject(new DOMException('cancel', 'AbortError')) }); }, null],
+  ['no share sheet, link copied', () => { Object.defineProperty(navigator, 'share', { value: undefined }); Object.defineProperty(navigator, 'clipboard', { value: { writeText: () => Promise.resolve() } }); }, 'Link copied'],
+]) for (const width of [360, 400]) {
+  const tag = `share ${width}, ${path}`;
+  const ctx = await browser.newContext({ viewport: { width, height: 800 }, isMobile: true, hasTouch: true });
+  const page = await ctx.newPage();
+  await page.addInitScript(init);
+  await page.goto(`${site}?state=phone`, { waitUntil: 'load' });
+  const label = await page.evaluate(() => document.querySelector('[data-share]').textContent);
+  await page.tap('[data-share]');
+  if (want) await until(page, (w) => document.querySelector('[data-share]').textContent === w, want, 5000); else await frames(page, 3);
+  const m = await shareFit(page);
+  if (m.text !== (want ?? label)) fail(`${tag}: label "${m.text}", want "${want ?? label}"`);
+  if (/https?:|\//.test(m.text)) fail(`${tag}: label shows the address`);
+  if (m.right > m.sheet + 0.5) fail(`${tag}: button reaches ${m.right.toFixed(1)} px, sheet ends at ${m.sheet.toFixed(1)}`);
+  if (m.sw !== m.iw) fail(`${tag}: scrollWidth ${m.sw} != ${m.iw}`);
+  console.log(`${tag}: "${m.text}", right edge ${m.right.toFixed(1)} of ${m.sheet.toFixed(1)}`);
+  await ctx.close();
+}
 {
   const { page, close } = await at(null, { reducedMotion: 'reduce' });
   await page.evaluate(() => document.querySelector('.how').scrollIntoView());
-  await page.waitForTimeout(300);
+  await until(page, () => !!document.querySelector('.det svg.run'), null, 5000);
+  await frames(page);
   const running = await page.evaluate(() => document.getAnimations().filter((a) => a.playState === 'running').length);
   if (running) fail(`reduced motion: ${running} animations running`);
   console.log(`reduced motion: ${running} running animations`);
@@ -191,8 +249,4 @@ for (const [name, init, want] of cases) {
   await close();
 }
 
-await browser.close();
-await sim.close();
-faults.forEach((f) => console.error(`home: ${f}`));
-console.log(`home: ${SIZES.length * 3} views + 9 behaviours, ${faults.length} faults`);
-process.exit(faults.length ? 1 : 0);
+await end(`home: ${SIZES.length * 3} views + 5 parts-list widths + 9 behaviours + 6 share presses, ${faults.length} faults`);

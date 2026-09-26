@@ -1,4 +1,6 @@
-import type { View } from '../../src/unit/ports';
+import type { Explained, View } from '../../src/unit/ports';
+import type { LabelMode } from '../../src/unit/beats';
+import type { Item } from '../../src/place/place';
 import { DetentHand } from '../../src/play/hand';
 import type { Projector } from '../../src/play/pointer';
 
@@ -8,13 +10,26 @@ export interface CutawayStage {
   readonly el: HTMLElement;
   readonly renderer: { domElement: HTMLElement; compile(scene: unknown, camera: unknown): unknown };
   readonly scene: unknown; readonly camera: unknown;
+  /** Stage size in CSS px and px per drawing unit (screen-constant parts size themselves with these). */
+  readonly W: number; readonly H: number; readonly s: number;
   cx: number; cy: number;
   frame(b: Box): void; span(): [number, number]; render(): void; resize(): void;
   toScreen(x: number, y: number): [number, number]; toWorld(px: number, py: number): [number, number];
 }
-/** A plate: draws a state; the focus lamp and exposure veil are optional. */
+/** A plate: draws a state; the focus lamp, exposure veil and the callout note are optional. */
 export interface CutawayFigure<S> {
   apply(s: S, dt: number, run: boolean): void;
+  /** After the shot is framed, before the render: size screen-constant parts (the callout note) to the stage. */
+  frame?(stage: CutawayStage): void;
+  /** Draw the callout (dot, leader, note) or clear it; `light` outlines one part (its number is hovered). */
+  explain?(c: Explained | null): void;
+  light?(part: string | null): void;
+  /** Named leader labels, or numbers only: in `numbered` no named label is drawn, whatever the state says. */
+  labels?(mode: LabelMode): void;
+  /** What is drawn now, in drawing units (tests check the layout rules on it). */
+  layout?(): Item[];
+  /** What of the drawn note is under screen point (px, py). */
+  noteAt?(px: number, py: number, stage: CutawayStage): 'hear' | 'close' | 'inside' | null;
   lamp?: { set(x: number, y: number, on: number, span: number): void };
   veil?: { set(cx: number, cy: number, w: number, h: number, exposure: number): void };
 }
@@ -46,8 +61,14 @@ export class CutawayView<S extends CutawayState> implements View<S> {
     const [sw, sh] = st.span();
     this.fig.lamp?.set(s.lampX, s.lampY, s.lampOn, Math.max(sw, sh));
     this.fig.veil?.set(st.cx, st.cy, sw, sh, s.exposure);
+    this.fig.frame?.(st);
     st.render();
   }
+  explain(c: Explained | null): void { this.fig.explain?.(c); }
+  light(part: string | null): void { this.fig.light?.(part); }
+  labels(mode: LabelMode): void { this.fig.labels?.(mode); }
+  layout(): Item[] { return this.fig.layout?.() ?? []; }
+  noteAt(px: number, py: number): 'hear' | 'close' | 'inside' | null { return this.fig.noteAt?.(px, py, this.stage) ?? null; }
   resize(): void { this.stage.resize(); }
   prepare(): void { this.stage.renderer.compile(this.stage.scene, this.stage.camera); }
   toWorld(px: number, py: number): [number, number] { return this.stage.toWorld(px, py); }

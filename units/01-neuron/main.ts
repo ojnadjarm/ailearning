@@ -1,14 +1,15 @@
-import '../../src/core/reload';
-import { boot, probe, loadBundle, Shell, type UnitSpec } from 'explainer-kit';
+import { boot, probe, loadBundle, layoutClips, keyHint, partMarkers, Shell, type UnitSpec } from 'explainer-kit';
 import { CutawayView, cutawayEasing } from 'explainer-kit/cutaway';
 import { THEME } from './plate/theme';
 import { Ink } from './plate/ink';
 import { Stage } from './plate/stage';
 import { Plate } from './plate/plate';
-import { afterWatch, SHOTS } from './unit/watch';
-import { L } from './unit/layout';
-import { A01, beats, controls } from './unit/unit';
-import spec from './unit.json';
+import { afterWatch } from './unit/watch';
+import { LANDING, SHOTS } from './unit/layout';
+import { BALLOON_R } from './unit/placed';
+import { makeUnit, hotspots, beats, controls, SECTIONS, FINISHED } from './unit/unit';
+import type { A01State } from './unit/state';
+import specUrl from './unit.json?url';
 
 /** Composition root: the Cutaway plate (style) and unit 01 (content) handed to the explainer engine. */
 const BASE = import.meta.env.BASE_URL;
@@ -22,7 +23,8 @@ const fonts = (): Promise<void[]> => Promise.all(FONTS.map(async ([f, w, st, u])
 }));
 Object.assign(probe, { backend: 'webgl2', accentDrawn: '' });
 
-const [, bundle] = await Promise.all([fonts(), loadBundle(`${BASE}bundles/01-neuron/`, spec as UnitSpec)]);
+const [, spec] = await Promise.all([fonts(), fetch(specUrl).then((r) => r.json() as Promise<UnitSpec>)]);
+const bundle = await loadBundle(`${BASE}bundles/01-neuron/`, spec);
 const ink = new Ink(THEME);
 const stage = new Stage(document.getElementById('stage')!, ink);
 stage.setShots(Object.values(SHOTS).map((b) => ({ x: b.camX, y: b.camY, w: b.camW, h: b.camH })));
@@ -33,17 +35,34 @@ t0 = performance.now();
 const plate = new Plate(ink);
 probe.plateMs = Math.round(performance.now() - t0);
 stage.scene.add(plate.root);
+const A01 = makeUnit(spec);
+const chapters = spec.chapters ?? [], told = chapters.filter((c) => !c.beat).length, byHand = chapters.filter((c) => c.beat && !c.clips?.length).length;
+const closing = chapters.length - told - byHand;
+const mins = Math.round(layoutClips(bundle.cues, A01.watch.order, A01.watch.lead, A01.watch.gap).end / 60);
 const shell = new Shell(document.getElementById('shell')!, {
   num: '01', name: 'Neuron', eyebrow: 'Plate I · Instrument 01', title: 'What a neural network is',
-  lede: 'A narrated engineering plate, drawn with its casing cut away. Watch it work, then tune it by hand. About ninety seconds, with sound.',
-  keys: 'Drag a dial to turn it. Arrow keys turn the lit dial.', endEyebrow: 'End of the opening', endTitle: 'Next in the full unit: race the tuner',
+  lede: `A narrated engineering plate, drawn with its casing cut away: ${chapters.length} chapters, ${told} narrated (${mins} min), ${byHand} by hand${closing ? ` and ${closing === 1 ? 'a closing one' : `${closing} closing`}` : ''}, then Practice for as long as you like. With sound; each chapter stops so you can look.`,
+  keys: `Drag a dial to turn it. ${keyHint()}`,
+  tip: 'Click or tap a circled number to open its note; Esc, a click on bare paper or the same number closes it.',
+  endEyebrow: 'End of Plate I', endTitle: 'Next: Plate II',
+  endLede: 'Any chapter below plays again.',
 });
 const view = new CutawayView(stage, plate);
-/** Behind the Begin card: the whole plate on a portrait field, the machine across the full width of a landscape one. */
-const full = stage.across({ x: 0, y: 0, w: L.caseW + 160, h: SHOTS.full.camH });
-const landing = stage.W > stage.H ? { camX: full.x, camY: full.y, camW: full.w, camH: full.h } : SHOTS.open;
-const { d } = boot({ unit: A01, bundle, view, shell, controls: controls(view), beats, after: afterWatch, opening: { ...landing, exposure: 0.35 }, easing: cutawayEasing });
+/** Behind the Begin card: the whole plate on a portrait field; on a landscape one the machine and its caption, centred on the field. */
+const landing = stage.W > stage.H ? LANDING : SHOTS.open;
+let state = (): A01State => A01.initial();
+const { d } = boot({
+  unit: A01, bundle, view, shell, controls: controls(view), hotspots: hotspots(() => state()), beats, after: afterWatch,
+  markers: partMarkers(spec.parts ?? [], (n) => plate.balloonAt(n), BALLOON_R),
+  opening: { ...landing, exposure: 0.35 }, easing: cutawayEasing, progress: { unit: 'U01', states: { drive: 'driven', bench: 'played', race: 'cleared' } }, sections: SECTIONS, finished: FINISHED,
+});
+state = () => d.s;
 const count = d.onFrame;
-d.onFrame = (ms) => { count(ms); probe.accentDrawn = ink.theme.signal; };
+/** The sheet change holds on the old sheet until the plate's first frame (`sheet:ready`). */
+let drawn = false;
+d.onFrame = (ms) => {
+  count(ms); probe.accentDrawn = ink.theme.signal;
+  if (!drawn) { drawn = true; Object.assign(window, { __sheetReady: true }); document.dispatchEvent(new Event('sheet:ready')); }
+};
 
 if (import.meta.hot) import.meta.hot.accept('./plate/theme.ts', (m) => { if (m) { ink.paint(m.THEME); stage.renderer.setClearColor(m.THEME.paper); d.wake(true); } });

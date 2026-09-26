@@ -30,6 +30,7 @@ const leaks = {
   'local port': ['units/x/main.ts', 'fetch("https://host:84' + '70/")'],
   'internal id in public copy': ['units/x/unit.json', '{"title": "from T' + '71"}'],
   'internal id in tooling': ['tools/a.mjs', '// see T' + '71'],
+  'three-digit internal id': ['tools/a.mjs', '// see T' + '105'],
   'internal wording in public copy': ['README.md', 'Built by the fle' + 'et.'],
   'maintainer wording in agent notes': ['CLAUDE.md', 'The ow' + 'ner pushes daily.'],
   'work-item wording': ['tests/e2e/a.mjs', '// tic' + 'ket 12'],
