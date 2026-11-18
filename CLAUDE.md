@@ -4,8 +4,8 @@ Public GitHub Pages site of narrated Cutaway plates (ink on ivory technical draw
 base `/ailearning/`. The plan and any machine-specific notes live outside this repo (`CLAUDE.local.md`, ignored by git).
 
 ## Rules
-- **Never `git add`, commit or push, never touch GitHub.** The maintainer stages, commits and pushes at the end of each day.
-- **Continuous release:** when you stop, `npm run ci` is green and the repo deploys as it is. Unfinished units are not linked.
+- **Commit only the files you changed (`T<n>: <what>`) and push; never force-push or rewrite history** (owner, 2026-11-17: pushes are allowed outside the work repos).
+- **Continuous release:** ship, the maintainer tests, then run `npm run test:changed`; the full `npm run ci` runs at most once a day. The repo deploys as it is. Unfinished units are not linked.
 - **Public repo:** credits read "Drawn by Claude · Directed by" the maintainer, whose name (linked to the portfolio) appears only in
   the credit spots: plate title blocks (APPROVED), README, the homepage title block (APPROVED) and colophon line (from
   `src/site/homepage/credits.mjs`), the 404 sheet, `LICENSE`, `LICENSE-content`. The private deny-list
@@ -17,6 +17,10 @@ base `/ailearning/`. The plan and any machine-specific notes live outside this r
 - **Kits are vendored, never edited here:** `src/kit/{cutaway,explainer}` and `public/fonts/` come from `tools/sync-kit.sh`
   (`CUTAWAY_KIT=<dir> EXPLAINER_KIT=<dir> npm run kit:sync`); `npm run kit:verify` checks them against `src/kit/VERSION`.
 - Web pages are fluid and responsive: verified at 400/768/1366/1920/2560, symmetric margins, no horizontal scroll, no dead gaps.
+- **Review switch:** a `REVIEW=toggle` build (the local test site) carries every built sheet behind a switch (`?review` / `?review=0`, kept in localStorage, `html[data-review]`, `src/site/sheet/sheets.mjs`); with it off the site is the Pages view. The Pages build has no switch.
+- **Local only:** review, QA, mockups and the lesson board never reach git (`.gitignore`); every unit's files are ignored until it is approved,
+  and `lesson-board set U0N approved --owner` re-includes them (generated block). The Pages build discovers units from `u/*/index.html`.
+- **Mockups:** live in `mock/<id>/` (any `index.html` below it becomes an entry), git-ignored, built only in `REVIEW=toggle` builds; never in the Pages build.
 
 ## Layout
 | Path | What |
@@ -32,16 +36,19 @@ base `/ailearning/`. The plan and any machine-specific notes live outside this r
 | `public/sound/` | Page-turn sounds, `.opus` + `.m4a`, ≤ 20 kB each (`bundle-check`) |
 | `public/THIRD-PARTY-NOTICES.txt` | three.js MIT text, GSAP copyright and licence link, page-turn sound source (CC0); `tests/unit/notices.test.mjs` fails if a dependency is missing |
 | `src/core/reload.ts` | `vite:preloadError` → reload once (stale HTML after a deploy) |
-| `tools/` | `sync-kit.sh`, `kit-verify.mjs`, `content-check.mjs`, `hygiene.mjs`, `base-check.mjs`, `link-check.mjs` (internal links resolve, no link to an unbuilt unit), `bundle-check.mjs`, `check-links.sh` (internal + external), `test-changed.mjs` (`npm run test:changed`: path → covering checks), `cue-check.mjs` (`npm run cue-check -- --clip --mark --key --part`: a state key changes on that word, the part is drawn), `narrate.sh` (`KOKORO_PY=… KOKORO_RENDER=… tools/narrate.sh <slug> <clip…>`: renders and merges only the named clips) |
+| `tools/` | `sync-kit.sh`, `kit-verify.mjs`, `content-check.mjs`, `hygiene.mjs`, `base-check.mjs`, `link-check.mjs` (internal links resolve, no link to an unbuilt unit), `bundle-check.mjs`, `check-links.sh` (internal + external), `test-changed.mjs` (`npm run test:changed`: path → covering checks), `cue-check.mjs` (`npm run cue-check -- --clip --mark --key --part`: a state key changes on that word, the part is drawn), `declutter.mjs` + `declutter/` (`npm run declutter [-- <NN>] [--size WxH]`: every step of a unit posed headless, exit 1 on a step over 7 labelled things or any leftover, stray control, duplicate, overlap or crossing leader), `narrate.sh` (`KOKORO_PY=… KOKORO_RENDER=… tools/narrate.sh <slug> <clip…>`: renders and merges only the named clips) |
 | `tests/` | `run-e2e.mjs` (`npm run e2e`: one pages-sim and one browser; frame-timed files alone, then a timed lane beside a parallel lane), `lib/harness.mjs` (every e2e's site, browser, faults and waits), `unit/*.test.mjs` (node; `lesson.test.mjs` lints the U01 script, checks words against numbers and the number rules; `framing.test.mjs` whole-or-out, nothing under the caption or the bar, lamp in frame, legibility), `lib/lesson.mjs` (the watch settled at each sentence), `lib/framing.mjs` (stages, framed objects, samples), `lib/pages-sim.mjs` (Pages behaviour: 301 `/dir`, 404 + `404.html`, gzip for text), `e2e/home.mjs` (3 states × 6 views + behaviours, and every parts-list row at 400–2560: numeral fits its column with a clear gap, text wraps in its row), `e2e/home-perf.mjs` (homepage budget), `e2e/site.mjs` (U01 as a sheet with the plate from 1024 px, the narrow sheet below with no plate code, widening loads the plate; 404; no-JS), `e2e/sheet-change.mjs` (page turn both ways, sound, reduced motion, compositor frames at 1366/1920, frame strip), `e2e/transitions.mjs` (every frame of both turns at 400–2560 and on a phone, 1× and 4× CPU, reduced motion: no blank or white frame, no late font or style sheet, CLS 0, the turn after the plate's first frame; 50 first presses per button, double presses start one navigation; real presses, down 90 ms up, at 0–1000 ms after the target shows and fully loaded, on "← Sheet 0", the homepage CTA and the landing choices), `e2e/unit.mjs` (watch sweep, no Parts button, list or modal (G opens nothing), the working mirror at 1366, number-only hover and click (body draws and opens nothing), the end card closing three ways, a heard callout's live number, live audio, tap a part, seek, keys sheet, resume in a second tab, drive, end, stored progress, the finished landing), `unit/play.test.mjs` + `lib/solve.mjs` (U01 play: generators, the right play and each detector's wrong move over 400 seeds, assembly, tuner levels solvable by grid search, `lintPlay`), `unit/place.test.mjs` (layout rules in every pose), `e2e/flow.mjs` (the lesson, then Practice: chooser and end card ways, Practice head and tabs, Practice never a chapter, bar segments; Practice from 7 places and back to the same point; the landing states with seeded progress; the closing chapter; the bar status fitting at 1024–2560 for every beat; one voice over 20 entries into Your turn with the clip's fetch delayed), `e2e/geometry.mjs` (layout, numbers only and page controls, the Practice sheet included, at every exercise step and chapter end at 1366/1920/2000/2560, narrow sheet at 400/768), `e2e/lesson.mjs` (the whole lesson by script: every chapter stop, the drive, every case with its detector's wrong move first, Show me per exercise, every contrast pair, the three tuner levels (Done pressed early on L3), the closing chapter with no button, stored "cleared", the finished landing, every chapter reopening, the skip offer; run with `--import ./tests/lib/register.mjs`) |
 
 ## Commands
-`npm run ci` (typecheck, kit:verify, node tests, build with pre/post checks, e2e under pages-sim; the full suite at most once a day) · `npm run test:changed [-- --dry] [path ...]` (only the checks covering the changed files, default `git status`) · `node tests/e2e/unit.mjs <url>` (U01 plays at any URL, 0 failed requests) · `node --import ./tests/lib/register.mjs tests/e2e/lesson.mjs <url>` (the whole lesson, ~3 min) · `npm run check-links`.
+`npm run ci` (typecheck, kit:verify, node tests, build with pre/post checks, e2e under pages-sim; the full suite at most once a day) · `npm run test:changed [-- --dry] [path ...]` (only the checks covering the changed files, default `git status`) · `node tests/e2e/unit.mjs <url>` (U01 plays at any URL, 0 failed requests) · `node --import ./tests/lib/register.mjs tests/e2e/lesson.mjs <url>` (the whole lesson, ~3 min) · `npm run check-links` · `npm run declutter -- <NN>` (~5 min a unit, 8 pages at once; `test:changed` runs it for each changed unit, `ci` for every unit).
 Screens from `e2e/site.mjs` land in `out/shots/`.
 
 ## Homepage
 - **A unit goes live** when its `content/homepage.json` entry has `status: "drawn"` and `u/<slug>/index.html` exists (the plugin fails the
   build otherwise). Only live units get links; every other unit is a phantom part, drawn, never clickable. `link-check` proves it.
+- **Lesson board** (`board/`, review builds only, `src/site/board/`): each unit's work stage lives in `content/board.json` (missing = not started;
+  `dev` when its first build task starts, `review` when a build is published, `approved` only on the maintainer's word). Change it with the
+  `lesson-board set <id> <stage>` command, never by hand; `status` above stays the release switch.
 - States: `?state=new|returning|phone` (tests only, no visible switcher), else coarse pointer ≤ 820 px → phone, else a stored
   `plates:v1:progress` resume on a live unit → returning, else new. Progress is read-only here.
 - Phone (≤ 639 px): notes and the parts list fold (`details[data-fold]`, closed before first paint), header on one line; ≤ 3.5 screens at 400×860.
@@ -184,3 +191,85 @@ Screens from `e2e/site.mjs` land in `out/shots/`.
   keeps the press and delivers it to what is under the pointer; the hold and 300 ms tail rules are unchanged. `transitions.mjs` presses the way a hand does.
 - 2026-09-26: the learner's guess needle (pencil 2) stops at 0 and 5: `rimValue` holds an end the needle rests on while the pointer is below
   the scale, so a drag past either end never wraps; the e2.3/e3 detectors for a guess below 0 are gone (e3.below has no detector now).
+- 2026-10-05: zoom for every plate (explainer kit `Zoom` + `ZoomControl`, synced): +, −, whole-drawing buttons at the stage's bottom right, keys `+ − 0`,
+  Ctrl+wheel and trackpad pinch about the pointer, two-finger pinch, a bare-paper drag pans while zoomed (never steals a hand's drag). Range 1–3×,
+  kept across chapters, no storage. The camera itself zooms (`Stage.look`; U01's stage too), so every hand's pointer maths and hit area follow
+  and text re-rasterises in half steps (vector, no blur). `tests/unit/zoom.test.mjs`: the model, pan vs tap, dial, crease handle, pencil, slider at 1× and 2×.
+- 2026-10-05: U02 crease readout (default look, owner review pending): a live tag above each Fig. 5 crease tick reads −bias ÷ weight in the plate's
+  number form (on from chapter II's new clip `c2c`, kept for play; hidden while e2's cover is down), the worked rule drawn on Fig. 5 during `c2c`,
+  and a tag on every plan crease handle reading the input pair it pins the crease through. `tests/unit/02-layers-tag.test.mjs`: tag vs sim.
+- 2026-10-05: plain mouse wheel zooms the drawing about the pointer on every unit (a notch is a line/page delta or a vertical-only pixel delta whose
+  `wheelDeltaY` is whole 120s; a trackpad scroll without Ctrl is left to the page), no page scroll over the drawing; "Scroll to zoom" heads the
+  zoom column (hidden on touch). Zoomed, a pan brings each edge of the 1× shot to the edge of the clear paper (`Zoom.shot`, set by the view).
+  U02 Tuning with one crease draws the second neuron's row blacked out under a "NOT TUNED HERE" plate (`plate/ghost.ts`; default look, owner
+  review pending), so the input-two and output pipes end in it. `tests/e2e/zoom.mjs`: every built unit mounts the zoom and wheel-zooms.
+- U02 row dials (w1 u1 b1 w2 u2 b2) are hands in Tuning, Practice Tuning and e4/e5. A click lands the turned dial on
+  its next detent by moving the crease handles (`sim/rowdial.ts` `turnRow`, row scale `rk1`/`rk2`; `unit/handles.ts` `followDials`). Kit
+  DetentHand: drags nearer than half the on-screen radius turn less (was a fixed 24 px, so small dials barely turned). Kit Stage inset
+  follows the visible `[data-stage-top]` chrome (the Practice header). U08 Step/Lift are absolutely placed left of the zoom column.
+- 2026-10-07: U02 Tuning task line: the instruction box reads the task in plain words plus a live count ("n of N rings on bare paper · n of N dots on
+  yellow") and a one-line "Stuck?" hint after three moves in a row bring no mark right (hands-driven, no timer; `unit/bench/tune.ts` `taskLine`).
+  Plan crease names sit beside the line's middle when handles show; handle tags sit left of each knob. Review builds carry mock pages
+  `mock/t274/{a,b,c}/` (vite input only when `isToggle()`), owner pick pending.
+- 2026-10-07: review-only mock pages `mock/t275/{a,b,c}/`: three looks for Tuning's rings vs dots (shape + size + colour/fill, legend glyphs in the
+  task line, marks kept ≥ 14 px on screen); the real exercise's marks are unchanged, owner pick pending.
+- 2026-10-07: review-only proposal page `mock/t276/` (vite input only when `isToggle()`): ten scripted steps that bridge Tuning from one crease to
+  two and three (why dots and rings, what tuning is, one crease failing, the second and third), each with a still judged by the lesson's crease rule
+  (`stills.js`); text only, the lesson and its audio are unchanged, owner OK pending.
+- 2026-10-09: U02 bridge chapters: VII "The line becomes a plane" (`plate/fold.ts`: one neuron's output over the floor of input pairs, an orbiting
+  view `foldXY` in `unit/layout.ts` from Fig. 5's side view to the plan's diamond; the line spreads into a tilted sheet, the valve out runs it below
+  the floor, back in folds it flat, from above the fold is the crease), VIII "Dots and rings are examples" (U01's example and target wording; the
+  gauge rises for a dot and rests at zero for a ring; marks judged from "met"), IX "One crease, then two", X "Three creases fence the middle"
+  (Tuning level three's answer); shot `planZ` puts the title block away (`titleOn`); Tuning L3 intro reads the task. Clips c7a–c10a and t3
+  re-rendered at the bundle's 64k/96k. `tests/unit/02-layers-bridge.test.mjs`: fold view ends, and what each sentence says the plan shows.
+- 2026-10-09 — U02 zoom to what moves: from II on one named shot per sentence (`layout.ts` SHOTS, `watch.ts`), idle labels faded in wide
+  shots; III and IV merged ("Two neurons, two creases", 13 chapters); Fig. 5 studs larger and grown down in V (`figDeep`) so the valveless
+  line shows whole; the caption sits on the bar while no instruction shows and the stage inset follows (`unit/inset.ts`, 216 → 156 px told);
+  Your turn framed on the bias dials and Fig. 5 (`turn`). At 1366 the told plate is 414 px tall (was 354).
+- 2026-10-11: the 3D valley in U04 and U05 (`units/04-gradient/plate/valley/`: `project.ts` lift → camera and the fit into Fig. 6, `shaders.ts`,
+  `relief.ts` captures Fig. 6 into a texture each frame while raised and drapes it on the loss as a lit block with light wall hatch; at lift 0 it
+  is hidden, so the map is the valley seen from above). State `lift`: U04 rises after IV's rings and flattens for VI's square and recap, U05
+  rises at II and flattens at III's recap; play poses lift 0. Fig. 6 callouts go through `plate/rest.ts`: a balloon is placed once its part rests
+  (best of 8 spots against the dot, arrow, footprints and other callouts), faded out while it moves; CONTOUR LINE, GRADIENT and GRADIENT
+  DESCENT keep their fixed slots and draw their leader once the part rests (U05 `plate/mapnames.ts`). U04 Your turn: d1/d2 complete on any
+  settled turn against the slope that lowers the loss (was one exact detent), the view zooms out to the whole drawing at d1/d2, both dials glow
+  in d2 until nudged, the arrow is named and a pencil ghost marks one click against it. Play poses clear OUTPUT, MISS, INPUT, EXAMPLE, TARGET,
+  CONTOUR LINE and GRADIENT (they pointed at the watch's line while exercises moved it).
+- 2026-10-11: one target pencil tick for every dial that asks for one (`units/05-gradient-descent/plate/pencil-tick.ts`: a tapered, slightly
+  wobbling graphite stroke on a paper halo with a second hairline pass, its value pencilled beside it clockwise and clear of the dial), used by
+  U05's rate dial (so U07/U08 too), U06's `DialTicks` (U07 too) and U09's `TuneDial` (U10 too). First asks name the value in words: U05 d1
+  (zero point two), U06 d1 (two point five), U08 d1 (zero point one five) and d3 (zero point three), re-rendered with Kokoro af_heart.
+  Learner drag ticks (U02/U03 wedges, the "drag a pencil tick" cases) are unchanged.
+- 2026-10-11 — U06/U07 review notes: no Nudge button at any chapter stop or after the watch (U06 `STOP_HANDS` keeps only dials, `AFTER_WATCH`
+  empty; U07 stops enable nothing). V's two-row last neuron (`plate/last.ts`, shared by U07 `two.ts`) is one compact casing: the second dial
+  240 under the first (`LAST2`), the second hidden output's pipe bends up to it; U07 draws no outlet pipe (`new LastOne(ink, false)`).
+- 2026-10-11 — U06/U07 computational graph, forward then backward: U06 `GRAPH4.stages` (hidden neuron, last neuron, loss) lettered over
+  the graph; `Graph` hides an edge's tag on an empty string. U06 VII: tags off for the forward pass, blue steps aside when the slopes are read,
+  tags off under the path product. U07 `plate/shown.ts` `backView`: blue never with red, slopes and red only on the stage the wave crosses,
+  only the dials once it is done; IV reruns the forward pass before the wave. S4/S1 balloons on short leaders across no edge. Tests: ≤ 13 numbers per sentence.
+- 2026-10-12 — declutter check: `npm run declutter` (`tools/declutter.mjs`, `tools/declutter/`) poses every step of a unit (each
+  sentence, chapter start and end, guided steps, every case open and answered, closing chapter, chooser, end card), resting 1 s per pose,
+  and fails on > 7 labelled things, a chapter end keeping > 2 of its own things, a leftover (a case's answer marks still there when the
+  next case opens, unless that case draws them fresh), a stray control, duplicate, overlap or crossing leader. Graduations count as scale
+  even when only one numeral is in frame; the dev server runs without HMR. `test:changed` runs it per changed unit; `ci` ends with it.
+  U01's last chapter end keeps the dials' balloons 3 and 4 only (framing test).
+- 2026-10-12: no Nudge button in U06/U07. U06 `AutoNudge` (`unit/nudge.ts`): once the learner's turned dials rest 8 frames, the
+  step's live travelling nudge runs by itself (Your turn, Chain tuning: every turn counts); Your turn judges the last dial within 0.05 of its
+  tick and the reading within `EX_TOL`. 6 task lines without "nudge" (d1 d2 d3 t0 t5 pt, af_heart). U07's 10 never-shown buttons, rows and
+  help text deleted. U04 twin slope plates grown on a small screen stay a gap apart (`TWIN_SPOTS`).
+- 2026-10-12: U01 declutter at 1366 green. Fig. 6 example plates are 98 high (the foot line reads with the cells, so an ON MARK plate is
+  one thing); the fork card hides the balloons (`bMask = 0`), the end card eases Fig. 5 out, so nothing labelled sits under either card.
+- 2026-10-12: U04 Your turn d1/d2: each turned dial carries a red arc one click long the way against its slope (`plate/against.ts`, keys
+  `againstW`/`againstB`); done is judged from where the step posed the dials and the slope's sign there (either order); a rest with a dial
+  turned with its slope or a higher loss shows "That turn raised the loss: go the other way." under the instruction; a Your turn entered from a
+  snapshot (resume, back from a re-watch or Practice) poses its open step again; the wheel over a live dial turns it one click per notch.
+- 2026-10-12: U04 Workbench e3/e4 and Tuning L1–L3 give live direction and wrong-move feedback. The wrong-way line lives in
+  `unit/feedback.ts` (shared by Your turn, e3 and Tuning); e3 and the Tuning surveys draw the red against-arcs (twin key `againstT`) and
+  show the line at a rest with a dial turned with its slope or a higher loss; e4 says "Still flat: …" (shut further / keep turning) while the
+  valve stays shut. Tuning counts every click as a step. Declutter: only the active dial's slope plate is drawn (`unit/active.ts`, the last
+  turned dial); the others show one "NAME SLOPE value" line in the plate's place (`AgainstArrow`, ≥ 30 px arc at 1366). The map's WEIGHT axis
+  name sits at the left end (clear of the zoom panel) and the fork hides balloon 16 under its card.
+- 2026-10-18 — declutter walks each watch chapter, play beat and Workbench case on its own page, 8 at once (`limiter` in `tools/declutter/walk.mjs`): 06 1255 → 280 s, 07 1246 → 289 s at 1366, same fault counts.
+- 2026-10-18 — build stamp: `src/site/stamp.mjs` (Vite, build only) emits `build.json` {commit, built} and a "build <hash> · <time>" line in the homepage colophon; the local publish reads it back from the served site and fails on a mismatch. `tests/unit/stamp.test.mjs`.
+- 2026-10-18 — playthrough gate: `npm run playthrough [-- <NN>]` (`tools/playthrough.mjs`, `tools/playthrough/`, on the declutter walker) plays every Workbench, Tuning and Practice case headless: the shown instruction must name a visible control (`unnamed`), and the case's worked answer played as moves, else the setting its verdict or press-in passes, else taps on its labelled spots, must reach the bench's step done (`never-completes`). Not in `ci:core` (a full run ~27 min); rules in `tests/unit/playthrough.test.mjs`.
+- 2026-10-19 — visual self-check: `npm run visualcheck [-- <NN>] [--case <beat/case>] [--shots <dir>]` (`tools/visualcheck.mjs`, `tools/visual/`, on the declutter walker) drags each Workbench, Tuning and Practice case's main object with the mouse at real speed, sampling every frame, and fails on a label or tooltip drawn twice at once, overlapping labels or controls (open and released pose), or a label that flickers or jitters during the drag (`THRESH` in `tools/visual/rules.mjs`). Not in `ci:core`; rules in `tests/unit/visualcheck.test.mjs`.
