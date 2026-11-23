@@ -45,10 +45,10 @@ export const now = (d: D): NeuronObs => forward(hv(d), [d.s.x1, d.s.x2]);
 
 /** The lamp walks over points, `gap` seconds apart. */
 export const lampWalk = (d: D, at: (string | [number, number])[], gap = 0.9): WalkStep[] => at.map((a) => ({ gap, run: () => ease(d, lampAt(a)) }));
-/** Dial `i` turned click by click to `to`; each step aims at its own detent, so a spring still moving never loses a click. */
+/** Dial `i` turned click by click to `to`; each step adds one click to the detent the last one aimed at, so a lagging spring never adds an extra. */
 export function clicksTo(d: D, i: number, to: number, gap = 0.6, from = d.hands[i].value()): WalkStep[] {
   const n = Math.round((to - from) / STEP), h = d.hands[i];
-  return Array.from({ length: Math.abs(n) }, (_, k) => ({ gap, run: () => { h.turn(Math.round((from + (k + 1) * Math.sign(n) * STEP - h.value()) / STEP)); d.wake(); } }));
+  return Array.from({ length: Math.abs(n) }, () => ({ gap, run: () => { h.turn(Math.sign(n)); d.wake(); } }));
 }
 /** Both dials turned click by click to `w`, dial 1 first. */
 export const pathTo = (d: D, w: Vec2, gap = 0.6): WalkStep[] => [...clicksTo(d, 0, w[0], gap), ...clicksTo(d, 1, w[1], gap)];

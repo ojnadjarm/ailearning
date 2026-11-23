@@ -154,3 +154,14 @@ test('tuning lamps: a lamp per target, lit only while that target is met at the 
     }
   }
 });
+
+test('clicksTo: a Show me walk lands on its detent even when the dial spring lags behind the clicks', async () => {
+  const { DetentHand } = await import('explainer-kit');
+  const { clicksTo } = await import('../../units/01-neuron/unit/bench/common.ts');
+  const h = new DetentHand({ cx: 0, cy: 0, r: 1, min: -3, max: 3, step: 0.5, angle: (v) => v, value: (a) => a }, { toScreen: (x, y) => [x, y] });
+  h.place(0);
+  const steps = clicksTo({ hands: [h], wake: () => undefined }, 0, 2);
+  for (const s of steps) s.run();
+  for (let k = 0; k < 600; k++) h.update(1 / 60);
+  assert.equal(h.value(), 2);
+});
